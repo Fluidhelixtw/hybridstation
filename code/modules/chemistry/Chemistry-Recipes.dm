@@ -59,11 +59,14 @@ datum
 			result_amount = 3
 			result = "lumen"
 
+
+
+
 		no_lumen_new_smoke
 			name = "no lumen new smoke"
 			id = "no_lumen_new_smoke"
 			instant = 1
-			required_reagents = list("lumen" = 1, "chlorine" = 1, "sugar" = 1, "hydrogen" = 1, "platinum" = 1)
+			required_reagents = list("lumen" = 1, "chlorine" = 1, "sugar" = 1, "hydrogen" = 1)
 			mix_phrase = "The mixture dissipates in a flash of intense light!"
 
 			on_reaction(var/datum/reagents/holder, var/created_volume) //flash and sparks
@@ -72,7 +75,6 @@ datum
 					holder.del_reagent("chlorine")
 					holder.del_reagent("sugar")
 					holder.del_reagent("hydrogen")
-					holder.del_reagent("platinum")
 				var/location = get_turf(holder.my_atom)
 				playsound(location, "sound/weapons/flashbang.ogg", 25, 1)
 				elecflash(location)
@@ -259,6 +261,39 @@ datum
 					holder.del_reagent("water")
 				return
 
+		acetylene
+			name = "acetylene"
+			id = "fuel"
+			required_reagents = list("hydrogen" = 1, "carbon" = 1, "oil" = 1)
+			mix_phrase = "A strange garlic-like smell fills the air!"
+			result_amount = 3
+			result = "fuel"
+
+		chloramine
+			name = "chloramine"
+			id = "chloramine"
+			required_reagents = list("bleach" = 1, "ammonia" = 1)
+			inhibitors = list("acetone")
+			mix_phrase = "The bleach mixes violently with the ammonia!"
+			//stole some code from cyanide
+			on_reaction(var/datum/reagents/holder, var/created_volume)
+				var/location = get_turf(holder.my_atom)
+
+				for(var/mob/M in all_viewers(null, location))
+					boutput(M, "<span class='alert'>The solution generates a strong vapor! OH FUCK!</span>")
+
+				var/list/mob/living/carbon/mobs_affected = list()
+				for(var/mob/living/carbon/C in range(location, 1))
+					if(!issmokeimmune(C))
+						mobs_affected += C
+				for(var/mob/living/carbon/C as anything in mobs_affected)
+					C.reagents.add_reagent("chloramine", (1 * created_volume) / length(mobs_affected))
+				return
+
+
+
+
+
 		booster_enzyme
 			name = "Booster Enzyme"
 			id = "booster_enzyme"
@@ -309,6 +344,15 @@ datum
 			required_reagents = list("blood" = 1, "carbon" = 1, "styptic_powder" = 1)
 			result_amount = 3
 			mix_phrase = "The mixture knits together into a fibrous, bloody mass."
+			mix_sound = 'sound/impact_sounds/Slimy_Hit_4.ogg'
+
+		blood
+			name = "Synthblood"
+			id = "synthblood"
+			result = "blood"
+			required_reagents = list("saltpetre" = 1, "hydroacid" = 1, "bleach" = 1, "water" = 7)
+			result_amount = 10
+			mix_phrase = "The mixture starts to coagulate slowly."
 			mix_sound = 'sound/impact_sounds/Slimy_Hit_4.ogg'
 
 		meat_slurry
@@ -1735,32 +1779,6 @@ datum
 						fireflash(location, 0)
 				return
 
-		explosion_barium // get in
-			name = "Barium Explosion"
-			id = "explosion_barium"
-			required_reagents = list("water" = 1, "barium" = 1)
-			instant = 1
-			mix_phrase = "The mixture explodes!"
-			on_reaction(var/datum/reagents/holder, var/created_volume)
-				if (holder.last_basic_explosion >= ticker.round_elapsed_ticks - 3)
-					return
-				holder.last_basic_explosion = ticker.round_elapsed_ticks
-				var/atom/my_atom = holder.my_atom
-
-				var/turf/location = 0
-				if (my_atom)
-					location = get_turf(my_atom)
-					explosion(my_atom, location, -1,-1,0,1)
-					fireflash(location, 0)
-				else
-					var/amt = max(1, (holder.covered_cache.len * (created_volume / holder.covered_cache_volume)))
-					for (var/i = 0, i < amt && holder.covered_cache.len, i++)
-						location = pick(holder.covered_cache)
-						holder.covered_cache -= location
-						explosion_new(my_atom, location, 2.25/amt)
-						fireflash(location, 0)
-				return
-
 		explosion_magnesium // get in
 			name = "Magnesium Explosion"
 			id = "explosion_magnesium"
@@ -1790,7 +1808,7 @@ datum
 		magnesium_chloride
 			name = "Magnesium Chloride"
 			id = "magnesium_chloride"
-			required_reagents = list("magnesium" = 1, "clacid" = 2)
+			required_reagents = list("magnesium" = 1, "hydroacid" = 2)
 			result = "magnesium_chloride"
 			mix_phrase = "The mixture settles into a white powder."
 			result_amount = 1
@@ -1825,19 +1843,11 @@ datum
 			result_amount = 3
 			mix_phrase = "The substance mixes into a clear, viscous liquid."
 
-		oil
-			name = "Oil"
-			id = "oil"
-			result = "oil"
-			required_reagents = list("carbon" = 1, "hydrogen" = 1, "fuel" = 1)
-			result_amount = 3
-			mix_phrase = "An iridescent black chemical forms in the container."
-
 		mutagen
 			name = "Unstable mutagen"
 			id = "mutagen"
 			result = "mutagen"
-			required_reagents = list("radium" = 1, "plasma" = 1, "chlorine" = 1)
+			required_reagents = list("radium" = 1, "plasma" = 1, "chlorine" = 2)
 			result_amount = 3
 			mix_phrase = "The substance turns neon green and bubbles unnervingly."
 
@@ -1845,7 +1855,7 @@ datum
 			name = "Stable mutagen"
 			id = "dna_mutagen"
 			result = "dna_mutagen"
-			required_reagents = list("mutagen" = 1, "lithium" = 1, "acetone" = 1, "bromine" = 1)
+			required_reagents = list("mutagen" = 1, "silicon" = 2, "stabilizer" = 1, "plasma" = 1)
 			result_amount = 3
 			mix_phrase = "The substance turns a drab green and begins to bubble."
 		//  required_temperature = 170
@@ -1921,11 +1931,11 @@ datum
 
 
 		phenol
-			name = "Phenol"
+			name = "phenol"
 			id = "phenol"
 			result = "phenol"
-			required_reagents = list("oil" = 1, "chlorine" = 1, "water" = 1) // hydrolysis of chlorobenzene
-			result_amount = 3
+			required_reagents = list("oil" = 1, "chlorine" = 2, "water" = 2) // hydrolysis of chlorobenzene
+			result_amount = 4
 			mix_phrase = "The mixture bubbles and gives off an unpleasant medicinal odor."
 			mix_sound = 'sound/misc/drinkfizz.ogg'
 
@@ -1933,7 +1943,7 @@ datum
 			name = "Salicylic Acid"
 			id = "salicylic_acid"
 			result = "salicylic_acid"
-			required_reagents = list("sodium" = 1, "phenol" = 1, "carbon" = 1, "oxygen" = 1, "acid" = 1)
+			required_reagents = list("salt" = 1, "phenol" = 1, "carbon" = 1, "oxygen" = 1, "acid" = 1)
 			//required_temperature = 390
 			result_amount = 5
 			mix_phrase = "The mixture crystallizes."
@@ -1975,15 +1985,16 @@ datum
 			mix_phrase = "A faint yet nostril-burning scent drifts from the mixture."*/
 
 		space_drugs
-			name = "Space Drugs"
+			name = "MDMA"
 			id = "space_drugs"
 			result = "space_drugs"
 			required_reagents = list("mercury" = 1, "sugar" = 1, "lithium" = 1)
 			result_amount = 3
+			required_temperature = 374
 			mix_phrase = "Slightly dizzying fumes drift from the solution."
 			mix_sound = 'sound/misc/drinkfizz.ogg'
 
-		mdma //MDMA and space drugs are already super similar. It's not very close to real life recipes but fuck it, I want this to be a botany friendly space drugs method.
+/*		mdma //MDMA and space drugs are already super similar. It's not very close to real life recipes but fuck it, I want this to be a botany friendly space drugs method.
 			name = "MDMA"
 			id = "mdma"
 			result = "space_drugs"
@@ -2006,13 +2017,13 @@ datum
 
 				holder.add_reagent("salbutamol",created_volume)
 				holder.add_reagent("water",created_volume)
-				return
+				return*/
 
 		lube
-			name = "Space Lube"
+			name = "Industrial Lubricant"
 			id = "lube"
 			result = "lube"
-			required_reagents = list("water" = 1, "silicon" = 1, "oxygen" = 1)
+			required_reagents = list("silicon" = 1, "bleach" = 1, "oil" = 1)
 			result_amount = 3
 			mix_phrase = "The substance turns a striking cyan and becomes oily."
 
@@ -2031,6 +2042,7 @@ datum
 			required_reagents = list("sulfur" = 1, "hydrogen" = 1, "oxygen" = 1) // tobba chem revision: change to SO3 + H2O
 			result_amount = 2
 			//required_temperature = -160
+
 			mix_phrase = "The mixture gives off a sharp acidic tang."
 			on_reaction(var/datum/reagents/holder, created_volume)
 				var/location = get_turf(holder.my_atom)
@@ -2042,14 +2054,14 @@ datum
 							H.emote("scream")
 				return
 
-		clacid
+		hydroacid
 			name = "Hydrochloric Acid"
-			id = "clacid"
-			result = "clacid"
-			required_reagents = list("hydrogen" = 1, "chlorine" = 1, "water" = 1)
+			id = "hydroacid"
+			result = "hydroacid"
+			required_reagents = list("hydrogen" = 1, "chlorine" = 1, "plasma" = 1, "acetic_acid" = 1)
 			result_amount = 3
 			mix_phrase = "The mixture gives off a sharp acidic tang."
-
+			required_temperature = 374
 			on_reaction(var/datum/reagents/holder, created_volume)
 				var/location = get_turf(holder.my_atom)
 				for(var/mob/living/carbon/human/H in location)
@@ -2094,7 +2106,7 @@ datum
 			name = "Pentetic Acid"
 			id = "penteticacid"
 			result = "penteticacid"
-			required_reagents = list("fuel" = 1, "chlorine" = 1, "ammonia" = 1, "formaldehyde" = 1, "sodium" = 1, "cyanide" = 1)
+			required_reagents = list("fuel" = 1, "chlorine" = 1, "ammonia" = 1, "formaldehyde" = 1, "salt" = 1, "cyanide" = 1)
 			// (dichloroethane + ammonia) + formaldehyde (maybe that should be implemented?) + (sodium cyanide) yields EDTA which is almost DPTA
 			//required_temperature = 310
 			result_amount = 6
@@ -2104,7 +2116,7 @@ datum
 			name = "Acetaldehyde"
 			id = "acetaldehyde"
 			result = "acetaldehyde"
-			required_reagents = list("chromium" = 1, "oxygen" = 1, "copper" = 1, "ethanol" = 1)
+			required_reagents = list("oxygen" = 1, "copper" = 1, "ethanol" = 1)
 			result_amount = 3
 			required_temperature = T0C + 275
 			mix_phrase = "It smells like a bad hangover in here."
@@ -2113,7 +2125,7 @@ datum
 			name = "Acetic Acid"
 			id = "acetic_acid"
 			result = "acetic_acid"
-			required_reagents = list("acetaldehyde" = 1, "oxygen" = 1, "nitrogen" = 4)
+			required_reagents = list("fuel" = 1, "oxygen" = 1, "nitrogen" = 4)
 			result_amount = 3
 			mix_phrase = "It smells like vinegar and a bad hangover in here."
 
@@ -2126,21 +2138,12 @@ datum
 			max_temperature = T0C + 150
 			mix_phrase = "The mixture yields a pungent odor, which makes you tired."
 
-		cyclopentanol
-			name = "Cyclopentanol"
-			id = "cyclopentanol"
-			result = "cyclopentanol"
-			required_temperature = T0C + 275
-			required_reagents = list("acetic_acid" = 1, "ether" = 1, "barium" = 1, "hydrogen" = 1, "oxygen" = 1)
-			result_amount = 3
-			mix_phrase = "The mixture fizzles into a colorless liquid."
-
 		kerosene
 			name = "Kerosene"
 			id = "kerosene"
 			result = "kerosene"
 			required_temperature = T0C + 600
-			required_reagents = list("cyclopentanol" = 1, "oxygen" = 3, "acetone" = 1, "hydrogen" = 1, "aluminium" = 1, "nickel" = 1)
+			required_reagents = list("oxygen" = 3, "acetone" = 1, "hydrogen" = 1, "aluminium" = 1, "nickel" = 1)
 			result_amount = 3
 			mix_phrase = "This pungent odor could probably melt steel."
 
@@ -2149,8 +2152,7 @@ datum
 			id = "formaldehyde"
 			result = "formaldehyde"
 			required_reagents = list("ethanol" = 1, "oxygen" = 1, "silver" = 1)
-			//ethanol as methanol, oxidized with a silver catalyst
-			required_temperature = T0C + 150 // really more like 620 but fuck it
+			required_temperature = 620
 			result_amount = 2
 			mix_phrase = "Ugh, it smells like the morgue in here."
 
@@ -2167,10 +2169,9 @@ datum
 			name = "Burn Medication"
 			id = "silver_sulfadiazine"
 			result = "silver_sulfadiazine"
-			required_reagents = list("silver" = 1, "sulfur" = 1, "oxygen" = 1, "chlorine" = 1, "ammonia" = 1) // oil as benzene, sulfur oxygen chlorine as a sulfonyl group
-			// removed oil from the recipe so that this can be made without leaving a chem dispenser like styptic
-			result_amount = 5
-			mix_phrase = "A strong and cloying odor begins to bubble from the mixture."
+			required_reagents = list("silver" = 1, "sulfur" = 1, "oxygen" = 1, "chlorine" = 1, "ammonia" = 1)
+			result_amount = 3
+			mix_phrase = "A strong and cloying odor begins to bubble from the yellow mixture."
 			mix_sound = 'sound/misc/drinkfizz.ogg'
 
 		/*
@@ -2183,9 +2184,9 @@ datum
 			name = "Activated Charcoal"
 			id = "charcoal"
 			result = "charcoal"
-			required_reagents = list("ash" = 1, "salt" = 1)
-			required_temperature = T0C + 100
-			result_amount = 2
+			required_reagents = list("acetic_acid" = 1, "salt" = 1, "calcium" = 1, "oxygen" = 1)
+			required_temperature = 573
+			result_amount = 3
 			mix_phrase = "The mixture yields a fine black powder."
 			mix_sound = 'sound/misc/fuse.ogg'
 
@@ -2228,9 +2229,18 @@ datum
 			name = "Oculine"
 			id = "oculine"
 			result = "oculine"
-			required_reagents = list("atropine" = 1, "saline" = 1, "spaceacillin" = 1)
+			required_reagents = list("iodine" = 1, "saline" = 2, "phenol" = 1)
 			result_amount = 4
 			mix_phrase = "The mixture settles, becoming a milky white."
+
+		auditone
+			name = "Auditone"
+			id = "auditone"
+			result = "auditone"
+			required_reagents = list("saline" = 2, "lithium" = 1, "ammonia" = 1)
+			result_amount = 4
+			mix_phrase = "The mixture settles with a faint popping sound."
+			mix_sound = 'sound/misc/drinkfizz.ogg'
 
 		mannitol // COGWERKS CHEM REVISION PROJECT: maybe this could be Mannitol, side effect: makes u pee?
 			name = "Mannitol"
@@ -2278,13 +2288,13 @@ datum
 			result_amount = 3
 			mix_phrase = "The solution fizzes and gives off toxic fumes."
 
-		methamphetamine // COGWERKS CHEM REVISION PROJECT: some sort of potent stimulant, could combine with teporone?
+		methamphetamine
 			name = "Methamphetamine"
 			id = "methamphetamine"
 			result = "methamphetamine"
-			required_reagents = list("ephedrine" = 1, "phosphorus" = 1, "hydrogen" = 1, "iodine" = 1) // tobba chem revision: change the hydrogen and iodine for hydroiodic acid
+			required_reagents = list("ephedrine" = 1, "phosphorus" = 1, "fuel" = 1, "salicylic_acid" = 1)
 			required_temperature = T0C + 100
-			result_amount = 3
+			result_amount = 4
 			mix_phrase = "The solution fizzes and gives off toxic fumes."
 
 			on_reaction(var/datum/reagents/holder, var/created_volume)
@@ -2528,7 +2538,7 @@ datum
 			name = "Chlorine Azide"
 			id = "chlorine_azide"
 			result = "chlorine_azide"
-			required_reagents = list("sodium" = 1, "ammonia" = 1, "nitrogen" = 1, "oxygen" = 1, "silver" = 1, "chlorine" = 1)
+			required_reagents = list("salt" = 1, "ammonia" = 1, "nitrogen" = 1, "oxygen" = 1, "silver" = 1, "chlorine" = 1)
 			instant = 1
 			mix_phrase = "The substance violently detonates!"
 			mix_sound = 'sound/impact_sounds/Metal_Hit_Heavy_1.ogg'
@@ -2720,18 +2730,9 @@ datum
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-		potash1
+		potash
 			name = "potash"
-			id = "potash1"
-			result = "potash"
-			required_reagents = list("ash" = 1, "water" = 1)
-			required_temperature = T0C + 80
-			result_amount = 1
-			mix_phrase = "A white crystalline residue forms as the water boils off."
-
-		potash2
-			name = "potash"
-			id = "potash2"
+			id = "potash"
 			result = "potash"
 			required_reagents = list("potassium" = 1, "chlorine" = 1, "acid" = 1)
 			result_amount = 2
@@ -2741,31 +2742,10 @@ datum
 			name = "saltpetre"
 			id = "saltpetre"
 			result = "saltpetre"
-			required_reagents = list("urine" = 1, "poo" = 1, "potash" = 1)
-			result_amount = 3
+			required_reagents = list("ammonia" = 1, "nitrogen" = 1, "potassium" = 1, "hydrogen" = 1, "oxygen" = 2)
+			result_amount = 5
 			mix_phrase = "A white crystalline substance condenses out of the mixture."
 			mix_sound = 'sound/misc/fuse.ogg'
-
-		jenkem // moved this down so improperly mixed nutrients yield jenkem instead
-			name = "Jenkem"
-			id = "jenkem"
-			result = "jenkem"
-			required_reagents = list("urine" = 1, "poo" = 1)
-			result_amount = 2
-			mix_phrase = "The mixture ferments into a filthy morass."
-			mix_sound = 'sound/impact_sounds/Slimy_Hit_4.ogg'
-
-			on_reaction(var/datum/reagents/holder, var/created_volume)
-				var/location = get_turf(holder.my_atom)
-				for(var/mob/M in all_viewers(null, location))
-					boutput(M, "<span class='alert'>The solution generates a strong vapor!</span>")
-				var/list/mob/living/carbon/mobs_affected = list()
-				for(var/mob/living/carbon/C in range(location, 1))
-					if(!issmokeimmune(C))
-						mobs_affected += C
-				for(var/mob/living/carbon/C as anything in mobs_affected)
-					C.reagents.add_reagent("jenkem",(1 * created_volume) / length(mobs_affected)) // this is going to make people so, so angry
-				return
 
 		/*plant_nutrients_mutagenic
 			name = "Mutriant Plant Formula"
@@ -2816,7 +2796,7 @@ datum
 			name = "Atrazine"
 			id = "weedkiller"
 			result = "weedkiller"
-			required_reagents = list("chlorine" = 1, "nitrogen" = 1, "hydrogen" = 1)
+			required_reagents = list("chlorine" = 1, "bleach" = 1, "nitrogen" = 1)
 			result_amount = 3
 			mix_phrase = "The mixture gives off a harsh odor."
 
@@ -2932,7 +2912,7 @@ datum
 			name = "Foam surfactant"
 			id = "foam surfactant"
 			result = "fluorosurfactant"
-			required_reagents = list("fluorine" = 1, "oil" = 1, "acid" = 1)
+			required_reagents = list("fluorine" = 1, "oil" = 1, "acid" = 1, "phoron")
 			result_amount = 3
 			mix_phrase = "A head of foam results from the mixture's constant fizzing."
 			mix_sound = 'sound/misc/drinkfizz.ogg'
@@ -3061,8 +3041,8 @@ datum
 			name = "luminol"
 			id = "luminol"
 			result = "luminol"
-			required_reagents = list("oxygen" = 1, "hydrogen" = 1, "nitrogen" = 1, "carbon" = 1)
-			result_amount = 3
+			required_reagents = list("oxygen" = 1, "hydrogen" = 1, "nitrogen" = 1, "carbon" = 1, "plasma" = 1)
+			result_amount = 5
 			mix_phrase = "The solution seems to highlight stains in the container."
 
 /*		fuckthisshit
@@ -3127,10 +3107,9 @@ datum
 			name = "Diphenhydramine"
 			id = "diphenhydramine"
 			result = "antihistamine"
-			//required_temperature = 320
+			required_temperature = 320
 			result_amount = 4
 			required_reagents = list("oil" = 1, "carbon" = 1, "bromine" = 1, "diethylamine" = 1, "ethanol" = 1)
-			// benzhydryl(benzene+carbon) bromide + 2-dimethylaminoethanol
 			mix_phrase = "The mixture fizzes gently."
 			mix_sound = 'sound/misc/drinkfizz.ogg'
 
@@ -3144,13 +3123,6 @@ datum
 			mix_phrase = "The mixture gives off quite a stench."
 			mix_sound = 'sound/misc/drinkfizz.ogg'
 
-		salt
-			name = "Salt"
-			id = "salt"
-			result = "salt"
-			required_reagents = list("chlorine" = 1, "sodium" = 1, "water" = 1)
-			result_amount = 2
-			mix_phrase = "The solution crystallizes with a brief flare of light."
 
 		saline
 			name = "Saline-Glucose Solution"
@@ -3163,7 +3135,7 @@ datum
 			name = "Heparin"
 			id = "heparin"
 			result = "heparin"
-			required_reagents = list("sugar" = 1, "meat_slurry" = 1, "phenol" = 1, "acid" = 1)
+			required_reagents = list("sugar" = 1, "phenol" = 2, "acid" = 1)
 			result_amount = 2
 
 		proconvertin // coagulant
@@ -3197,15 +3169,6 @@ datum
 			mix_phrase = "The mixture hisses oddly."
 			mix_sound = 'sound/voice/animal/cat_hiss.ogg'
 
-		boilpee // a shameful cogwerks. hobo chemistry, assistant-sourcable source of ammonia for various other reactions.
-			name = "Boiled Pee"
-			id = "boilpee"
-			result = "ammonia"
-			required_temperature = T0C + 80
-			result_amount = 1
-			required_reagents = list("urine" = 1, "water" = 1)
-			mix_phrase = "The mixture bubbles and gives off a sharp odor."
-			mix_sound = 'sound/misc/drinkfizz.ogg'
 
 		crank // cogwerks - awful hobo drug that can be made by pissing in a bunch of vending machine stuff and then boiling it all with a welder
 			name = "Crank"
@@ -3257,42 +3220,24 @@ datum
 			on_reaction(var/datum/reagents/holder, var/created_volume)
 				bust_lights()
 				creepify_station()
-				return
+				return*/
 
 		bleach
-			name = "Bleach" // cogwerks WIP: could be useful for hobo chemistry, hair bleaching, stubborn stains, being a jerk and turning stuff white
+			name = "Bleach"
 			id = "bleach"
 			result = "bleach"
-			result_amount = 1
-			required_reagents = list("sodium" = 1, "chlorine" = 1, "hydrogen" = 1)
+			result_amount = 3
+			required_reagents = list("salt" = 1, "chlorine" = 1, "hydrogen" = 1)
 			mix_phrase = "The mixture gives off a sharp odor much like bleach. Probably because it's bleach."
 			mix_sound = 'sound/misc/drinkfizz.ogg'
 
-		chlorine // cogwerks, more hobo chemistry
-			name = "Chlorine"
-			id = "chlorine"
-			result = "chlorine"
-			required_reagents = list("ammonia" = 1, "bleach" = 1 )
-			result_amount = 1
-			mix_phrase = "The mixture starts bubbling violently!"
-			mix_sound = 'sound/misc/fuse.ogg'
-
-			on_reaction(var/datum/reagents/holder, var/created_volume)
-				var/location = get_turf(holder.my_atom)
-				for(var/mob/M in AIviewers(5, location))
-					boutput(M, "<span class='alert'>The solution boils up into a choking cloud!</span>")
-				src.mustard_gas = new /datum/effects/system/mustard_gas_spread/
-				src.mustard_gas.attach(src)
-				src.mustard_gas.set_up(5, 0, usr.loc)
-				return */
-
-		space_cleaner // COGWERKS CHEM REVISION PROJECT: add ethanol to this recipe
-			name = "Space cleaner"
+		space_cleaner
+			name = "Cleaner Fluid"
 			id = "cleaner"
 			result = "cleaner"
-			required_reagents = list("ammonia" = 1, "ethanol" = 1, "water" = 1)
+			required_reagents = list("ammonia" = 1, "bleach" = 1, "acetone" = 1)
 			result_amount = 3
-			//mix_phrase = "The mixture begins to emit a distinct smell of bleach." -AMMONIA IS NOT BLEACH!!!!!!!!!! - grumpwerks
+			mix_phrase = "The mixture begins to emit a distinct smell of bleach."
 			mix_phrase = "Ick, this stuff really stinks. Sure does make the container sparkle though!"
 
 		strange_reagent
@@ -3704,7 +3649,7 @@ datum
 			name = "harmless glitter"
 			id = "sparkles"
 			result = "sparkles"
-			required_reagents = list("colors" = 1, "paper" = 1, "platinum" = 1)
+			required_reagents = list("colors" = 1, "paper" = 1)
 			mix_phrase = "The mixture becomes far more fabulous- safely."
 
 		rotting
@@ -3872,7 +3817,7 @@ datum
 			name = "calcium carbonate"
 			id = "calcium_carbonate"
 			result = "calcium_carbonate"
-			required_reagents = list("calcium" = 1, "chlorine" = 2, "sodium" = 2, "carbon" = 1, "oxygen" = 3)
+			required_reagents = list("calcium" = 1, "chlorine" = 2, "salt" = 2, "carbon" = 1, "oxygen" = 3)
 			result_amount = 1
 			mix_phrase = "A white solid precipitates out of the solution."
 			mix_sound = 'sound/misc/fuse.ogg'
@@ -3929,7 +3874,7 @@ datum
 			name = "silicon dioxide"
 			id = "silicon_dioxide"
 			result = "silicon_dioxide"
-			required_reagents = list("sodium" = 2, "silicon" = 3, "oxygen" = 7, "acid" = 1)
+			required_reagents = list("salt" = 2, "silicon" = 3, "oxygen" = 7, "acid" = 1)
 			result_amount = 3
 			mix_phrase = "The white flakes turn into a white powder."
 			on_reaction(var/datum/reagents/holder, created_volume)
@@ -4006,3 +3951,12 @@ datum
 			mix_phrase = "The mixture comes together slowly. It doesn't seem like it wants to be here."
 			required_reagents = list("poor_cement" = 1, "silicon_dioxide" = 5, "water" = 1)
 			result_amount = 7
+
+		catalyst
+			name = "catalyst"
+			id = "catalyst"
+			result = "catalyst"
+			mix_phrase = "The strange matter annihilates the copper and plasma and the released energy condenses into a blue crystal. That's unnerving."
+			required_reagents = list("copper" = 1, "strange_matter" = 2, "plasma" = 1)
+			result_amount = 1
+			mix_sound = 'sound/effects/elec_bzzz.ogg'

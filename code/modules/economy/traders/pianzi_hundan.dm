@@ -121,8 +121,6 @@
 	comtype = /obj/item/reagent_containers/food/drinks/bottle/wine
 	amount = 8
 	price_boundary = list(25,75)
-	possible_alt_types = list(/obj/item/reagent_containers/food/drinks/bottle/vintage)
-	alt_type_chance = 50
 	possible_names = list("Cause to celebrate? This deal certainly is! Vintage drink of the best quality!",
 	"I've come across some very prized vintage drink! Excellent for parties!")
 

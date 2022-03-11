@@ -396,7 +396,6 @@
 	station_bounties[/obj/item/reagent_containers/food/snacks/ingredient/meat] = 1
 	station_bounties[/obj/item/reagent_containers/glass/bottle/bubblebath] = 1
 	station_bounties[/obj/item/reagent_containers/glass/wateringcan] = 1
-	station_bounties[/obj/item/reagent_containers/food/drinks/bottle/vintage] = 1
 
 	station_bounties[/obj/item/storage/belt/medical] = 1
 	station_bounties[/obj/item/storage/belt/utility] = 1

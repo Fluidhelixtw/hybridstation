@@ -260,7 +260,7 @@ toxic - poisons
 		return
 
 	syndicate
-		reagent_payload = "sodium_thiopental" // HEH
+		reagent_payload = "ketamine" // HEH
 
 		pistol
 			caliber = 0.355

@@ -368,6 +368,8 @@
 
 	setup_material()
 		src.setMaterial(getMaterial("plasmastone"), appearance = 0, setname = 0)
+		src.create_reagents(50)
+		src.reagents.add_reagent("plasma", 50)
 		return ..()
 
 /obj/item/raw_material/gemstone
@@ -464,13 +466,15 @@
 
 /obj/item/raw_material/starstone
 	name = "starstone"
-	desc = "An extremely rare jewel. Highly prized by collectors and lithovores."
+	desc = "An extremely rare piece of a strange matter star. Incredibly potent and expensive."
 	icon_state = "starstone"
 	material_name = "Starstone"
 	crystal = 1
 
 	setup_material()
 		src.setMaterial(getMaterial("starstone"), appearance = 0, setname = 0)
+		src.create_reagents(50)
+		src.reagents.add_reagent("strange_matter", 50)
 		return ..()
 
 /obj/item/raw_material/eldritch

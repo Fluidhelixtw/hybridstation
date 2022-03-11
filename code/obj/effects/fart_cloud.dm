@@ -16,7 +16,6 @@
 				continue
 			if (prob(20))
 				boutput(H, "<span class='alert'>Oh god! The <i>smell</i>!!!</span>")
-			H.reagents.add_reagent("jenkem",0.1)
 		sleep(1.5 SECONDS)
 		if(amount < 1)
 			dispose()
@@ -40,7 +39,6 @@
 			continue
 		if (R == src.fartowner)
 			continue
-		R.reagents.add_reagent("jenkem",1)
 	return
 
 /obj/effects/fart_cloud/Crossed(atom/movable/AM)
@@ -51,5 +49,5 @@
 			return
 		if (R == src.fartowner)
 			return
-		R.reagents.add_reagent("jenkem",1)
+
 	return

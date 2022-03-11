@@ -207,7 +207,7 @@
 			src.ArtifactStimulus("elec", volume * 50)
 		if("acid","acetic_acid")
 			src.ArtifactTakeDamage(volume * 2)
-		if("pacid","clacid","nitric_acid")
+		if("pacid","hydroacid","nitric_acid")
 			src.ArtifactTakeDamage(volume * 10)
 		if("george_melonium")
 			var/random_stimulus = pick("heat","force","radiate","elec")

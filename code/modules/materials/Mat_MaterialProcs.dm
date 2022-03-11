@@ -355,7 +355,6 @@ triggerOnEntered(var/atom/owner, var/atom/entering)
 
 /datum/materialProc/plasmastone
 	var/total_plasma = 500
-
 	execute(var/location) //exp and temp both have the location as first argument so i can use this for both.
 		var/turf/T = get_turf(location)
 		if(!T || T.density)

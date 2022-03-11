@@ -1,20 +1,42 @@
 //Contains base elements / reagents.
 datum
 	reagent
+
+		strange_matter
+			name = "strange matter"
+			id = "strange_matter"
+			description = "A strange pale liquid notable for it's extremely weird properties. Its almost... strange."
+			reagent_state = LIQUID
+			fluid_r = 255
+			fluid_g = 255
+			fluid_b = 255
+			transparency = 200
+			on_mob_life(var/mob/M, var/mult = 1)
+				if(!M) M = holder.my_atom
+				if (probmult(10))
+					. = get_offset_target_turf(get_turf(M), rand(-6, 6), rand(-6, 6))
+					M.visible_message("<span class='alert'>[M] is warped away!</span>")
+					playsound(M.loc, "warp", 50)
+					boutput(M, "<span class='alert'>You suddenly teleport...</span>")
+					M.set_loc(.)
+				..()
+				return
+
+
+		antimony
+			name = "antimony"
+			id = "antimony"
+			description = "A reactive blueish white metalloid"
+			reagent_state = SOLID
+			fluid_r = 222
+			fluid_g = 222
+			fluid_b = 255
+			transparency = 255
+
 		aluminium
 			name = "aluminium"
 			id = "aluminium"
 			description = "A silvery white and ductile member of the boron group of chemical elements."
-			reagent_state = SOLID
-			fluid_r = 220
-			fluid_g = 220
-			fluid_b = 220
-			transparency = 255
-
-		barium
-			name = "barium"
-			id = "barium"
-			description = "A highly reactive element."
 			reagent_state = SOLID
 			fluid_r = 220
 			fluid_g = 220
@@ -30,6 +52,13 @@ datum
 			fluid_g = 50
 			fluid_b = 50
 			transparency = 50
+			on_mob_life(var/mob/M, var/mult = 1)
+				if(!M) M = holder.my_atom
+				if(M.health > 0)
+					M.take_toxin_damage(0.5 * mult)
+					M.change_eye_blurry(10 , 50)
+				..()
+				return
 
 		calcium
 			name = "calcium"
@@ -79,17 +108,6 @@ datum
 			on_plant_life(var/obj/machinery/plantpot/P)
 				P.HYPdamageplant("poison",3)
 
-		chromium
-			name = "chromium"
-			id = "chromium"
-			description = "A catalytic chemical element."
-			reagent_state = SOLID
-			fluid_r = 220
-			fluid_g = 220
-			fluid_b = 220
-			transparency = 255
-			penetrates_skin = 0
-
 		copper
 			name = "copper"
 			id = "copper"
@@ -112,10 +130,13 @@ datum
 			transparency = 60
 			penetrates_skin = 1
 
+
+
 			on_mob_life(var/mob/M, var/mult = 1)
 				if(!M) M = holder.my_atom
-				M.take_toxin_damage(1*mult) // buffin this because fluorine is horrible - adding a burn effect
-				M.TakeDamage("chest", 0, 1*mult, 0, DAMAGE_BURN)
+				if(M.health > 0)
+					M.take_toxin_damage(0.5 * mult)
+					M.TakeDamage("chest", 0, 0.5*mult, 0, DAMAGE_BURN)
 				..()
 				return
 
@@ -259,6 +280,61 @@ datum
 			fluid_b = 252
 			transparency = 20
 
+			minimum_reaction_temperature = T0C + 585
+			depletion_rate = 0.4
+			heat_capacity = 5
+
+			var/max_radius = 1
+			var/min_radius = 1
+			var/volume_radius_modifier = -0.15
+			var/volume_radius_multiplier = 0.09
+			var/explosion_threshold = 100
+			var/min_explosion_radius = 1
+			var/max_explosion_radius = 1
+			var/volume_explosion_radius_multiplier = 0.005
+			var/volume_explosion_radius_modifier = 0
+
+
+			var/caused_fireflash = 0
+			var/min_req_fluid = 0.10
+
+			reaction_temperature(exposed_temperature, exposed_volume)
+				if(volume < 10)
+					if (holder)
+						holder.del_reagent(id)
+					return
+
+				if (caused_fireflash)
+					return
+				else
+
+					var/list/covered = holder.covered_turf()
+					if (covered.len < 4 || (volume / holder.total_volume) > min_req_fluid)
+						if(covered.len > 0) //possible fix for bug where caused_fireflash was set to 1 without fireflash going off, allowing fuel to reach any temp without igniting
+							caused_fireflash = 1
+						for(var/turf/turf in covered)
+							var/radius = clamp(((volume/covered.len) * volume_radius_multiplier + volume_radius_modifier), min_radius, max_radius)
+							fireflash_sm(turf, radius, 2200 + radius * 250, radius * 50)
+							if(holder && volume/length(covered) >= explosion_threshold)
+								if(holder.my_atom)
+									holder.my_atom.visible_message("<span class='alert'><b>[holder.my_atom] explodes!</b></span>")
+									// Added log entries (Convair880).
+									message_admins("Hydrogen explosion (inside [holder.my_atom], reagent type: [id]) at [log_loc(holder.my_atom)]. Last touched by: [holder.my_atom.fingerprintslast ? "[key_name(holder.my_atom.fingerprintslast)]" : "*null*"] (usr: [ismob(usr) ? key_name(usr) : usr]).")
+									logTheThing("bombing", holder.my_atom.fingerprintslast, null, "Hydrogen explosion (inside [holder.my_atom], reagent type: [id]) at [log_loc(holder.my_atom)]. Last touched by: [holder.my_atom.fingerprintslast ? "[key_name(holder.my_atom.fingerprintslast)]" : "*null*"] (usr: [ismob(usr) ? key_name(usr) : usr]).")
+								else
+									turf.visible_message("<span class='alert'><b>[holder.my_atom] explodes!</b></span>")
+									// Added log entries (Convair880).
+									message_admins("Hydrogen explosion ([turf], reagent type: [id]) at [log_loc(turf)].")
+									logTheThing("bombing", null, null, "Hydrogen explosion ([turf], reagent type: [id]) at [log_loc(turf)].")
+
+								var/boomrange = clamp(round((volume/covered.len) * volume_explosion_radius_multiplier + volume_explosion_radius_modifier), min_explosion_radius, max_explosion_radius)
+								explosion(holder.my_atom, turf, -1,-1,boomrange,1)
+				if (caused_fireflash)
+					holder?.del_reagent(id)
+
+			reaction_obj(var/obj/O, var/volume)
+				return 1
+
 		iodine
 			name = "iodine"
 			id = "iodine"
@@ -311,10 +387,8 @@ datum
 
 			on_mob_life(var/mob/M, var/mult = 1)
 				if(!M) M = holder.my_atom
-				if(M.canmove && isturf(M.loc))
-					step(M, pick(cardinal))
-				if(probmult(5)) M.emote(pick("twitch","drool","moan"))
-				..()
+				if(prob(10))
+					M.change_misstep_chance(20 * mult)
 				return
 
 		magnesium
@@ -343,18 +417,16 @@ datum
 			transparency = 255
 			penetrates_skin = 1
 			touch_modifier = 0.2
-			depletion_rate = 0.2
+			depletion_rate = 0.4
 
 			on_mob_life(var/mob/M, var/mult = 1)
 				if(!M) M = holder.my_atom
-				if(prob(70))
-					M.take_brain_damage(1*mult)
-				if (probmult(5) && isliving(M)) //folk treatment for the black plague- drinking mercury
-					var/mob/living/L = M
-					var/datum/ailment_data/disease/plague = L.find_ailment_by_type(/datum/ailment/disease/space_plague)
-					if (istype(plague))
-						L.cure_disease(plague)
+				if(M.health > 0)
+					M.take_toxin_damage(0.5 * mult)
+				if (M.get_brain_damage() <= 50)
+					M.take_brain_damage(0.5 * mult)
 				..()
+				return
 
 			on_plant_life(var/obj/machinery/plantpot/P)
 				P.HYPdamageplant("poison",1)
@@ -405,7 +477,7 @@ datum
 					P.growth++
 
 		plasma
-			name = "plasma"
+			name = "phoron"
 			id = "plasma"
 			description = "The liquid phase of an unusual extraterrestrial compound."
 			reagent_state = LIQUID
@@ -431,6 +503,8 @@ datum
 				if(!M) M = holder.my_atom
 				if(holder.has_reagent("epinephrine"))
 					holder.remove_reagent("epinephrine", 2 * mult)
+				if(holder.has_reagent("ephedrine"))
+					holder.remove_reagent("ephedrine", 2 * mult)
 				M.take_toxin_damage(1 * mult)
 				..()
 				return
@@ -453,16 +527,6 @@ datum
 				var/datum/plant/growing = P.current
 				if (growing.growthmode != "plasmavore")
 					P.HYPdamageplant("poison",2)
-
-		platinum
-			name = "platinum"
-			id = "platinum"
-			description = "Shiny."
-			reagent_state = SOLID
-			fluid_r = 220
-			fluid_g = 220
-			fluid_b = 220
-			transparency = 255
 
 		potassium
 			name = "potassium"
@@ -683,16 +747,6 @@ datum
 				if (prob(80)) P.HYPdamageplant("radiation",3)
 				if (prob(16)) P.HYPmutateplant(1)
 
-		sodium
-			name = "sodium"
-			id = "sodium"
-			description = "A soft, silvery-white, highly reactive alkali metal."
-			reagent_state = SOLID
-			fluid_r = 200
-			fluid_g = 200
-			fluid_b = 200
-			transparency = 255
-			pathogen_nutrition = list("sodium")
 
 		uranium
 			name = "uranium"

@@ -293,31 +293,6 @@
 				user.show_text("That was the last cup!", "red")
 				src.UpdateIcon()
 
-	piss
-		New()
-			..()
-			src.create_reagents(4000)
-			reagents.add_reagent("urine",400)
-			reagents.add_reagent("water",600)
-			src.UpdateIcon()
-		name = "discolored water fountain"
-		desc = "It's called a fountain, but it's not very decorative or interesting. You can get a drink from it, though seeing the color you feel you shouldn't"
-		color = "#ffffcc"
-
-	juicer
-		New()
-			..()
-			src.create_reagents(4000)
-			reagents.add_reagent(pick("CBD","THC","urine","refried_beans","coffee","methamphetamine"),100)
-			reagents.add_reagent(pick("CBD","THC","urine","refried_beans","coffee","methamphetamine"),100)
-			reagents.add_reagent(pick("CBD","THC","urine","refried_beans","coffee","methamphetamine"),100)
-			reagents.add_reagent(pick("CBD","THC","urine","refried_beans","coffee","methamphetamine"),100)
-			reagents.add_reagent("water",600)
-			src.UpdateIcon()
-		name = "discolored water fountain"
-		desc = "It's called a fountain, but it's not very decorative or interesting. You can get a drink from it, though seeing the color you feel you shouldn't"
-		color = "#ccffcc"
-
 
 
 /obj/reagent_dispensers/fueltank

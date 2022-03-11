@@ -651,7 +651,6 @@
 	spawn_contents = list(/obj/item/storage/box/clothing/bartender,\
 	/obj/item/storage/box/clothing/waiter,\
 	/obj/item/gun/russianrevolver,\
-	/obj/item/reagent_containers/food/drinks/bottle/vintage,\
 	/obj/item/reagent_containers/food/drinks/drinkingglass/shot = 4,\
 	/obj/item/reagent_containers/food/drinks/drinkingglass/wine = 2,\
 	/obj/item/storage/box/glassbox)

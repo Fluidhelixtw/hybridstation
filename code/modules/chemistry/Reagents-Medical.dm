@@ -237,7 +237,7 @@ datum
 		medical/salicylic_acid
 			name = "salicylic acid"
 			id = "salicylic_acid"
-			description = "This is a is a standard salicylate pain reliever and fever reducer."
+			description = "This is a is a standard salicylate pain reliever and bruise healer."
 			reagent_state = LIQUID
 			fluid_r = 181
 			fluid_g = 72
@@ -249,27 +249,11 @@ datum
 
 			on_mob_life(var/mob/M, var/mult = 1)
 				if(!M) M = holder.my_atom
-				if(prob(55))
-					M.HealDamage("All", 2 * mult, 0)
-				if(M.bodytemperature > M.base_body_temp)
-					M.bodytemperature = max(M.base_body_temp, M.bodytemperature-(10 * mult))
-				// I only put this following bit because wiki claims it "attempts to return temperature to normal"
-				// Rather than the previous functionality of cooling down when hot
-				// No need to implement if the wiki is erronous here
-				if(M.bodytemperature < M.base_body_temp)
-					M.bodytemperature = min(M.base_body_temp, M.bodytemperature+(10 * mult))
+				M.HealDamage("All", 1 * mult, 0)
+				if(prob(50))
+					M.HealDamage("All", 0.5 * mult, 0)
 				..()
 				return
-
-			on_add()
-				if (ismob(holder?.my_atom))
-					var/mob/M = holder.my_atom
-					APPLY_MOVEMENT_MODIFIER(M, /datum/movement_modifier/reagent/salicylic_acid, src.type)
-
-			on_remove()
-				if (ismob(holder?.my_atom))
-					var/mob/M = holder.my_atom
-					REMOVE_MOVEMENT_MODIFIER(M, /datum/movement_modifier/reagent/salicylic_acid, src.type)
 
 		medical/menthol
 			name = "menthol"
@@ -293,7 +277,7 @@ datum
 				..()
 				return
 
-		medical/calomel // COGWERKS CHEM REVISION PROJECT. marked for revision. should be a chelation agent
+		medical/calomel
 			name = "calomel"
 			id = "calomel"
 			description = "This potent purgative rids the body of impurities. It is highly toxic however and close supervision is required."
@@ -423,6 +407,7 @@ datum
 						for(var/mob/V in AIviewers(O, null)) V.show_message(text("<span class='alert'>The solution molds itself around [].</span>", O), 1)
 					else
 						for(var/mob/V in AIviewers(O, null)) V.show_message(text("<span class='alert'>The solution fails to cling to [].</span>", O), 1)*/
+
 
 
 		medical/synaptizine // COGWERKS CHEM REVISION PROJECT. remove this, make epinephrine (epinephrine) do the same thing
@@ -560,7 +545,6 @@ datum
 			fluid_g = 220
 			fluid_b = 220
 			transparency = 40
-			penetrates_skin = 1 // splashing saline on someones wounds would sorta help clean them
 			depletion_rate = 0.15
 			value = 5 // 3c + 1c + 1c
 
@@ -569,7 +553,7 @@ datum
 					M = holder.my_atom
 				if (prob(33))
 					M.HealDamage("All", 2 * mult, 2 * mult)
-				if (blood_system && isliving(M) && prob(33))
+				if (blood_system && isliving(M))
 					var/mob/living/H = M
 					H.blood_volume += 1  * mult
 					H.nutrition += 1  * mult
@@ -587,22 +571,16 @@ datum
 			fluid_b = 60
 			transparency = 40
 			value = 2 // 1c + 1c
-			target_organs = list("left_kidney", "right_kidney", "liver")
 
 			on_mob_life(var/mob/M, var/mult = 1)
 				if(!M) M = holder.my_atom
-				if(M.getStatusDuration("radiation") && prob(80))
+				if(M.getStatusDuration("radiation"))
 					M.changeStatus("radiation", -2 SECONDS * mult, 1)
-				if(M.getStatusDuration("n_radiation") && prob(80))
+				if(M.getStatusDuration("n_radiation"))
 					M.changeStatus("n_radiation", -2 SECONDS * mult, 1)
 
-				M.take_toxin_damage(-0.5 * mult)
-				M.HealDamage("All", 0, 0, 0.5 * mult)
+				M.take_toxin_damage(-1 * mult)
 
-				if (prob(33) && ishuman(M))
-					var/mob/living/carbon/human/H = M
-					if (H.organHolder)
-						H.organHolder.heal_organs(1*mult, 1*mult, 1*mult, target_organs)
 				..()
 				return
 
@@ -656,16 +634,45 @@ datum
 				..()
 				return
 
-		medical/oculine // COGWERKS CHEM REVISION PROJECT. probably a magic drug, maybe ought to involve atropine
+		medical/auditone
+			name = "auditone"
+			id = "auditone"
+			description = "Auditone is a powerful ear medication."
+			reagent_state = LIQUID
+			fluid_r = 200
+			fluid_g = 255
+			fluid_b = 155
+			transparency = 190
+
+			on_mob_life(var/mob/M, var/mult = 1)
+				if (!M)
+					M = holder.my_atom
+
+				if (M.bioHolder)
+					var/datum/bioEffect/BE
+					BE = M.bioHolder.GetEffect("deaf")
+					if (probmult(50) && (M.get_ear_damage() && M.get_ear_damage() <= M.get_ear_damage_natural_healing_threshold()) && BE?.curable_by_mutadone)
+						M.bioHolder.RemoveEffect("deaf")
+
+				if (M.get_ear_damage()) // Permanent ear damage.
+					M.take_ear_damage(-1 * mult)
+
+				if (M.get_ear_damage(1)) // Temporary deafness.
+					M.take_ear_damage(-1 * mult, 1)
+
+				..()
+				return
+
+
+		medical/oculine
 			name = "oculine"
 			id = "oculine"
-			description = "Oculine is a combined eye and ear medication with antibiotic effects."
+			description = "Oculine is a powerful eye medication."
 			reagent_state = LIQUID
 			fluid_r = 255
 			fluid_g = 255
 			fluid_b = 255
 			transparency = 111
-			penetrates_skin = 1
 			value = 26 // 18 5 3
 
 			// I've added hearing damage here (Convair880).
@@ -681,27 +688,21 @@ datum
 					BE = M.bioHolder.GetEffect("blind")
 					if (probmult(30) && BE?.curable_by_mutadone)
 						M.bioHolder.RemoveEffect("blind")
-					BE = M.bioHolder.GetEffect("deaf")
-					if (probmult(30) && (M.get_ear_damage() && M.get_ear_damage() <= M.get_ear_damage_natural_healing_threshold()) && BE?.curable_by_mutadone)
-						M.bioHolder.RemoveEffect("deaf")
 
 				if (M.get_eye_blurry())
 					M.change_eye_blurry(-1)
 
-				if (M.get_eye_damage() && prob(80)) // Permanent eye damage.
+				if (M.get_eye_damage()) // Permanent eye damage.
 					M.take_eye_damage(-1 * mult)
 
-				if (M.get_eye_damage(1) && prob(50)) // Temporary blindness.
-					M.take_eye_damage(-0.5 * mult, 1)
-
-				if (M.get_ear_damage() && prob(80)) // Permanent ear damage.
-					M.take_ear_damage(-1 * mult)
-
-				if (M.get_ear_damage(1) && prob(50)) // Temporary deafness.
-					M.take_ear_damage(-0.5 * mult, 1)
+				if (M.get_eye_damage(1)) // Temporary blindness.
+					M.take_eye_damage(-1 * mult, 1)
 
 				..()
 				return
+
+
+
 
 		medical/haloperidol // COGWERKS CHEM REVISION PROJECT. ought to be some sort of shitty illegal opiate or hypnotic drug
 			name = "haloperidol"
@@ -851,7 +852,7 @@ datum
 				if (!M)
 					M = holder.my_atom
 				if (holder.has_reagent("cholesterol"))
-					holder.remove_reagent("cholesterol", 2 * mult) // insulin used to do this but now doesn't, so w/e this can do it now.
+					holder.remove_reagent("cholesterol", 4 * mult) // insulin used to do this but now doesn't, so w/e this can do it now.
 				..()
 				return
 
@@ -976,7 +977,7 @@ datum
 				return
 
 		medical/silver_sulfadiazine // COGWERKS CHEM REVISION PROJECT. marked for revision
-			name = "silver sulfadiazine"
+			name = "disinfectant"
 			id = "silver_sulfadiazine"
 			description = "This antibacterial compound is used to treat burn victims."
 			reagent_state = LIQUID
@@ -991,7 +992,7 @@ datum
 				if(!M) M = holder.my_atom
 				// Please don't set this to 8 again, medical patches add their contents to the bloodstream too.
 				// Consequently, a single patch would heal ~200 damage (Convair880).
-				M.HealDamage("All", 0, 2 * mult)
+				M.HealDamage("All", 0, 1.5 * mult)
 				M.UpdateDamageIcon()
 				..()
 				return
@@ -1061,19 +1062,16 @@ datum
 				if (DNA.endurance < 0 && prob(50))
 					DNA.endurance++
 
-		medical/ephedrine // COGWERKS CHEM REVISION PROJECT. poor man's epinephrine
+		medical/ephedrine
 			name = "ephedrine"
 			id = "ephedrine"
-			description = "Ephedrine is a plant-derived stimulant."
+			description = "Ephedrine is a cheap heart stimulant used in shitty medical establishments."
 			reagent_state = LIQUID
 			fluid_r = 210
 			fluid_g = 255
 			fluid_b = 250
 			depletion_rate = 0.3
-			overdose = 35
-			addiction_prob = 1//25
-			addiction_prob2 = 10
-			addiction_min = 10
+			overdose = 30
 			value = 9 // 4c + 3c + 1c + 1c
 			var/remove_buff = 0
 			stun_resist = 15
@@ -1081,7 +1079,7 @@ datum
 			on_add()
 				if(ismob(holder?.my_atom))
 					var/mob/M = holder.my_atom
-					APPLY_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_ephedrine", 2)
+					APPLY_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_ephedrine", 1)
 				..()
 
 			on_remove()
@@ -1092,18 +1090,13 @@ datum
 
 			on_mob_life(var/mob/M, var/mult = 1)
 				if(!M) M = holder.my_atom
-				if(M.bodytemperature < M.base_body_temp) // So it doesn't act like supermint
-					M.bodytemperature = min(M.base_body_temp, M.bodytemperature+(5 * mult))
 				M.make_jittery(4)
-				M.changeStatus("drowsy", -10 SECONDS)
 				if(M.losebreath > 3)
 					M.losebreath = max(5, M.losebreath-(1 * mult))
-				if(M.get_oxygen_deprivation() > 75)
-					M.take_oxygen_deprivation(-1 * mult)
-				if ((M.health < 0) || (M.health > 0 && probmult(33)))
-					if (M.get_toxin_damage() && prob(25))
-						M.take_toxin_damage(-1 * mult)
-					M.HealDamage("All", 1 * mult, 1 * mult)
+				if ((M.health < 30) && (M.health > -120))
+					M.take_toxin_damage(-0.25 * mult)
+					M.take_oxygen_deprivation(-2 * mult)
+					M.HealDamage("All", 0.5 * mult, 0.5 * mult)
 				..()
 				return
 
@@ -1116,17 +1109,7 @@ datum
 					else if (effect <= 3) M.emote(pick("groan","moan"))
 					if (effect <= 8)
 						M.take_toxin_damage(1 * mult)
-				else if (severity == 2)
-					if( effect <= 2)
-						M.visible_message("<span class='alert'>[M.name] suddenly and violently vomits!</span>")
-						M.vomit()
-						M.add_karma(1)
-					else if (effect <= 5)
-						M.visible_message("<span class='alert'><b>[M.name]</b> staggers and drools, their eyes bloodshot!</span>")
-						M.dizziness += 8
-						M.setStatus("weakened", max(M.getStatusDuration("weakened"), 5 SECONDS * mult))
-					if (effect <= 15)
-						M.take_toxin_damage(1 * mult)
+
 
 
 		medical/penteticacid // COGWERKS CHEM REVISION PROJECT. should be a potent chelation agent, maybe roll this into tribenzocytazine as Pentetic Acid
@@ -1171,36 +1154,18 @@ datum
 			addiction_min = 10
 			value = 10 // 4 3 1 1 1
 
-			on_add()
-				if(ismob(holder?.my_atom))
-					var/mob/M = holder.my_atom
-					APPLY_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_diphenhydramine", -3)
-				return
-
-			on_remove()
-				if(ismob(holder?.my_atom))
-					var/mob/M = holder.my_atom
-					REMOVE_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_diphenhydramine")
-				return
-
 			on_mob_life(var/mob/M, var/mult = 1)
 				if(!M) M = holder.my_atom
 				M.jitteriness = max(M.jitteriness-20,0)
 				if(holder.has_reagent("histamine"))
-					holder.remove_reagent("histamine", 3 * mult)
-				if(holder.has_reagent("itching"))
-					holder.remove_reagent("itching", 3 * mult)
+					holder.remove_reagent("histamine", 8 * mult)
 				if(probmult(7)) M.emote("yawn")
-				if(prob(3))
-					M.setStatus("stunned", max(M.getStatusDuration("stunned"), 3 SECONDS * mult))
-					M.changeStatus("drowsy", 12 SECONDS)
-					M.visible_message("<span class='notice'><b>[M.name]<b> looks a bit dazed.</span>")
 				..()
 				return
 
 		medical/styptic_powder // // COGWERKS CHEM REVISION PROJECT. marked for revision
 			name = "styptic powder"
-			id = "styptic_powder" // HOW FUCKING LONG WAS THIS MISSPELLED AS stypic_powder AND WHY DID IT TAKE ME TWO YEARS TO NOTICE?! *SCREAM
+			id = "styptic_powder"
 			description = "Styptic (aluminium sulfate) powder helps control bleeding and heal physical wounds."
 			reagent_state = SOLID
 			fluid_r = 255
@@ -1212,55 +1177,20 @@ datum
 
 			on_mob_life(var/mob/M, var/mult = 1)
 				if(!M) M = holder.my_atom
-				// Please don't set this to 8 again, medical patches add their contents to the bloodstream too.
-				// Consequently, a single patch would heal ~200 damage (Convair880).
-				M.HealDamage("All", 2 * mult, 0)
 				M.UpdateDamageIcon()
 				..()
 				return
 
 			reaction_mob(var/mob/M, var/method=TOUCH, var/volume_passed, var/list/paramslist = 0)
 				. = ..()
-				if(!volume_passed)
-					return
-				if(!isliving(M)) // fucking human shitfucks
-					return
-				if(issilicon(M)) // Borgs shouldn't heal from this
-					return
 				volume_passed = clamp(volume_passed, 0, 10)
 				if(method == TOUCH)
 					. = 0
-					M.HealDamage("All", volume_passed, 0)
-					// M.HealBleeding(volume_passed) // At least implement your stuff properly first, thanks. Styptic also shouldn't be as good as synthflesh for healing bleeding.
-
-					/*for(var/A in M.organs)
-						var/obj/item/affecting = null
-						if(!M.organs[A])    continue
-						affecting = M.organs[A]
-						if(!istype(affecting, /obj/item/organ))    continue
-						affecting.heal_damage(volume_passed, 0)*/
-
-					var/mob/living/L = M
-					if (L.bleeding == 1)
-						repair_bleeding_damage(L, 50, 1)
-					else
-						repair_bleeding_damage(L, 5, 1)
-						//H.bleeding = min(H.bleeding, rand(0,5))
-
-					var/silent = 0
-					if (length(paramslist))
-						if ("silent" in paramslist)
-							silent = 1
-
-					if (!silent)
-						if(!ON_COOLDOWN(M, "styptic screaming", 3 SECONDS))
-							boutput(M, "<span class='notice'>The styptic powder stings like hell as it closes some of your wounds.</span>")
-							M.emote("scream")
-					M.UpdateDamageIcon()
+					repair_bleeding_damage(M, 100, 2)
 				else if(method == INGEST)
 					boutput(M, "<span class='alert'>You feel gross!</span>")
 					if (volume_passed > 0)
-						M.take_toxin_damage(volume_passed/2)
+						M.take_toxin_damage(volume_passed/3)
 						if (prob(1) && isliving(M))
 							var/mob/living/L = M
 							L.contract_disease(/datum/ailment/malady/bloodclot,null,null,1)
@@ -1383,9 +1313,9 @@ datum
 
 			on_mob_life(var/mob/M, var/mult = 1)
 				if(!M) M = holder.my_atom
-				M.take_oxygen_deprivation(-6 * mult)
+				M.take_oxygen_deprivation(-2 * mult)
 				if(M.losebreath)
-					M.losebreath = max(0, M.losebreath-(4 * mult))
+					M.losebreath = max(0, M.losebreath-(2 * mult))
 
 				if (ishuman(M))
 					var/mob/living/carbon/human/H = M
@@ -1452,12 +1382,12 @@ datum
 
 			on_mob_life(var/mob/M, var/mult = 1)
 				if(!M) M = holder.my_atom
-				M.take_brain_damage(-3 * mult)
+				M.take_brain_damage(-1.5 * mult)
 				..()
 				return
 
 		medical/charcoal
-			name = "charcoal"
+			name = "activated charcoal"
 			id = "charcoal"
 			description = "Activated charcoal helps to absorb toxins."
 			reagent_state = SOLID
@@ -1470,15 +1400,14 @@ datum
 			on_mob_life(var/mob/M, var/mult = 1)
 				if(!M) M = holder.my_atom
 				for(var/reagent_id in M.reagents.reagent_list)
-					if(reagent_id != id && prob(50)) // slow this down a bit
-						M.reagents.remove_reagent(reagent_id, 1 * mult)
-				M.HealDamage("All", 0, 0, 1.5 * mult)
+					if(reagent_id != id) // slow this down a bit
+						M.reagents.remove_reagent(reagent_id, 0.5 * mult)
+				M.HealDamage("All", 0, 0, 1.25 * mult)
 
 				if (ishuman(M))
 					var/mob/living/carbon/human/H = M
 					if (H.organHolder)
 						H.organHolder.heal_organs(1*mult, 1*mult, 1*mult, target_organs)
-
 				..()
 				return
 
@@ -1514,8 +1443,6 @@ datum
 			on_mob_life(var/mob/M, var/mult = 1)
 				if(!M) M = holder.my_atom
 				if(holder.has_reagent("ethanol")) holder.remove_reagent("ethanol", 8 * mult)
-				if (M.get_toxin_damage() <= 25)
-					M.take_toxin_damage(-2 * mult)
 				..()
 				return
 

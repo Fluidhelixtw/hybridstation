@@ -1368,7 +1368,7 @@
 
 /mob/living/carbon/human/verb/fuck()
 	set hidden = 1
-	alert("Go play HellMOO if you wanna do that.")
+	alert("sex is cringe")
 
 // called when something steps onto a human
 // this could be made more general, but for now just handle mulebot
@@ -2333,43 +2333,7 @@
 			O.emp_act()
 	boutput(src, "<span class='alert'><B>BZZZT</B></span>")
 
-/mob/living/carbon/human/verb/consume(mob/M as mob in oview(0))
-	set hidden = 1
-	var/mob/living/carbon/human/H = M
-	if (!istype(H))
-		return
-
-	if (!H.stat)
-		boutput(usr, "You can't eat [H] while they are conscious!")
-		return
-
-	if (H.bioHolder.HasEffect("consumed"))
-		boutput(usr, "There's nothing left to consume!")
-		return
-
-	if(src.emote_check(1, 50, 0))	//spam prevention
-		usr.visible_message("<span class='alert'>[usr] starts [pick("taking bites out of","chomping","chewing","biting","eating","gnawing")] [H]. [pick("What a [pick("psychopath","freak","weirdo","lunatic","creep","rude dude","nutter","jerk","nerd")]!","Holy shit!","What the [pick("hell","fuck","christ","shit","heck")]?","Oh [pick("no","dear","god")]!")]</span>")
-
-		var/loc = usr.loc
-
-		SPAWN_DBG(5 SECONDS)
-			if (usr.loc != loc || H.loc != loc)
-				boutput(usr, "<span class='alert'>Your consumption of [H] was interrupted!</span>")
-				return
-
-			usr.visible_message("<span class='alert'>[usr] finishes [pick("taking bites out of","chomping","chewing","biting","eating","gnawing")] [H]. That was [pick("gross","horrific","disturbing","weird","horrible","funny","strange","odd","creepy","bloody","gory","shameful","awkward","unusual")]!</span>")
-
-			if (prob(10) && !H.mutantrace)
-				usr.reagents.add_reagent("prions", 10)
-				SPAWN_DBG(rand(20,50)) boutput(usr, "<span class='alert'>You don't feel so good.</span>")
-
-			H.TakeDamageAccountArmor("chest", rand(30,50), 0, 0, DAMAGE_STAB)
-			if (!isdead(H) && prob(50))
-				H.emote("scream")
-			H.bioHolder.AddEffect("consumed")
-			take_bleeding_damage(H, null, rand(15,30), DAMAGE_STAB)
-	else
-		src.show_text("You're not done eating the last piece yet.", "red")
+//I removed the secret vore mechanic. Fuck that. -avery
 
 /mob/living/carbon/human/verb/numbers()
 	set name = "7848(2)9(1)"

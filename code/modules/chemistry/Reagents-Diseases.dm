@@ -533,18 +533,18 @@ datum
 			id = "bacterialmedium"
 			description = "A solution useful for the cultivation of bacteria."
 			reagent_state = 2
-			pathogen_nutrition = list("water", "sugar", "sodium", "iron", "nitrogen")
+			pathogen_nutrition = list("water", "sugar", "salt", "iron", "nitrogen")
 
 		parasiticmedium
 			name = "Parasitic Medium"
 			id = "parasiticmedium"
 			description = "A solution useful for the cultivation of parasites."
 			reagent_state = 2
-			pathogen_nutrition = list("water", "sugar", "sodium", "iron", "nitrogen")
+			pathogen_nutrition = list("water", "sugar", "salt", "iron", "nitrogen")
 
 		fungalmedium
 			name = "Fungal Medium"
 			id = "fungalmedium"
 			description = "A solution encouraging the growth of fungi."
 			reagent_state = 2
-			pathogen_nutrition = list("water", "sugar", "sodium", "iron", "nitrogen")
+			pathogen_nutrition = list("water", "sugar", "salt", "iron", "nitrogen")

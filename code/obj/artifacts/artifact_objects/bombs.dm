@@ -239,13 +239,13 @@ ABSTRACT_TYPE(/datum/artifact/bomb)
 				// industrial heavy machinery kinda stuff
 				potential_reagents = list("nanites","liquid plasma","mercury","lithium","plasma","radium","uranium","phlogiston",
 				"silicon","gypsum","sodium_sulfate","diethylamine","pyrosium","thermite","fuel","acid","silicate","lube","cryostylane",
-				"ash","clacid","oil","acetone","ammonia")
+				"ash","hydroacid","oil","acetone","ammonia")
 			if ("martian")
 				// medicine, some poisons, some gross stuff
 				potential_reagents = list("charcoal","styptic_powder","salbutamol","anti_rad","silver_sulfadiazine","synaptizine",
 				"omnizine","synthflesh","saline","salicylic_acid","menthol","calomel","penteticacid","antihistamine","atropine",
 				"perfluorodecalin","ipecac","mutadone","insulin","epinephrine","cyanide","ketamine","toxin","neurotoxin","mutagen",
-				"fake_initropidril","toxic_slurry","jenkem","space_fungus","blood","vomit","gvomit","urine","meat_slurry","grease","butter")
+				"fake_initropidril","toxic_slurry","space_fungus","blood","vomit","gvomit","meat_slurry","grease","butter")
 			if ("eldritch")
 				// all the worst stuff. all of it
 				potential_reagents = list("chlorine","fluorine","lithium","mercury","plasma","radium","uranium","strange_reagent",

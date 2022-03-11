@@ -38,7 +38,7 @@
 	"pacid",
 	"phlogiston",
 	"big_bang",
-	"clacid",
+	"hydroacid",
 	"nitric_acid",
 	"firedust")
 

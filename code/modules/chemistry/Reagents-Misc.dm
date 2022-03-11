@@ -5,6 +5,47 @@ ABSTRACT_TYPE(/datum/reagent/concrete)
 
 datum
 	reagent
+		catalyst
+			name = "catalyst"
+			id = "catalyst"
+			description = "An INCREDIBLY potent catalyst made by combining pure phoron, strange matter and copper."
+			reagent_state = SOLID
+			fluid_r = 100
+			fluid_b = 200
+			fluid_g = 110
+			transparency = 100
+			on_mob_life(var/mob/M, var/mult = 1)
+				if(!M) M = holder.my_atom
+				if (probmult(10))
+					M.TakeDamage("chest", 0, 40*mult, 0, DAMAGE_BURN)
+				if (probmult(10))
+					M.HealDamage("All", 0, 60 * mult)
+				if (probmult(10))
+					switch(rand(1,5))
+						if(1)
+							boutput(M, "<b>You feel mentally and physically unstable.</b>")
+						if(2)
+							boutput(M, "<b>You realize that the Matrix is the best movie ever made.</b>")
+						if(3)
+							boutput(M, "<b>Colors seem louder than usual.</b>")
+						if(4)
+							boutput(M, "<b>You look upwards. You don't like what you see.</b>")
+						if(5)
+							boutput(M, "<b>You hear millions of voices scream at you in French. Why French? Of all languages?</b>")
+				..()
+				return
+
+		stabiliser
+			name = "exothermic inhibitor"
+			id = "stabiliser"
+			description = "An anti-catalyst, exothermic inhibitor and stabilization agent. It prevents explosive chemicals from detonating or forming."
+			reagent_state = SOLID
+			fluid_r = 195
+			fluid_g = 195
+			fluid_b = 50
+			transparency = 100
+
+
 		nitroglycerin // Yes, this is a bad idea.
 			name = "nitroglycerin"
 			id = "nitroglycerin"
@@ -618,7 +659,7 @@ datum
 				return
 
 		fffoam
-			name = "firefighting foam"
+			name = "fire-suppressant"
 			id = "ff-foam"
 			description = "Carbon Tetrachloride is a foam used for fire suppression."
 			reagent_state = LIQUID
@@ -685,7 +726,7 @@ datum
 						M.changeStatus("burning", -M.getStatusDuration("burning"))
 
 		silicate
-			name = "silicate"
+			name = "silicate reinforcement"
 			id = "silicate"
 			description = "A compound that can be used to reinforce glass."
 			reagent_state = LIQUID
@@ -717,7 +758,7 @@ datum
 //foam precursor
 
 		fluorosurfactant
-			name = "fluorosurfactant"
+			name = "foaming agent"
 			id = "fluorosurfactant"
 			description = "A perfluoronated sulfonic acid that forms a foam when mixed with water."
 			reagent_state = LIQUID
@@ -858,7 +899,7 @@ datum
 
 			on_mob_life(var/mob/M, var/mult = 1)
 				if (!M) M = holder.my_atom
-				M.take_toxin_damage(1.5 * mult)
+				M.take_toxin_damage(1 * mult)
 				..()
 				return
 
@@ -898,16 +939,6 @@ datum
 							return T
 				return 0
 
-		stabiliser
-			name = "stabilising agent"
-			id = "stabiliser"
-			description = "A chemical that stabilises normally volatile compounds, preventing them from reacting immediately."
-			reagent_state = LIQUID
-			fluid_r = 255
-			fluid_g = 255
-			fluid_b = 0
-			transparency = 255
-			value = 3 // 1c + 1c + 1c
 
 		ectoplasm
 			name = "ectoplasm"
@@ -1083,10 +1114,10 @@ datum
 				..()
 				return
 
-		space_cleaner // COGWERKS CHEM REVISION PROJECT. ethanol, ammonia + water - treat like a shitty version of windex
-			name = "space cleaner"
+		space_cleaner
+			name = "Cleaner Fluid"
 			id = "cleaner"
-			description = "A compound used to clean things. It has a sharp, unpleasant odor." // cogwerks- THIS IS NOT BLEACH ARGHHHH
+			description = "A compound used to clean things. It has a sharp, unpleasant odor."
 			reagent_state = LIQUID
 			fluid_r = 110
 			fluid_g = 220
@@ -1142,7 +1173,7 @@ datum
 		oil
 			name = "oil"
 			id = "oil"
-			description = "A decent lubricant for machines. High in benzene, naptha and other hydrocarbons."
+			description = "A flammable and very useful hydrocarbon."
 			reagent_state = LIQUID
 			fluid_r = 0
 			fluid_g = 0
@@ -1155,7 +1186,7 @@ datum
 			var/min_req_fluid = 0.25 //at least 1/4 of the fluid needs to be oil for it to ignite
 
 			reaction_temperature(exposed_temperature, exposed_volume)
-				if (!src.reacting && (holder && !holder.has_reagent("chlorine"))) // need this to be higher to make propylene possible
+				if (!src.reacting && (holder && !holder.has_reagent("chlorine")))
 					src.reacting = 1
 					var/list/covered = holder.covered_turf()
 					if (covered.len < 4 || (volume / holder.total_volume) > min_req_fluid)
@@ -2848,11 +2879,8 @@ datum
 
 			on_mob_life(var/mob/M, var/mult = 1) // cogwerks note. making atrazine toxic
 				if (!M) M = holder.my_atom
-				M.take_toxin_damage(2 * mult)
-				if(holder.has_reagent("THC"))
-					holder.remove_reagent("THC", 1)
-				if(holder.has_reagent("CBD"))
-					holder.remove_reagent("CBD", 1)
+				M.take_toxin_damage(0.5 * mult)
+				M.TakeDamage("chest", 0, 0.5*mult, 0, DAMAGE_BURN)
 				..()
 				return
 
@@ -3106,59 +3134,6 @@ datum
 						playsound(T, "sound/impact_sounds/Slimy_Splat_1.ogg", 50, 1)
 						make_cleanable( /obj/decal/cleanable/greenpuke,T)
 
-		urine
-			name = "urine"
-			id = "urine"
-			description = "Ewww."
-			reagent_state = LIQUID
-			fluid_r = 233
-			fluid_g = 216
-			fluid_b = 0
-			transparency = 245
-			hygiene_value = -3
-			hunger_value = -0.098
-
-			/*on_mob_life(var/mob/M, var/mult = 1) why
-				for (var/datum/ailment_data/disease/virus in M.ailments)
-					if (prob(10))
-						M.resistances += virus.type
-						M.ailments -= virus
-						boutput(M, "<span class='notice'>You feel better</span>")
-				..()
-				return*/
-			reaction_turf(var/turf/T, var/volume)
-				var/list/covered = holder.covered_turf()
-				if (covered.len > 9)
-					volume = (volume/covered.len)
-				if (volume > 10)
-					return 1
-				if (volume >= 5)
-					if (!locate(/obj/decal/cleanable/urine) in T)
-						playsound(T, "sound/impact_sounds/Slimy_Splat_1.ogg", 50, 1)
-						make_cleanable( /obj/decal/cleanable/urine,T)
-
-		triplepiss
-			name = "triplepiss"
-			id = "triplepiss"
-			description = "Ewwwwwwwww."
-			reagent_state = LIQUID
-			fluid_r = 133
-			fluid_g = 116
-			fluid_b = 0
-			transparency = 255
-			hygiene_value = -5
-
-			reaction_turf(var/turf/T, var/volume)
-				var/list/covered = holder.covered_turf()
-				if (covered.len > 9)
-					volume = (volume/covered.len)
-				if (volume > 10)
-					return 1
-				if (volume >= 5)
-					if (!locate(/obj/decal/cleanable/urine) in T)
-						playsound(T, "sound/impact_sounds/Slimy_Splat_1.ogg", 50, 1)
-						make_cleanable( /obj/decal/cleanable/urine,T)
-
 		poo
 			name = "compost"
 			id = "poo"
@@ -3257,16 +3232,6 @@ datum
 				M.ex_act(1)
 				M.gib()
 				M.reagents.del_reagent(src.id)
-
-		cyclopentanol
-			name = "cyclopentanol"
-			id = "cyclopentanol"
-			description = "A substance not particularly worth noting."
-			reagent_state = LIQUID
-			fluid_r = 10
-			fluid_g = 254
-			fluid_b = 254
-			transparency = 50
 
 		glue
 			name = "glue"
@@ -3480,7 +3445,6 @@ datum
 
 
 			on_mob_life(var/mob/M, var/mult = 1)
-				//TODO: transfer reagents out of the contents and into the mob
 				if(hardened && contents && volume > 0)
 					var/amount_to_transfer = contents.total_volume / (src.volume / (src.depletion_rate * mult))
 					contents.trans_to(holder.my_atom, amount_to_transfer)
@@ -3711,7 +3675,7 @@ datum
 				if (M?.reagents)
 					if (prob(25))
 						boutput(M, "<span class='alert'>Oh god! The <i>smell</i>!!!</span>")
-					M.reagents.add_reagent("jenkem",0.1 * volume_passed)
+					M.reagents.add_reagent("ethanol",0.1 * volume_passed)
 
 			very_toxic
 				id = "very_toxic_fart"

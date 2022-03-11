@@ -2914,7 +2914,7 @@ datum
 			fluid_g = 220
 			fluid_b = 0
 			transparency = 225
-			pathogen_nutrition = list("water", "sugar", "sodium", "iron", "nitrogen")
+			pathogen_nutrition = list("water", "sugar", "salt", "iron", "nitrogen")
 			hunger_value = 1
 			viscosity = 0.2
 
@@ -3477,9 +3477,6 @@ datum
 			on_mob_life(var/mob/M, var/mult = 1)
 				if(!M)
 					M = holder.my_atom
-
-				if(probmult(10))
-					new /obj/decal/cleanable/urine(M.loc)
 
 				if(probmult(15))
 					M.visible_message("<span class='alert'>[M] pukes violently!</span>")

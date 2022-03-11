@@ -257,7 +257,7 @@
 		// Interactions with circulator
 		if( !(src.circulator_flags & LEAKS_LUBE)							\
 			&& ( src.reagents.has_reagent("pacid", 10)					\
-		    || src.reagents.has_reagent("clacid", 10)					\
+		    || src.reagents.has_reagent("hydroacid", 10)					\
 		    || src.reagents.has_reagent("nitric_acid", 10))		\
 		  && prob(10))
 			src.circulator_flags |= LEAKS_LUBE

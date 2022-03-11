@@ -169,37 +169,8 @@ datum
 						M.reagents.add_reagent("salts1", 5 * mult)
 						M.emote("twitch")
 
-
-		drug/jenkem
-			name = "jenkem"
-			id = "jenkem"
-			description = "Jenkem is a prison drug made from fermenting feces in a solution of urine. Extremely disgusting."
-			reagent_state = LIQUID
-			fluid_r = 100
-			fluid_g = 70
-			fluid_b = 0
-			transparency = 255
-			addiction_prob = 5//30
-			addiction_min = 5
-			value = 2 // 1 1  :I
-			viscosity = 0.4
-			bladder_value = -0.03
-			hunger_value = -0.04
-			hygiene_value = -0.5
-			thirst_value = -0.04
-			energy_value = -0.04
-
-			on_mob_life(var/mob/M, var/mult = 1)
-				if(!M) M = holder.my_atom
-				M.make_dizzy(5 * mult)
-				if(prob(10))
-					M.emote(pick("twitch","drool","moan"))
-					M.take_toxin_damage(1 * mult)
-				..()
-				return
-
 		drug/crank
-			name = "crank" // sort of a shitty version of methamphetamine that can be made by assistants
+			name = "crank"
 			id = "crank"
 			description = "A cheap and dirty stimulant drug, commonly used by space biker gangs."
 			reagent_state = SOLID
@@ -289,7 +260,6 @@ datum
 			on_mob_life(var/mob/M, var/mult = 1)
 				if(!M) M = holder.my_atom
 				M.druggy = max(M.druggy, 15)
-				// TODO. Write awesome hallucination algorithm!
 //				if(M.canmove) step(M, pick(cardinal))
 //				if(prob(7)) M.emote(pick("twitch","drool","moan","giggle"))
 				if(probmult(6))
@@ -307,7 +277,7 @@ datum
 							switch(rand(1,5))
 								if(1)
 									halluc_state = "pig"
-									halluc_name = pick("pig", "DAT FUKKEN PIG")
+									halluc_name = pick("pig", "DAT FUKKEN PIG", "Oinkalicious")
 								if(2)
 									halluc_state = "spider"
 									halluc_name = pick("giant black widow", "queen bitch spider", "OH FUCK A SPIDER")
@@ -387,7 +357,7 @@ datum
 					boutput(M, "Your ears start buzzing.")
 
 		drug/space_drugs
-			name = "space drugs"
+			name = "MDMA"
 			id = "space_drugs"
 			description = "An illegal chemical compound used as a cheap drug."
 			reagent_state = LIQUID
@@ -793,6 +763,46 @@ datum
 					else if (effect <= 7)
 						M.emote("shiver")
 						M.bodytemperature -= 70 * mult
+//FINISH LATER -fluidhelix
+		drug/amphomine
+			name = "amphomine"
+			id = "amphomine"
+			description = "A cheap and effective painkiller."
+			reagent_state = SOLID
+			fluid_r = 165
+			fluid_g = 185
+			fluid_b = 220
+			addiction_prob = 100
+			transparency = 50
+			overdose = 25
+
+			on_add()
+				if (ismob(holder?.my_atom))
+					var/mob/M = holder.my_atom
+					boutput(M, "You stop feeling any pain from your less severe wounds...")
+					boutput(M, "<b>You hear a voice in your head say 'This chemical is under construction, its supposed to fix staminaloss from damage above crit but that feature hasn't been implimented yet!'. Wonder what that means./b>")
+/*			on_remove()
+				if (ismob(holder?.my_atom))
+					var/mob/M = holder.my_atom
+					//remove-effect fix-stamina (make this work)
+				..()
+*/
+
+			on_mob_life(var/mob/M, var/mult = 1)
+				if(!M) M = holder.my_atom
+				M.take_toxin_damage(1 * mult)
+				//if (M.health >= 0)
+					//add-effect fix-stamina
+				holder.remove_reagent("mannitol", 5)
+				holder.remove_reagent("syaptizine", 5)
+				//holder.remove_reagent("mindshield", 5)
+				..()
+
+
+
+
+
+
 
 		drug/catdrugs
 			name = "cat drugs"
@@ -919,7 +929,7 @@ datum
 					else if (effect <= 7)
 						M.emote("laugh")
 
-		drug/methamphetamine // // COGWERKS CHEM REVISION PROJECT. marked for revision
+		drug/methamphetamine
 			name = "methamphetamine"
 			id = "methamphetamine"
 			description = "Methamphetamine is a highly effective and dangerous stimulant drug."
@@ -928,22 +938,20 @@ datum
 			fluid_g = 250
 			fluid_b = 250
 			transparency = 220
-			addiction_prob = 10//60
+			addiction_prob = 50//60
 			addiction_min = 5
-			overdose = 20
-			depletion_rate = 0.6
+			overdose = 25
+			depletion_rate = 0.4
+
 			value = 13 // 9c + 1c + 1c + 1c + heat
-			energy_value = 1.5
-			bladder_value = -0.09
-			hunger_value = -0.09
-			thirst_value = -0.09
-			stun_resist = 50
-			var/purge_brain = TRUE
+
 
 			on_add()
 				if(ismob(holder?.my_atom))
 					var/mob/M = holder.my_atom
-					APPLY_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_methamphetamine", 3)
+					APPLY_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_methamphetamine", 1.5)
+					M.add_stam_mod_max("methamphetamine", 30)
+
 				if (ismob(holder?.my_atom))
 					var/mob/M = holder.my_atom
 					APPLY_MOVEMENT_MODIFIER(M, /datum/movement_modifier/reagent/energydrink, src.type)
@@ -953,71 +961,35 @@ datum
 				if(ismob(holder?.my_atom))
 					var/mob/M = holder.my_atom
 					REMOVE_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_methamphetamine")
-				if(holder && ismob(holder.my_atom))
-					holder.del_reagent("triplemeth")
+					M.remove_stam_mod_max(src.id)
+
 				if (ismob(holder?.my_atom))
 					var/mob/M = holder.my_atom
 					REMOVE_MOVEMENT_MODIFIER(M, /datum/movement_modifier/reagent/energydrink, src.type)
 				..()
 
 			on_mob_life(var/mob/M, var/mult = 1)
+				var/meth_amt = holder.get_reagent_amount("methamphetamine")
+				if(meth_amt >= 300)
+					M.emote("scream")
+					M.gib()//hehe
 				if(!M) M = holder.my_atom
+				M.take_brain_damage(0.5 * mult)
 				if(probmult(5)) M.emote(pick("twitch","blink_r","shiver"))
 				M.make_jittery(5)
-				M.changeStatus("drowsy", -20 SECONDS)
-				if(M.sleeping) M.sleeping = 0
-				if(prob(50))
-					M.take_brain_damage(1 * mult)
-				if(purge_brain)
-					if(holder.has_reagent("synaptizine"))
-						holder.remove_reagent("synaptizine", 5 * mult)
-					if(holder.has_reagent("mannitol"))
-						holder.remove_reagent("mannitol", 5 * mult)
+				if(probmult(5))
+					M.reagents.add_reagent("histamine", 10 * mult)
 				..()
 				return
 
 			do_overdose(var/severity, var/mob/M, var/mult = 1)
-				var/effect = ..(severity, M)
-				if (severity == 1)
-					if (effect <= 2)
-						M.visible_message("<span class='alert'><b>[M.name]</b> can't seem to control their legs!</span>")
-						M.change_misstep_chance(20 * mult)
-						M.setStatus("weakened", max(M.getStatusDuration("weakened"), 5 SECONDS * mult))
-					else if (effect <= 4)
-						M.visible_message("<span class='alert'><b>[M.name]'s</b> hands flip out and flail everywhere!</span>")
-						M.drop_item()
-						M.hand = !M.hand
-						M.drop_item()
-						M.hand = !M.hand
-					else if (effect <= 7)
-						M.emote("laugh")
-				else if (severity == 2)
+				if (severity >= 0)
+					M.take_toxin_damage(2 * mult)
+				if(probmult(15))
+					M.take_brain_damage(1 * mult)
 
-					if(!holder.has_reagent("triplemeth", 10 * mult))
-						holder.add_reagent("triplemeth", 10 * mult, null)
-						M.add_karma(10)
 
-					if (effect <= 2)
-						M.visible_message("<span class='alert'><b>[M.name]'s</b> hands flip out and flail everywhere!</span>")
-						M.drop_item()
-						M.hand = !M.hand
-						M.drop_item()
-						M.hand = !M.hand
-					else if (effect <= 4)
-						M.visible_message("<span class='alert'><b>[M.name]</b> falls to the floor and flails uncontrollably!</span>")
-						M.make_jittery(10)
-						M.setStatus("weakened", max(M.getStatusDuration("weakened"), 2 SECONDS * mult))
-					else if (effect <= 7)
-						M.emote("laugh")
 
-			syndicate
-				name = "methamphetamine"
-				id = "synd_methamphetamine"
-				description = "Methamphetamine is a highly effective and dangerous stimulant drug. This batch seems unusally high-grade and pure."
-				purge_brain = FALSE
-				fluid_r = 115 // This shit's pure and blue
-				fluid_g = 197
-				fluid_b = 250
 
 		drug/hellshroom_extract
 			name = "Hellshroom extract"

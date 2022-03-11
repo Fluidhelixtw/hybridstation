@@ -191,7 +191,7 @@ proc/spawndeco()
 						new selected(T)
 				else
 					if(prob(11) && prob(55))
-						var/selected = pick(/obj/decal/cleanable/dirt, /obj/decal/cleanable/oil, /obj/decal/cleanable/oil/streak, /obj/decal/cleanable/vomit, /obj/decal/cleanable/urine)
+						var/selected = pick(/obj/decal/cleanable/dirt, /obj/decal/cleanable/oil, /obj/decal/cleanable/oil/streak, /obj/decal/cleanable/vomit)
 						new selected(T)
 			if("clean")
 				continue

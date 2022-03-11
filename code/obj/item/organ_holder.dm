@@ -1493,13 +1493,8 @@
 				O.take_damage(15, 15) //safe-ish
 		else
 			linked_organ.take_damage(30, 30) //not safe
-		boutput(holder.owner, "<span class='notice'>You overclock your cyberkidney[islist(linked_organ) ? "s" : ""] to rapidly purge chemicals from your body.</span>")
-		APPLY_MOB_PROPERTY(holder.owner, PROP_CHEM_PURGE, src, power)
-		holder.owner.urine += power // -.-
-		SPAWN_DBG(15 SECONDS)
-			if(holder?.owner)
-				REMOVE_MOB_PROPERTY(holder.owner, PROP_CHEM_PURGE, src)
-
+		boutput(holder.owner, "<span class='notice'>You overclock your cyberkidney[islist(linked_organ) ? "s" : ""] but the fact that urine does not exist in this universe stops it from working!</span>")
+	//fluidhelix - PLACEHOLDER. Gotta decide how kidneys work after urine is gone.
 	proc/cancel_purge()
 		if(holder?.owner)
 			REMOVE_MOB_PROPERTY(holder.owner, PROP_CHEM_PURGE, src)

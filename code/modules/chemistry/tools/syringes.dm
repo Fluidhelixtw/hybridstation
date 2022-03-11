@@ -261,11 +261,6 @@
 
 // drugs
 
-/obj/item/reagent_containers/syringe/jenkem
-	name = "syringe (jenkem)"
-	desc = "Contains jenkem, a low quality sewage drug used by no one in the right state of mind."
-	initial_reagents = "jenkem"
-
 /obj/item/reagent_containers/syringe/krokodil
 	name = "syringe (krokodil)"
 	desc = "Contains krokodil, a sketchy homemade opiate often used by disgruntled Cosmonauts.."
@@ -285,7 +280,7 @@
 	name = "syringe (synaptizine)"
 	desc = "Contains synaptizine, a mild stimulant to increase alertness."
 	initial_reagents = "synaptizine"
-	
+
 /obj/item/reagent_containers/syringe/formaldehyde
 	name = "syringe (embalming fluid)"
 	desc = "Contains formaldehyde, a chemical that prevents corpses from decaying."

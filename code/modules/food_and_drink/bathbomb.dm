@@ -189,20 +189,6 @@
 			R.add_reagent("toxic_slurry",5)
 			R.add_reagent("thc",5)
 
-		else if(flavor_value < 57)
-			name += " - Public Pool Flavor"
-			desc = pick("No Running!","Don't forget to wear sunscreen!","Smells like summer. Hot, sweaty, and miserable.")
-			R.add_reagent("urine", 3)
-			if(prob(10))
-				R.add_reagent("gvomit",7)
-			else
-				R.add_reagent("vomit",7)
-			if(prob(10))
-				R.add_reagent("bloodc",5)
-			else
-				R.add_reagent("blood",5)
-			R.add_reagent("chlorine",10)
-
 		else if(flavor_value < 67)
 			name += " - Vampire Tea Party Flavor"
 			desc = "Ugh, who invited Nosferatu?"
@@ -245,7 +231,7 @@
 
 		if(!src.batbomb)
 			if (prob(50))
-				R.add_reagent("barium", 5)
+				R.add_reagent("magnesium", 5)
 			else
 				R.add_reagent("potassium",5)
 			R.add_reagent("salt",10)

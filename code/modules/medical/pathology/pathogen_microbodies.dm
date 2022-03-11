@@ -53,7 +53,7 @@ datum/microbody
 	var/module_id = null
 
 	// A list of reagent IDs, each of which is required for the growth of a pathogen.
-	var/list/nutrients = list("water", "sugar", "sodium", "iron", "nitrogen")
+	var/list/nutrients = list("water", "sugar", "salt", "iron", "nitrogen")
 
 	// If 1, curing also immunizes to re-infection.
 	var/auto_immunize = 0

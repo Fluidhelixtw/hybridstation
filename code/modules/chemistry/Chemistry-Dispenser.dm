@@ -11,11 +11,11 @@
 	deconstruct_flags = DECON_SCREWDRIVER | DECON_WRENCH | DECON_CROWBAR | DECON_WELDER | DECON_WIRECUTTERS | DECON_MULTITOOL
 	var/obj/item/beaker = null
 	var/list/dispensable_reagents = list(
-		"aluminium","barium","bromine","calcium","carbon","chlorine", \
-		"chromium","copper","ethanol","fluorine","hydrogen", \
+		"antimony","aluminium","bromine","calcium","carbon","chlorine", \
+		"copper","ethanol","fluorine","hydrogen", \
 		"iodine","iron","lithium","magnesium","mercury","nickel", \
-		"nitrogen","oxygen","phosphorus","plasma","platinum","potassium", \
-		"radium","silicon","silver","sodium","sugar","sulfur","water"
+		"nitrogen","oxygen","phosphorus","potassium","oil", \
+		"radium","silicon","silver","salt","sugar","sulfur","water"
 	)
 	var/glass_path = /obj/item/reagent_containers/glass
 	var/glass_name = "beaker"

@@ -486,7 +486,7 @@ ABSTRACT_TYPE(/mob/living/critter/aquatic)
 					sleep(0.2 SECONDS)
 				SPAWN_DBG(5 SECONDS)
 				for (var/mob/living/M in oview(src, 7))
-					M.reagents.add_reagent(pick("cyanide","neurotoxin","venom","histamine","jenkem","lsd"), 5)
+					M.reagents.add_reagent(pick("cyanide","neurotoxin","venom","histamine","lsd"), 5)
 				return "<span class='alert'><b>[src]</b> does a sinister dance.</span>"
 		if ("snap")
 			if (src.emote_check(voluntary, 300))

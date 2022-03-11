@@ -73,32 +73,15 @@ datum
 					var/stack_mult = 1
 					if(ON_COOLDOWN(M, "basic_acid_stack_check", 0.1 SECONDS))
 						stack_mult = 0.5
-					if (volume > 25)
-						if (ishuman(M))
-							var/mob/living/carbon/human/H = M
-							if (H.wear_mask)
-								boutput(M, "<span class='alert'>Your mask protects you from the acid!</span>")
-								return
-							if (H.head)
-								boutput(M, "<span class='alert'>Your helmet protects you from the acid!</span>")
-								return
-
-						if (prob(75))
-							M.TakeDamage("head", 0, 10 * stack_mult, 0, DAMAGE_BURN)
+					if (volume < 125)
+						M.TakeDamage("head", 0, ((holder.get_reagent_amount("acid")) / 2.5) * stack_mult, 0, DAMAGE_BURN)
+						if (volume > 75)
 							M.emote("scream")
 							boutput(M, "<span class='alert'>Your face has become disfigured!</span>")
 							M.real_name = "Unknown"
 							M.unlock_medal("Red Hood", 1)
-						else
-							M.TakeDamage("All", 0, 10 * stack_mult, 0, DAMAGE_BURN)
 					else
-
-						M.TakeDamage("All", 0, min(5, volume * 0.5) * stack_mult, 0, DAMAGE_BURN)
-				else
-					boutput(M, "<span class='alert'>The greenish acidic substance stings[volume < 10 ? " you, but isn't concentrated enough to harm you" : null]!</span>")
-					if (volume >= 10)
-						M.TakeDamage("All", 0, clamp((volume - 10) * 2, 4, 20), 0, DAMAGE_BURN)
-						M.emote("scream")
+						M.TakeDamage("All", 0, 50 * stack_mult, 0, DAMAGE_BURN)
 
 			reaction_obj(var/obj/O, var/volume)
 				if (istype(O,/obj/fluid))
@@ -122,23 +105,116 @@ datum
 					return
 				B.take_damage(blob_damage * min(volume, 10), 1, "mixed")
 
-		harmful/acid/clacid
+		harmful/hydroacid
 			name = "hydrochloric acid"
-			id = "clacid"
+			id = "hydroacid"
 			description = "A strong acid with the molecular formula HCl."
 			fluid_r = 0
 			fluid_g = 200
 			fluid_b = 255
 			blob_damage = 1.2
 
-		harmful/acid/nitric_acid
+			on_mob_life(var/mob/M, var/mult = 1)
+				if (!M) M = holder.my_atom
+				//M.take_toxin_damage(1)
+				M.TakeDamage("chest", 0, 2 * mult, 0, DAMAGE_BURN)
+				..()
+				return
+
+			reaction_mob(var/mob/M, var/method=TOUCH, var/volume)
+				. = ..()
+				if (method == TOUCH)
+					. = 0
+					var/stack_mult = 1
+					if(ON_COOLDOWN(M, "basic_acid_stack_check", 0.1 SECONDS))
+						stack_mult = 0.5
+					if (volume < 50)
+						M.TakeDamage("head", 0, ((holder.get_reagent_amount("acid")) * 2) * stack_mult, 0, DAMAGE_BURN)
+						if (volume > 35)
+							M.emote("scream")
+							boutput(M, "<span class='alert'>Your face has become disfigured!</span>")
+							M.real_name = "Unknown"
+
+					else
+						M.TakeDamage("head", 0, 50 * stack_mult, 0, DAMAGE_BURN)
+
+			reaction_obj(var/obj/O, var/volume)
+				if (istype(O,/obj/fluid))
+					return 1
+				if (istype(O,/obj/item/clothing/head/chemhood || /obj/item/clothing/suit/chemsuit))
+					return 1
+				if (isitem(O))
+					var/obj/item/toMelt = O
+					if (!(toMelt.item_function_flags & IMMUNE_TO_ACID))
+						if(!O.hasStatus("acid"))
+							O.changeStatus("acid", 5 SECONDS, list("leave_cleanable" = 1))
+					else
+						O.visible_message("The acidic substance slides off \the [O] harmlessly.")
+
+			on_plant_life(var/obj/machinery/plantpot/P)
+				P.HYPdamageplant("acid",5)
+				P.growth -= 3
+
+			reaction_blob(var/obj/blob/B, var/volume)
+				if (!blob_damage)
+					return
+				B.take_damage(blob_damage * min(volume, 10), 1, "mixed")
+
+
+		harmful/nitric_acid
 			name = "nitric acid"
 			id = "nitric_acid"
 			description = "A strong acid."
 			fluid_r = 0
 			fluid_g = 200
 			fluid_b = 255
-			blob_damage = 0.7
+			blob_damage = 1
+
+			on_mob_life(var/mob/M, var/mult = 1)
+				if (!M) M = holder.my_atom
+				M.take_toxin_damage(1)
+				M.TakeDamage("chest", 0, 1 * mult, 0, DAMAGE_BURN)
+				..()
+				return
+
+			reaction_mob(var/mob/M, var/method=TOUCH, var/volume)
+				. = ..()
+				if (method == TOUCH)
+					. = 0
+					var/stack_mult = 1
+					if(ON_COOLDOWN(M, "basic_acid_stack_check", 0.1 SECONDS))
+						stack_mult = 0.5
+					if (volume < 100)
+						M.TakeDamage("head", 0, ((holder.get_reagent_amount("acid"))) * stack_mult, 0, DAMAGE_BURN)
+						if (volume > 35)
+							M.emote("scream")
+							boutput(M, "<span class='alert'>Your face has become disfigured!</span>")
+							M.real_name = "Unknown"
+
+					else
+						M.TakeDamage("head", 0, 100 * stack_mult, 0, DAMAGE_BURN)
+
+			reaction_obj(var/obj/O, var/volume)
+				if (istype(O,/obj/fluid))
+					return 1
+				if (istype(O,/obj/item/clothing/head/chemhood || /obj/item/clothing/suit/chemsuit))
+					return 1
+				if (isitem(O))
+					var/obj/item/toMelt = O
+					if (!(toMelt.item_function_flags & IMMUNE_TO_ACID))
+						if(!O.hasStatus("acid"))
+							O.changeStatus("acid", 5 SECONDS, list("leave_cleanable" = 1))
+					else
+						O.visible_message("The acidic substance slides off \the [O] harmlessly.")
+
+			on_plant_life(var/obj/machinery/plantpot/P)
+				P.HYPdamageplant("acid",5)
+				P.growth -= 3
+
+			reaction_blob(var/obj/blob/B, var/volume)
+				if (!blob_damage)
+					return
+				B.take_damage(blob_damage * min(volume, 10), 1, "mixed")
 
 		harmful/acetic_acid
 			name = "acetic acid"
@@ -155,12 +231,11 @@ datum
 				. = ..()
 				if (method == TOUCH)
 					. = 0
-					if (volume >= 50 && prob(75))
-						M.TakeDamage("head", 0, 10, 0, DAMAGE_BURN)
+					if (volume >= 75)
+						M.TakeDamage("head", 0, ((holder.get_reagent_amount("acetic_acid")) / 5), 0, DAMAGE_BURN)
 						M.emote("scream")
 						boutput(M, "<span class='alert'>Your face has become disfigured!</span>")
 						M.real_name = "Unknown"
-						M.unlock_medal("Red Hood", 1)
 					else
 						random_burn_damage(M, min(5, volume * 0.25))
 				else
@@ -172,10 +247,56 @@ datum
 			on_plant_life(var/obj/machinery/plantpot/P)
 				P.HYPdamageplant("acid", 1)
 
-			reaction_blob(var/obj/blob/B, var/volume)
-				if (!blob_damage)
-					return
-				B.take_damage(blob_damage * min(volume, 10), 1, "mixed")
+		harmful/bleach
+			name = "bleach"
+			id = "bleach"
+			description = "A foul-smelling clear liquid that turns everything white."
+			reagent_state = LIQUID
+			overdose = 30
+			fluid_r = 255
+			fluid_g = 255
+			fluid_b = 255
+			transparency = 200
+
+			on_mob_life(var/mob/M, var/mult = 1)
+				if (!M) M = holder.my_atom
+				M.TakeDamage("chest", 0, 1 * mult, 0, DAMAGE_BURN)
+				if (probmult(50))
+					M.take_toxin_damage(1 * mult)
+				if(src.volume > src.overdose)
+					M.take_toxin_damage(2)
+				..()
+				return
+
+			reaction_obj(var/obj/O, var/volume)
+				O.color = rgb(255,255,255)
+				return
+
+			reaction_turf(var/turf/T, var/volume)
+				T.color = rgb(200,200,200)
+				return
+
+
+		harmful/chloramine
+			name = "chloramine"
+			id = "chloramine"
+			description = "Smells an awful lot like the pool."
+			reagent_state = GAS
+			fluid_r = 255
+			fluid_g = 255
+			fluid_b = 255
+			transparency = 100
+			depletion_rate = 0.5
+			on_mob_life(var/mob/M, var/mult = 1)
+				if (!M) M = holder.my_atom
+				M.losebreath += (1 * mult)
+				if (probmult(10))
+					M.vomit()
+				if (probmult(50))
+					M.take_toxin_damage(1 * mult)
+
+				..()
+				return
 
 		harmful/amanitin
 			name = "amanitin"
@@ -344,7 +465,7 @@ datum
 				if (!M) M = holder.my_atom
 				M.take_toxin_damage(1 * mult)
 				if (prob(10))
-					M.reagents.add_reagent("histamine", rand(5,15) * mult)
+					M.reagents.add_reagent("histamine", 10 * mult)
 				..()
 				return
 
@@ -1044,20 +1165,19 @@ datum
 		harmful/sulfonal
 			name = "sulfonal"
 			id = "sulfonal"
-			description = "An old sedative with toxic side-effects."
+			description = "A dangerous sedative with toxic side-effects."
 			reagent_state = LIQUID
 			fluid_r = 125
 			fluid_g = 195
 			fluid_b = 160
 			transparency = 80
-			depletion_rate = 0.1
-			var/counter = 1
+			depletion_rate = 0.2
 			var/remove_buff = 0
 			blob_damage = 2
 
 			on_add()
 				if (istype(holder) && istype(holder.my_atom) && hascall(holder.my_atom,"add_stam_mod_max"))
-					remove_buff = holder.my_atom:add_stam_mod_max("r_sulfonal", -10)
+					remove_buff = holder.my_atom:add_stam_mod_max("r_sulfonal", -25)
 				return
 
 			on_remove()
@@ -1068,23 +1188,7 @@ datum
 
 			on_mob_life(var/mob/M, var/mult = 1)
 				if (!M) M = holder.my_atom
-				if (!counter) counter = 1
-				M.jitteriness = max(M.jitteriness-30,0)
-				if(M.hasStatus("stimulants"))
-					M.changeStatus("stimulants", -10 SECONDS * mult)
-
-				switch(counter+= (1 * mult))
-					if (1 to 10)
-						if (probmult(7)) M.emote("yawn")
-					if (11 to 20)
-						M.setStatus("drowsy", 40 SECONDS)
-					if (21)
-						M.emote("faint")
-					if (22 to INFINITY)
-						if (prob(20))
-							M.emote("faint")
-							M.setStatus("paralysis", max(M.getStatusDuration("paralysis"), 8 SECONDS * mult))
-						M.setStatus("drowsy", 40 SECONDS)
+				APPLY_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, src.id, -3)
 				M.take_toxin_damage(1 * mult)
 				..()
 				return
@@ -1092,7 +1196,7 @@ datum
 		harmful/toxin
 			name = "toxin"
 			id = "toxin"
-			description = "A Toxic chemical."
+			description = "A toxic chemical."
 			reagent_state = LIQUID
 			fluid_r = 25
 			fluid_b = 0
@@ -1769,6 +1873,7 @@ datum
 				..()
 				var/mob/living/carbon/human/H = holder.my_atom
 				if (!istype(H)) return
+
 				H.remove_stam_mod_max(src.id)
 				REMOVE_MOB_PROPERTY(H, PROP_STAMINA_REGEN_BONUS, src.id)
 

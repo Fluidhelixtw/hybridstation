@@ -300,38 +300,11 @@
 	bladder
 		name = "Bladder"
 		icon_state = "bladder"
-		desc = "You can raise your bladder by releasing your urges in the toilet. Be sure to stand above a toilet and type '*pee'."
+		desc = "This feature is disabled, you should not see this!"
 		depletion_rate = 0.067 //53
 		gain_rate = 1
 
-		getWarningMessage()
-			var/list/urination = list("urinate", "piss", "pee", "answer the call of nature", "wee-wee", "spend a penny", "have a leak", "take a leak", "relieve yourself", "have a Jimmy", "have a whizz", "have a piddle", "pass water", "empty the tank", "flush the buffers", "lower the water level", "pay the water bill", "park your breakfast", "make your bladder gladder", "release the pressure", "put out the fire", "visit the urination station", "drain the tank")
-			var/to_urinate = pick(urination)
-			if (value < 25)
-				return "<span class='alert'>You feel like you could [pick("wet", "piss", "pee", "urinate into", "leak into")] your pants any minute now!</span>"
-			else if (value < 50)
-				return "<span class='alert'>You feel a [pick("serious", "pressing", "critical", "dire", "burning")] [pick("inclination", "desire", "need", "call", "urge", "motivation")] to [to_urinate]!</span>"
-			else if (value < 75)
-				return "<span class='alert'>You feel a [pick("slight", "tiny", "faint", "distant", "minimal", "little")] [pick("inclination", "desire", "need", "urge", "call", "motivation")] to [to_urinate].</span>"
-			else
-				return null
 
-		onDeplete()
-			showOwner("<span class='alert'><b>You piss all over yourself!</b></span>")
-			modifyValue(100)
-			holder.affectMotive("Hygiene", -100)
-			holder.owner.changeStatus("stunned", 2 SECONDS)
-			if (ishuman(holder.owner))
-				var/mob/living/carbon/human/H = holder.owner
-				if (H.w_uniform)
-					var/obj/item/clothing/U = H.w_uniform
-					U.add_stain("piss-soaked")
-					//U.name = "piss-soaked [initial(U.name)]"
-				else if (H.wear_suit)
-					var/obj/item/clothing/U = H.wear_suit
-					U.add_stain("piss-soaked")
-					//U.name = "piss-soaked [initial(U.name)]"
-			make_cleanable(/obj/decal/cleanable/urine,holder.owner.loc)
 
 	comfort
 		name = "comfort"

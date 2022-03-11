@@ -761,15 +761,6 @@
 	upperfluc = 150
 	lowerfluc = -150
 
-/datum/commodity/drugs/jenkem
-	comname = "Jenkem (1x syringe)"
-	comtype = /obj/item/reagent_containers/syringe/jenkem
-	desc = "A low quality sewage drug used by no one in the right state of mind."
-	price = 300
-	baseprice = 300
-	upperfluc = 150
-	lowerfluc = -50
-
 /datum/commodity/drugs/lsd
 	comname = "LSD (1x patch)"
 	comtype = /obj/item/reagent_containers/patch/LSD

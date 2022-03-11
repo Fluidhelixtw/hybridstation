@@ -80,6 +80,9 @@ datum
 			size_divisor = 80
 			mob_burning = 15
 
+
+
+
 		combustible/napalm_goo  // adapated from weldfuel
 			name = "napalm goo"
 			id = "napalm_goo"
@@ -92,15 +95,15 @@ datum
 			viscosity = 0.8
 			minimum_reaction_temperature = T0C + 100
 			var/temp_reacted = 0
-			penetrates_skin = 1
+			penetrates_skin = 0
 
 			reaction_temperature(exposed_temperature, exposed_volume)
 				if(!temp_reacted)
 					temp_reacted = 1
-					var/radius = clamp(volume*0.15, 0, 8)
+					var/radius = clamp(volume*0.15, 0, 6)
 					var/list/covered = holder.covered_turf()
 					for(var/turf/t in covered)
-						radius = clamp((volume/covered.len)*0.15, 0, 8)
+						radius = clamp((volume/covered.len)*0.15, 0, 6)
 						fireflash_s(t, radius, rand(3000, 6000), 500)
 				holder?.del_reagent(id)
 				return
@@ -349,7 +352,7 @@ datum
 
 				holder?.del_reagent(id)
 
-			on_mob_life(var/mob/M, var/mult = 1) // fuck you jerk chemists (todo: a thing to self-harm borgs too, maybe ex_act(3) to the holder? I D K
+			on_mob_life(var/mob/M, var/mult = 1)
 				if(!M) M = holder.my_atom
 				if(prob(70))
 					M.take_brain_damage(1 * mult)
@@ -389,9 +392,9 @@ datum
 			id = "infernite"
 			description = "An extremely volatile substance, handle with the utmost care."
 			reagent_state = LIQUID
-			fluid_r = 255
-			fluid_g = 200
-			fluid_b = 200
+			fluid_r = 180
+			fluid_g = 255
+			fluid_b = 180
 			volatility = 2
 			transparency = 175
 			depletion_rate = 4
@@ -638,10 +641,10 @@ datum
 			transparency = 250
 			viscosity = 0.2
 
-		combustible/fuel // COGWERKS CHEM REVISION PROJECT. treat like acetylene or similar basic hydrocarbons for other reactions
-			name = "welding fuel"
+		combustible/fuel
+			name = "acetylene"
 			id = "fuel"
-			description = "A highly flammable blend of basic hydrocarbons, mostly Acetylene. Useful for both welding and organic chemistry, and can be fortified into a heavier oil."
+			description = "Pure acetylene, a useful hydrocarbon"
 			reagent_state = LIQUID
 			volatility = 1
 			fluid_r = 0
@@ -665,7 +668,7 @@ datum
 
 
 			var/caused_fireflash = 0
-			var/min_req_fluid = 0.10 //at least 10% of the fluid needs to be oil for it to ignite
+			var/min_req_fluid = 0.10 //at least 10% of the fluid needs to be fuel for it to ignite
 
 			reaction_temperature(exposed_temperature, exposed_volume)
 				if(volume < 1)
@@ -725,8 +728,6 @@ datum
 
 			on_plant_life(var/obj/machinery/plantpot/P)
 				P.HYPdamageplant("poison", 1)
-
-		// cogwerks - gunpowder test. IS THIS A TERRIBLE GODDAMN IDEA? PROBABLY
 
 		combustible/blackpowder
 			name = "black powder"
