@@ -65,11 +65,17 @@
 /datum/movement_modifier/reagent/morphine
 	health_deficiency_adjustment = -60
 
-/datum/movement_modifier/reagent/salicylic_acid
-	health_deficiency_adjustment = -25
+/datum/movement_modifier/reagent/lean
+	health_deficiency_adjustment = -50
+	
+/datum/movement_modifier/reagent/amphomine
+	health_deficiency_adjustment = -20
+	
+/datum/movement_modifier/reagent/plasmorphine
+	health_deficiency_adjustment = -20
 
-/datum/movement_modifier/reagent/epinepherine
-	health_deficiency_adjustment = -15
+/datum/movement_modifier/reagent/jarhead
+	health_deficiency_adjustment = -100
 
 /datum/movement_modifier/reagent/cocktail_triple
 	multiplicative_slowdown = 0.333

@@ -261,6 +261,20 @@ datum
 					holder.del_reagent("water")
 				return
 
+<<<<<<< Updated upstream
+=======
+		pseudosoul
+			name = "pseudosoul"
+			id = "pseudosoul"
+			required_reagents = list("epinephrine" = 1, "amphomine" = 1, "hydroacid" = 1, "phenol" = 1, "blood" = 1)
+			result_amount = 3
+			result = "pseudosoul"
+			mix_phrase = "The mixture starts whispering quietly."
+			mix_sound = 'sound/effects/ghostbreath.ogg'
+
+
+
+>>>>>>> Stashed changes
 		acetylene
 			name = "acetylene"
 			id = "fuel"
@@ -321,12 +335,12 @@ datum
 			mix_phrase = "The water somehow seems purified. Or maybe defiled."
 
 		calomel
-			name = "Calomel"
+			name = "Purgative"
 			id = "calomel"
 			result = "calomel"
-			required_reagents = list("mercury" = 1, "chlorine" = 1)
+			required_reagents = list("charcoal" = 1, "silver" = 1, "lithium" = 1, "bleach" = 1, "plasma" = 1)
 			required_temperature = T0C + 100
-			result_amount = 1
+			result_amount = 4
 			mix_phrase = "Stinging vapors rise from the solution."
 
 		/*tricalomel
@@ -341,8 +355,8 @@ datum
 			name = "Synthetic Flesh"
 			id = "synthflesh"
 			result = "synthflesh"
-			required_reagents = list("blood" = 1, "carbon" = 1, "styptic_powder" = 1)
-			result_amount = 3
+			required_reagents = list("blood" = 1, "carbon" = 2, "styptic_powder" = 1, "plasma" = 1)
+			result_amount = 4
 			mix_phrase = "The mixture knits together into a fibrous, bloody mass."
 			mix_sound = 'sound/impact_sounds/Slimy_Hit_4.ogg'
 
@@ -427,15 +441,6 @@ datum
 			on_reaction(var/datum/reagents/holder, var/created_volume)
 				fireflash(holder.my_atom, 3)
 				return*/
-
-
-		thalmerite
-			name = "Pyrosium"
-			id = "thalmerite"
-			result = "thalmerite"
-			required_reagents = list("plasma" = 1, "radium" = 1, "phosphorus" = 1)
-			result_amount = 3
-			mix_phrase = "The resultant gel begins to emit significant heat."
 
 
 		aranesp
@@ -1869,13 +1874,9 @@ datum
 			name = "Robustissin"
 			id = "cold_medicine"
 			result = "cold_medicine"
-			required_reagents = list("menthol" = 1, "morphine" = 1, "hydrogen" = 1, "acetone" = 1)
-			result_amount = 4
+			required_reagents = list("chlorine" = 1, "oxygen" = 2, "carbon" = 1, "diethylamine" = 1, "phenol" = 1)
+			result_amount = 5
 			mix_phrase = "The chemicals fizz together and a strange grape scent rises from the container."
-
-		cold_medicine/cold_medicine2
-			id = "cold_medicine2"
-			required_reagents = list("antihistamine" = 1, "oil" = 1, "salicylic_acid" = 1, "menthol" = 1)
 
 		cyanide
 			name = "Cyanide"
@@ -2166,7 +2167,7 @@ datum
 			mix_phrase = "The chemicals mix into an odd pink slush."
 
 		silver_sulfadiazine // COGWERKS CHEM REVISION PROJECT: marked for revision. maybe something like Silvadene?
-			name = "Burn Medication"
+			name = "Silvadene"
 			id = "silver_sulfadiazine"
 			result = "silver_sulfadiazine"
 			required_reagents = list("silver" = 1, "sulfur" = 1, "oxygen" = 1, "chlorine" = 1, "ammonia" = 1)
@@ -2194,7 +2195,7 @@ datum
 			name = "Teporone"
 			id = "teporone"
 			result = "teporone"
-			required_reagents = list("silicon" = 1, "acetone" = 1, "plasma" = 1)
+			required_reagents = list("silicon" = 1, "acetone" = 1, "cryostylane" = 1)
 			result_amount = 2
 			mix_phrase = "The mixture turns an odd lavender color."
 			mix_sound = 'sound/misc/drinkfizz.ogg'
@@ -2203,7 +2204,7 @@ datum
 			name = "Epinephrine"
 			id = "epinephrine"
 			result = "epinephrine"
-			required_reagents = list("phenol" = 1, "hydrogen" = 1, "oxygen" = 1, "chlorine" = 1, "acetone" = 1, "diethylamine" = 1)
+			required_reagents = list("phenol" = 1, "plasma" = 1, "oxygen" = 1, "acetone" = 1, "diethylamine" = 1)
 			result_amount = 4
 			mix_phrase = "Tiny white crystals precipitate out of the solution."
 			mix_sound = 'sound/misc/drinkfizz.ogg'
@@ -2251,7 +2252,7 @@ datum
 			result_amount = 2
 			mix_phrase = "The mixture bubbles slowly, making a slightly sweet odor."
 
-		salbutamol // COGWERKS CHEM REVISION PROJECT: possibly dexamesothone, anti-edema medication
+		salbutamol
 			name = "Salbutamol"
 			id = "salbutamol"
 			result = "salbutamol"
@@ -2259,6 +2260,16 @@ datum
 			result_amount = 5
 			mix_phrase = "The solution bubbles freely, creating a head of bluish foam."
 			mix_sound = 'sound/misc/drinkfizz.ogg'
+
+		oxydecazine
+			name = "Oxydecazine"
+			id = "oxydecazine"
+			result = "oxydecazine"
+			required_reagents = list("salbutamol" = 1, "oxygen" = 3, " acetone" = 1, "plasma" = 1)
+			required_temperature = 374
+			result_amount = 3
+			mix_phrase = "The salbutamol seems to absorb the other reagents and swell in mass."
+
 
 		perfluorodecalin // COGWERKS CHEM REVISION PROJECT:marked for revision
 			name = "Perfluorodecalin"
@@ -2312,7 +2323,7 @@ datum
 					C.reagents.add_reagent("neurotoxin",((0.5 * created_volume) / length(mobs_affected))) // ~HEH~
 				return
 
-		mutadone // // COGWERKS CHEM REVISION PROJECT: magic bullshit drug, make it involve mutagen
+		mutadone
 			name = "Mutadone"
 			id = "mutadone"
 			result = "mutadone"
@@ -2321,7 +2332,7 @@ datum
 			mix_phrase = "A foul astringent liquid emerges from the reaction."
 
 		cryoxadone
-			name = "Cryoxadone" // leaving this name alone
+			name = "Cryoxadone"
 			id = "cryoxadone"
 			result = "cryoxadone"
 			required_reagents = list("cryostylane" = 1, "mutagen" = 1, "plasma" = 1, "acetone" = 1)
@@ -2330,12 +2341,12 @@ datum
 			mix_sound = 'sound/misc/drinkfizz.ogg'
 
 		cryostylane
-			name = "Cryostylane"
+			name = "thermal paste"
 			id = "cryostylane"
 			result = "cryostylane"
-			required_reagents = list("nitrogen" = 1, "plasma" = 1, "water" = 1) // had a conflict with ammonia recipe
+			required_reagents = list("silicon" = 1, "plasma" = 1, "water" = 1, "acetic_acid" = 1)
 			result_amount = 3
-			mix_phrase = "A light layer of frost forms on top of the mixture."
+			mix_phrase = "The mixture begins to freeze and boil at the same time."
 			mix_sound = 'sound/misc/drinkfizz.ogg'
 
 		spaceacillin
@@ -2912,7 +2923,11 @@ datum
 			name = "Foam surfactant"
 			id = "foam surfactant"
 			result = "fluorosurfactant"
+<<<<<<< Updated upstream
 			required_reagents = list("fluorine" = 1, "oil" = 1, "acid" = 1, "phoron")
+=======
+			required_reagents = list("fluorine" = 1, "oil" = 1, "acid" = 1, "plasma" = 1)
+>>>>>>> Stashed changes
 			result_amount = 3
 			mix_phrase = "A head of foam results from the mixture's constant fizzing."
 			mix_sound = 'sound/misc/drinkfizz.ogg'
@@ -3067,7 +3082,7 @@ datum
 			result_amount = 3
 			mix_phrase = "The mixture bubbles, emitting an acrid reek."
 
-		diethylamine // COGWERKS CHEM REVISION PROJECT: change this so cleaner involves ammonia, ethanol and water
+		diethylamine
 			name = "Diethylamine"
 			id = "diethylamine"
 			result = "diethylamine"
@@ -3076,6 +3091,14 @@ datum
 			result_amount = 2
 			mix_phrase = "A horrible smell pours forth from the mixture."
 
+		lean
+			name = "purple drank"
+			id = "lean"
+			result = "lean"
+			required_reagents = list("sodawater" = 1, "cold_medicine" = 1, "cocktail_citrus" = 1)
+			result_amount = 3
+			mix_phrase = "The mixture starts violently bubbling"
+
 		LSD
 			name = "Lysergic acid diethylamide"
 			id = "LSD"
@@ -3083,6 +3106,14 @@ datum
 			required_reagents = list("diethylamine" = 1, "space_fungus" = 1)
 			result_amount = 3
 			mix_phrase = "The mixture turns a rather unassuming color and settles."
+
+		spacewalker
+			name = "Spacewalker"
+			id = "spacewalker"
+			result = "spacewalker"
+			required_reagents = list("plasma" = 1, "silver_sulfadiazine" = 1, "salbutamol" = 1, "oxygen" = 1)
+			result_amount = 4
+			mix_phrase = "The solution begins to swirl and darken."
 
 		bathsalts // cogwerks' dumb first drug attempt, delete if bad
 			name = "Bath Salts"
@@ -3243,9 +3274,9 @@ datum
 		strange_reagent
 			id = "strange_reagent"
 			result = "strange_reagent"
-			required_reagents = list("omnizine" = 1, "mutagen" = 1, "water_holy" = 1)
-			result_amount = 2
-			mix_phrase = "The substance begins moving on its own somehow."
+			required_reagents = list("blood" = 1, "synthflesh" = 1, "dna_mutagen" = 1, "epinephrine" = 1, "pseudosoul" = 1, "plasma" = 1)
+			result_amount = 1
+			mix_phrase = "The mixture compacts itself into a thick moving goo."
 
 		carpet
 			name = "Carpet"
@@ -3311,7 +3342,7 @@ datum
 			name = "Hairgrownium"
 			id = "hairgrownium"
 			result = "hairgrownium"
-			required_reagents = list("synthflesh" = 1,"ephedrine" = 1,"carpet" = 1)
+			required_reagents = list("synthflesh" = 1, "iron" = 1, "silicon" = 1)
 			result_amount = 3
 			mix_phrase = "The liquid becomes slightly hairy."
 
@@ -3702,9 +3733,8 @@ datum
 			name = "Rajaijah"
 			id = "madness_toxin"
 			result = "madness_toxin"
-			required_reagents = list("prions" = 1, "sarin" = 1, "methamphetamine" = 1, "mercury" = 1, "haloperidol" = 1, "sulfonal" = 1, "plasma" = 1, "LSD" = 1)
-			//required_temperature = 100 - T0C
-			result_amount = 8
+			required_reagents = list("catalyst" = 1, "formaldehyde" = 1, "mercury" = 1, "haloperidol" = 1, "plasma" = 1, "LSD" = 1)
+			result_amount = 2
 			mix_phrase = "The mixture forms a clear greenish liquid, emitting a nauseating smell reminiscent of chlorophyll and rubbing alcohol."
 			mix_sound = 'sound/misc/drinkfizz.ogg'
 
@@ -3725,10 +3755,23 @@ datum
 			result_amount = 2
 			mix_phrase = "The ants arachnify. What?"
 
-		thalmerite_heat
-			name = "thalmerite heating"
-			id = "thalmerite_heat"
-			required_reagents = list("thalmerite" = 1, "oxygen" = 1)
+		no_thermal_oxynitro
+			name = "no thermal oxynitro"
+			id = "no_thermal_oxynitro"
+			instant = 1
+			required_reagents = list("cryostylane" = 1, "oxygen" = 1, "nitrogen" = 1)
+			mix_phrase = "The mixture burns away into nothing!"
+			on_reaction(var/datum/reagents/holder, var/created_volume)
+				if (holder)
+					holder.del_reagent("cryostylane")
+					holder.del_reagent("oxygen")
+					holder.del_reagent("nitrogen")
+				return
+
+		thermal_heat
+			name = "thermal paste heating"
+			id = "thermal_heat"
+			required_reagents = list("cryostylane" = 1, "oxygen" = 1)
 			result_amount = 1
 			reaction_speed = 1
 			reaction_temp_divider = 25
@@ -3738,10 +3781,10 @@ datum
 			on_reaction(var/datum/reagents/holder, var/created_volume)
 				holder.temperature_reagents(holder.total_temperature + created_volume*200, 400, change_min = 1)
 
-		cryostylane_cold
-			name = "cryostylane chilling"
-			id = "cryostylane_cold"
-			required_reagents = list("cryostylane" = 1, "oxygen" = 1)
+		thermal_cool
+			name = "thermal paste chilling"
+			id = "thermal_cool"
+			required_reagents = list("cryostylane" = 1, "nitrogen" = 1)
 			result_amount = 1
 			reaction_speed = 1
 			reaction_temp_divider = 15

@@ -110,6 +110,30 @@ datum
 				..()
 				return
 
+		//UNTESTED
+		medical/russiancyan
+			name = "russian cyan"
+			id = "russian cyan"
+			description = "Prussian blue infused with pure phoron"
+			reagent_state = SOLID
+			fluid_r = 0
+			fluid_g = 210
+			fluid_b = 200
+			transparency = 100
+
+			on_mob_life(var/mob/M, var/mult = 1)
+				if(!M) M = holder.my_atom
+				if(M.getStatusDuration("radiation"))
+					M.changeStatus("radiation", -5 SECONDS * mult, 1)
+				if(M.getStatusDuration("n_radiation"))
+					M.changeStatus("n_radiation", -5 SECONDS * mult, 1)
+
+				M.take_toxin_damage(-2.5 * mult)
+
+				..()
+				return
+
+
 		medical/ether
 			name = "ether"
 			id = "ether"
@@ -157,9 +181,9 @@ datum
 				return
 
 		medical/cold_medicine
-			name = "robustissin"
+			name = "Mefenamic Acid"
 			id = "cold_medicine"
-			description = "A pharmaceutical compound used to treat minor colds, coughs, and other ailments."
+			description = "A pharmaceutical compound used to treat minor colds, influenza, and food poisoning."
 			reagent_state = LIQUID
 			fluid_r = 107
 			fluid_g = 29
@@ -174,11 +198,11 @@ datum
 				if(probmult(8))
 					M.emote(pick("smile","giggle","yawn"))
 				for(var/datum/ailment_data/disease/virus in M.ailments)
-					if(probmult(25) && istype(virus.master,/datum/ailment/disease/cold))
+					if(probmult(100) && istype(virus.master,/datum/ailment/disease/cold))
 						M.cure_disease(virus)
-					if(probmult(25) && istype(virus.master,/datum/ailment/disease/flu))
+					if(probmult(100) && istype(virus.master,/datum/ailment/disease/flu))
 						M.cure_disease(virus)
-					if(probmult(25) && istype(virus.master,/datum/ailment/disease/food_poisoning))
+					if(probmult(100) && istype(virus.master,/datum/ailment/disease/food_poisoning))
 						M.cure_disease(virus)
 				..()
 				return
@@ -193,9 +217,7 @@ datum
 						M.change_misstep_chance(8 * mult)
 					else if (effect <= 9)
 						M.emote("twitch")
-						M.setStatus("weakened", max(M.getStatusDuration("weakened"), 3 SECONDS * mult))
 					else if(effect <= 12)
-						M.setStatus("weakened", max(M.getStatusDuration("weakened"), 5 SECONDS * mult))
 						M.druggy ++
 				else if (severity == 2)
 					if(effect <= 4)
@@ -203,16 +225,14 @@ datum
 						M.change_misstep_chance(14 * mult)
 					else if (effect <= 10)
 						M.emote("twitch")
-						M.setStatus("weakened", max(M.getStatusDuration("weakened"), 3 SECONDS * mult))
 					else if (effect <= 13)
-						M.setStatus("weakened", max(M.getStatusDuration("weakened"), 5 SECONDS * mult))
 						M.druggy ++
 
 
 		medical/teporone // COGWERKS CHEM REVISION PROJECT. marked for revision
 			name = "teporone"
 			id = "teporone"
-			description = "This experimental plasma-based compound seems to regulate body temperature."
+			description = "This experimental phoron-based compound seems to regulate body temperature."
 			reagent_state = LIQUID
 			fluid_r = 210
 			fluid_g = 100
@@ -228,9 +248,9 @@ datum
 				if(!M) M = holder.my_atom
 				M.make_jittery(2)
 				if(M.bodytemperature > M.base_body_temp)
-					M.bodytemperature = max(M.base_body_temp, M.bodytemperature-(15 * mult))
+					M.bodytemperature = max(M.base_body_temp, M.bodytemperature-(25 * mult))
 				else if(M.bodytemperature < 311)
-					M.bodytemperature = min(M.base_body_temp, M.bodytemperature+(15 * mult))
+					M.bodytemperature = min(M.base_body_temp, M.bodytemperature+(25 * mult))
 				..()
 				return
 
@@ -278,7 +298,11 @@ datum
 				return
 
 		medical/calomel
+<<<<<<< Updated upstream
 			name = "calomel"
+=======
+			name = "Purgative"
+>>>>>>> Stashed changes
 			id = "calomel"
 			description = "This potent purgative rids the body of impurities. It is highly toxic however and close supervision is required."
 			reagent_state = LIQUID
@@ -294,14 +318,11 @@ datum
 
 				for(var/reagent_id in M.reagents.reagent_list)
 					if(reagent_id != id)
-						M.reagents.remove_reagent(reagent_id, 5 * mult)
-				if(M.health > 20)
-					M.take_toxin_damage(5 * mult, 1)	//calomel doesn't damage organs.
+						M.reagents.remove_reagent(reagent_id, 12 * mult)
+				M.take_toxin_damage(2 * mult, 1)	//calomel doesn't damage organs.
 				if(probmult(6))
 					M.visible_message("<span class='alert'>[M] pukes all over \himself.</span>")
 					M.vomit()
-				if(probmult(4))
-					M.emote("piss")
 				..()
 				return
 
@@ -385,8 +406,15 @@ datum
 							silent = 1
 					if (!silent)
 						boutput(M, "<span class='notice'>The synthetic flesh integrates itself into your wounds, healing you.</span>")
-
+					if (M.acid_name != null)
+						boutput(M, "<span class='notice'>Your face begins to reconstruct itself!</span>")
+						M.real_name = M.acid_name
+						M.acid_name = null
 					M.UpdateDamageIcon()
+
+
+
+
 
 			reaction_turf(var/turf/T, var/volume)
 				var/list/covered = holder.covered_turf()
@@ -410,23 +438,26 @@ datum
 
 
 
+<<<<<<< Updated upstream
 		medical/synaptizine // COGWERKS CHEM REVISION PROJECT. remove this, make epinephrine (epinephrine) do the same thing
+=======
+		medical/synaptizine
+>>>>>>> Stashed changes
 			name = "synaptizine"
 			id = "synaptizine"
-			description = "Synaptizine a mild medical stimulant. Can be used to reduce drowsyness and resist disabling symptoms such as paralysis."
+			description = "A potent concussion treatment and mild stimulant, extremely good at preventing brain death."
 			reagent_state = LIQUID
 			fluid_r = 200
 			fluid_g = 0
 			fluid_b = 255
 			transparency = 175
-			overdose = 40
+			overdose = 20
 			value = 7
-			stun_resist = 31
 
 			on_add()
 				if(ismob(holder?.my_atom))
 					var/mob/M = holder.my_atom
-					APPLY_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_synaptizine", 4)
+					APPLY_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_synaptizine", 1)
 				..()
 
 			on_remove()
@@ -435,37 +466,21 @@ datum
 					REMOVE_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_synaptizine")
 				..()
 
-			on_mob_life(var/mob/M, var/mult = 1)
+			on_mob_life(var/mob/M, var/mult = 1) //UNTESTED
 				if(!M) M = holder.my_atom
 				M.changeStatus("drowsy", -10 SECONDS)
 				if(M.sleeping) M.sleeping = 0
-				if (M.get_brain_damage() <= 90)
-					if (prob(50)) M.take_brain_damage(-1 * mult)
-				else M.take_brain_damage(-10 * mult) // Zine those synapses into not dying *yet*
+				if(volume < 20)
+					if (M.get_brain_damage() <= 90)
+						if (prob(50)) M.take_brain_damage(-4 * mult)
+					else M.take_brain_damage(-10 * mult) // Zine those synapses into not dying *yet*
 				..()
 				return
 
-			do_overdose(var/severity, var/mob/M, var/mult = 1)
-				var/effect = ..(severity, M)
-				if (severity == 1)
-					if( effect <= 1)
-						M.visible_message("<span class='alert'>[M.name] suddenly and violently vomits!</span>")
-						M.vomit()
-					else if (effect <= 3) M.emote(pick("groan","moan"))
-					if (effect <= 8)
-						M.take_toxin_damage(1 * mult)
-				else if (severity == 2)
-					if( effect <= 2)
-						M.visible_message("<span class='alert'>[M.name] suddenly and violently vomits!</span>")
-						M.vomit()
-					else if (effect <= 5)
-						M.visible_message("<span class='alert'><b>[M.name]</b> staggers and drools, their eyes crazed and bloodshot!</span>")
-						M.dizziness += 8
-						M.reagents.add_reagent("madness_toxin", rand(1,2) * mult)
-					if (effect <= 15)
-						M.take_toxin_damage(1 * mult)
+			do_overdose(var/mob/M, var/mult = 1)
 
-		medical/omnizine // COGWERKS CHEM REVISION PROJECT. magic drug, ought to use plasma or something
+
+		medical/omnizine
 			name = "omnizine"
 			id = "omnizine"
 			description = "Omnizine is a highly potent healing medication that can be used to treat a wide range of injuries."
@@ -536,7 +551,7 @@ datum
 						M.dizziness += 5
 						M.setStatus("weakened", max(M.getStatusDuration("weakened"), 4 SECONDS * mult))
 
-		medical/saline // COGWERKS CHEM REVISION PROJECT. magic drug, ought to use plasma or something
+		medical/saline
 			name = "saline-glucose solution"
 			id = "saline"
 			description = "This saline and glucose solution can help stabilize critically injured patients and cleanse wounds."
@@ -561,7 +576,7 @@ datum
 				..()
 				return
 
-		medical/anti_rad // COGWERKS CHEM REVISION PROJECT. replace with potassum iodide
+		medical/anti_rad
 			name = "potassium iodide"
 			id = "anti_rad"
 			description = "Potassium Iodide is a medicinal drug used to counter the effects of radiation poisoning."
@@ -751,8 +766,8 @@ datum
 					holder.remove_reagent("catdrugs", 5 * mult)
 				if(holder.has_reagent("methamphetamine"))
 					holder.remove_reagent("methamphetamine", 5 * mult)
-				if(holder.has_reagent("epinephrine"))
-					holder.remove_reagent("epinephrine", 5 * mult)
+				if(holder.has_reagent("phrine"))
+					holder.remove_reagent("phrine", 5 * mult)
 				if(holder.has_reagent("ephedrine"))
 					holder.remove_reagent("ephedrine", 5 * mult)
 				if(holder.has_reagent("synaptizine"))
@@ -769,10 +784,10 @@ datum
 				..()
 				return
 
-		medical/epinephrine // COGWERKS CHEM REVISION PROJECT. Could be Epinephrine instead
-			name = "epinephrine"
-			id = "epinephrine"
-			description = "Epinephrine is a potent neurotransmitter, used in medical emergencies to halt anaphylactic shock and prevent cardiac arrest."
+		medical/phrine // COGWERKS CHEM REVISION PROJECT. Could be phrine instead
+			name = "phrine"
+			id = "phrine"
+			description = "phrine is a potent neurotransmitter, used in medical emergencies to halt anaphylactic shock and prevent cardiac arrest."
 			reagent_state = LIQUID
 			fluid_r = 210
 			fluid_g = 255
@@ -785,8 +800,8 @@ datum
 			on_add()
 				if(ismob(holder?.my_atom))
 					var/mob/M = holder.my_atom
-					APPLY_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_epinephrine", 3)
-					APPLY_MOVEMENT_MODIFIER(M, /datum/movement_modifier/reagent/epinepherine, src.type)
+					APPLY_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_phrine", 3)
+
 				..()
 
 
@@ -794,8 +809,8 @@ datum
 			on_remove()
 				if(ismob(holder?.my_atom))
 					var/mob/M = holder.my_atom
-					REMOVE_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_epinephrine")
-					REMOVE_MOVEMENT_MODIFIER(M, /datum/movement_modifier/reagent/epinepherine, src.type)
+					REMOVE_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_phrine")
+
 				..()
 
 			on_mob_life(var/mob/M, var/mult = 1)
@@ -977,7 +992,11 @@ datum
 				return
 
 		medical/silver_sulfadiazine // COGWERKS CHEM REVISION PROJECT. marked for revision
+<<<<<<< Updated upstream
 			name = "disinfectant"
+=======
+			name = "silvadene"
+>>>>>>> Stashed changes
 			id = "silver_sulfadiazine"
 			description = "This antibacterial compound is used to treat burn victims."
 			reagent_state = LIQUID
@@ -1195,10 +1214,10 @@ datum
 							var/mob/living/L = M
 							L.contract_disease(/datum/ailment/malady/bloodclot,null,null,1)
 
-		medical/cryoxadone // COGWERKS CHEM REVISION PROJECT. magic drug, but isn't working right correctly
+		medical/cryoxadone
 			name = "cryoxadone"
 			id = "cryoxadone"
-			description = "A plasma mixture with almost magical healing powers. Its main limitation is that the targets body temperature must be under 265K for it to metabolise correctly."
+			description = "A phoronic mixture with almost magical healing powers. Its main limitation is that the targets body temperature must be under 150K for it to metabolise correctly."
 			reagent_state = LIQUID
 			fluid_r = 0
 			fluid_g = 0
@@ -1207,18 +1226,9 @@ datum
 			value = 12 // 5 3 3 1
 			target_organs = list("left_eye", "right_eye", "heart", "left_lung", "right_lung", "left_kidney", "right_kidney", "liver", "stomach", "intestines", "spleen", "pancreas", "appendix", "tail")	//RN this is all the organs. Probably I'll remove some from this list later. no "brain",  either
 
-			/*reaction_temperature(exposed_temperature, exposed_volume)
-				var/myvol = volume
-
-				if(exposed_temperature > T0C + 50) //Turns into omnizine. Derp.
-					volume = 0
-					holder.add_reagent("omnizine", myvol, null)
-
-				return*/
-
 			on_mob_life(var/mob/M, var/mult = 1)
 				if(!M) M = holder.my_atom
-				if(M.bodytemperature < M.base_body_temp - 100 && !M.hasStatus("burning"))
+				if(M.bodytemperature < 200 && !M.hasStatus("burning"))
 					var/health_before = M.health
 
 					if(M.get_oxygen_deprivation())
@@ -1337,6 +1347,34 @@ datum
 							else
 								H.organHolder.damage_organ(0, 0, severity*mult, "left_kidney")
 				..(severity, M)
+
+		medical/ //UNTESTED
+			name = "oxydecazine"
+			id = "oxydecazine"
+			description = "A potent medicinal chemical that heals scarred lung tissue and oxygenates tissues."
+			reagent_state = GAS
+			fluid_r = 10
+			fluid_g = 60
+			fluid_b = 60
+			transparency = 20
+			target_organs = list("left_lung", "right_lung")
+			on_mob_life(var/mob/M, var/mult = 1)
+				if(!M) M = holder.my_atom
+				M.take_oxygen_deprivation(-6.5 * mult)
+				M.TakeDamage("chest", 0, 1 * mult, 0, DAMAGE_BURN)
+				if(M.losebreath)
+					M.losebreath = max(0, M.losebreath-(10 * mult))
+
+				if (ishuman(M))
+					var/mob/living/carbon/human/H = M
+					if (H.organHolder)
+						H.organHolder.heal_organs(2*mult, 2*mult, 2*mult, target_organs)
+
+				//simple drug, might need more effects -fluidhelix
+
+
+
+
 
 		medical/perfluorodecalin
 			name = "perfluorodecalin"

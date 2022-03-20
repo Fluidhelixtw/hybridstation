@@ -513,7 +513,7 @@ datum
 					L.update_burning(50 * mult)
 				..()
 
-		combustible/thalmerite // COGWERKS CHEM REVISION PROJECT. pretty much a magic chem, can leave alone
+		combustible/thalmerite 
 			name = "pyrosium"
 			id = "thalmerite"
 			description = "This strange compound seems to slowly heat up all by itself. Very sticky."

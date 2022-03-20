@@ -25,7 +25,11 @@ datum
 						if(1)
 							boutput(M, "<b>You feel mentally and physically unstable.</b>")
 						if(2)
+<<<<<<< Updated upstream
 							boutput(M, "<b>You realize that the Matrix is the best movie ever made.</b>")
+=======
+							boutput(M, "<b>Reality suddenly feels less real.</b>")
+>>>>>>> Stashed changes
 						if(3)
 							boutput(M, "<b>Colors seem louder than usual.</b>")
 						if(4)
@@ -35,6 +39,51 @@ datum
 				..()
 				return
 
+<<<<<<< Updated upstream
+=======
+		pseudosoul //UNTESTED
+			name = "pseudosoul"
+			id = "pseudosoul"
+			description = "Liquid consciousness, a useful component in more advanced medicines."
+			reagent_state = LIQUID
+			fluid_r = 120
+			fluid_g = 210
+			fluid_b = 220
+			transparency = 100
+			on_mob_life(var/mob/M, var/mult = 1, var/data = "")
+				if(!M) M = holder.my_atom
+				if (probmult(25))
+					M.playsound_local(M, pick(ghostly_sounds), 100, 1)
+					switch(rand(1,11))
+						if(1)
+							data = "Who am i? WHO AM I?"
+						if(2)
+							data = "God, i hate [M.real_name]. What a dork."
+						if(3)
+							data = "Don't tell them, but I really like [M.real_name]. Like, like like like."
+						if(4)
+							data = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+						if(5)
+							data = "Space space wanna go to space yes please space. Space space. Go to space."
+						if(6)
+							data = "new phone who dis"
+						if(7)
+							data = "Don't trust the other voices!"
+						if(8)
+							data = "Trust the other voices!"
+						if(9)
+							data = "That guy. Yeah. That one right there. He's going to try to kill you. Kill him first."
+						if(10)
+							data = "The afterlife fuckin rocks, dude."
+						if(11)
+							data = "SPAAAAAAAAAAAAAAACE!"
+
+					boutput(M, "<b>You hear a voice in your head... <i>[data]</i></b>")
+				..()
+				return
+
+
+>>>>>>> Stashed changes
 		stabiliser
 			name = "exothermic inhibitor"
 			id = "stabiliser"
@@ -358,7 +407,7 @@ datum
 				return
 
 		hairgrownium //It..grows hair.  Not to be confused with the previous hair growth reagent, "wacky monkey cheeseonium"
-			name = "hairgrownium"
+			name = "Capillium"
 			id = "hairgrownium"
 			description = "A mysterious chemical purported to help grow hair. Often found on late-night TV infomercials."
 			fluid_r = 100
@@ -552,9 +601,9 @@ datum
 				..()
 
 		strange_reagent
-			name = "strange reagent"
+			name = "Lifegiver"
 			id = "strange_reagent"
-			description = "A glowing green fluid highly reminiscent of nuclear waste."
+			description = "A glowing green goo capable of raising the dead. As long as the body is intact, of course."
 			reagent_state = LIQUID
 			fluid_r = 160
 			fluid_g = 232
@@ -578,17 +627,17 @@ datum
 					return
 				if (!volume_passed)
 					return
-				if (volume_passed < 1)
+				if (volume_passed < 10)
 					return
 				if (isdead(M) || istype(get_area(M),/area/afterlife/bar))
-					var/came_back_wrong = 0
-					if (M.get_brute_damage() + M.get_burn_damage() >= 150)
-						came_back_wrong = 1
+					if (M.get_brute_damage() + M.get_burn_damage() >= 100 || M.get_brain_damage() <= 90)
+						return
+					if (!holder.has_reagent("phrine"))
+						return
 					if (ismobcritter(M))
 						M.full_heal() // same as with objcritters basically
 					else
 						M.take_oxygen_deprivation(-INFINITY)
-						M.take_toxin_damage(rand(0,15))
 						M.TakeDamage("chest", rand(0,15), rand(0,15), 0, DAMAGE_CRUSH)
 						setalive(M)
 					var/mob/G
@@ -596,13 +645,11 @@ datum
 						var/mob/living/carbon/human/H = M
 						var/obj/item/organ/brain/B = H.organHolder?.get_organ("brain")
 						G = find_ghost_by_key(B?.owner?.key)
-						if (came_back_wrong || H.decomp_stage != 0 || G?.mind?.dnr) //Wire: added the dnr condition here
+						if (H.decomp_stage != 0 || G?.mind?.dnr)
 							H.visible_message("<span class='alert'><B>[H]</B> starts convulsing violently!</span>")
 							if (G?.mind?.dnr)
 								H.visible_message("<span class='alert'><b>[H]</b> seems to prefer the afterlife!</span>")
 							H.make_jittery(1000)
-							SPAWN_DBG(rand(20, 100))
-								H.gib()
 							return
 					else // else just get whoever's the mind
 						G = find_ghost_by_key(M.mind?.key)
@@ -1015,81 +1062,17 @@ datum
 					DNA.endurance++
 
 		cryostylane
-			name = "cryostylane"
+			name = "thermal paste"
 			id = "cryostylane"
-			description = "An incredibly cold substance.  Used in many high-demand cooling systems."
+			description = "An incredibly reactive paste that can heat up or cool down depending on what is near it."
 			reagent_state = LIQUID
-			fluid_r = 0
-			fluid_g = 0
+			fluid_r = 200
+			fluid_g = 200
 			fluid_b = 220
 			transparency = 200
 			value = 3 // 1 1 1
 			viscosity = 0.35
 			heat_capacity = 600
-
-			reaction_mob(var/mob/M, var/method=TOUCH, var/volume_passed,var/list/paramslist = 0)
-				. = ..()
-				if (isobserver(M))
-					return
-
-				var/silent = 0
-				if (length(paramslist))
-					if ("silent" in paramslist)
-						silent = 1
-
-				var/list/covered = holder.covered_turf()
-				if (covered.len > 3)
-					silent = 1
-
-				if (method == TOUCH)
-					var/mob/living/L = M
-					if (istype(L) && L.getStatusDuration("burning"))
-						L.delStatus("burning")
-					if(!M.is_cold_resistant() || ischangeling(M))
-						M.bodytemperature=max(M.bodytemperature-volume_passed*2, 0)
-						volume_passed *= 0.75 //1 quarter of the chilling is done immidiately on touch reactions
-				if ((world.time > M.last_cubed + 5 SECONDS) && M.bioHolder)
-					if ((!M.is_cold_resistant() || ischangeling(M)) && isturf(M.loc) )
-						if (silent && volume_passed < 1)
-							if (prob(volume_passed*100))
-								cube_mob(M,volume_passed)
-						else
-							cube_mob(M,volume_passed)
-				return
-
-			proc/cube_mob(var/mob/M, var/volume_passed)
-				var/obj/icecube/I = new/obj/icecube(get_turf(M), M)
-				I.health = max(volume_passed/5,1)
-				//M.bodytemperature = 0
-
-			on_mob_life(var/mob/M, var/mult = 1)
-				if (!M) M = holder.my_atom
-				if (M.bodytemperature > 0 && !M.hasStatus("burning"))
-					M.bodytemperature = max(M.bodytemperature-(10 * mult),0)
-				..()
-				return
-
-			reaction_turf(var/turf/target, var/volume)
-				if (volume >= 3)
-					if (locate(/obj/decal/icefloor) in target) return
-					var/obj/decal/icefloor/B = new /obj/decal/icefloor(target)
-					SPAWN_DBG(80 SECONDS)
-						if (B)
-							B.dispose()
-
-				var/obj/hotspot = (locate(/obj/hotspot) in target)
-				if (hotspot)
-					if (istype(target, /turf/simulated))
-						var/turf/simulated/T = target
-						if (!T.air) return //ZeWaka: Fix for TOTAL_MOLES(null)
-						var/datum/gas_mixture/lowertemp = T.remove_air( TOTAL_MOLES(T.air) )
-						if (lowertemp) //ZeWaka: Fix for null.temperature
-							lowertemp.temperature = FIRE_MINIMUM_TEMPERATURE_TO_EXIST - 200 //T0C - 100
-							lowertemp.toxins = max(lowertemp.toxins-50,0)
-							lowertemp.react()
-							T.assume_air(lowertemp)
-					qdel(hotspot)
-				return
 
 		booster_enzyme
 			name = "booster enzyme"
@@ -1102,7 +1085,7 @@ datum
 			transparency = 255
 			viscosity = 0.15
 			depletion_rate = 1
-			var/static/list/booster_enzyme_reagents_to_check = list("charcoal","synaptizine","styptic_powder","teporone","salbutamol","methamphetamine","omnizine","perfluorodecalin","penteticacid","oculine","epinephrine","mannitol","synthflesh", "saline", "anti_rad", "salicylic_acid", "menthol", "silver_sulfadiazine"/*,"coffee", "sugar", "espresso", "energydrink", "ephedrine", "crank"*/) //these last ones are probably an awful idea. Uncomment to buff booster a decent amount
+			var/static/list/booster_enzyme_reagents_to_check = list("charcoal","synaptizine","styptic_powder","teporone","salbutamol","methamphetamine","omnizine","perfluorodecalin","penteticacid","oculine","phrine","mannitol","synthflesh", "saline", "anti_rad", "salicylic_acid", "menthol", "silver_sulfadiazine"/*,"coffee", "sugar", "espresso", "energydrink", "ephedrine", "crank"*/) //these last ones are probably an awful idea. Uncomment to buff booster a decent amount
 
 			on_mob_life(var/mob/M, var/mult = 1)
 				for (var/i = 1, i <= booster_enzyme_reagents_to_check.len, i++)

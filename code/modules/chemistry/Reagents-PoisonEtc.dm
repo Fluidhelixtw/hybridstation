@@ -47,7 +47,7 @@ datum
 			on_plant_life(var/obj/machinery/plantpot/P)
 				P.HYPdamageplant("poison", 3 * damage_factor)
 
-		harmful/acid // COGWERKS CHEM REVISION PROJECT. give this a reaction and remove it from the dispenser machine, hydrogen (2) + sulfur (1) + oxygen (4)
+		harmful/acid
 			name = "sulfuric acid"
 			id = "acid"
 			description = "A strong mineral acid with the molecular formula H2SO4."
@@ -78,6 +78,7 @@ datum
 						if (volume > 75)
 							M.emote("scream")
 							boutput(M, "<span class='alert'>Your face has become disfigured!</span>")
+							M.acid_name = M.real_name
 							M.real_name = "Unknown"
 							M.unlock_medal("Red Hood", 1)
 					else
@@ -133,6 +134,10 @@ datum
 						if (volume > 35)
 							M.emote("scream")
 							boutput(M, "<span class='alert'>Your face has become disfigured!</span>")
+<<<<<<< Updated upstream
+=======
+							M.acid_name = M.real_name
+>>>>>>> Stashed changes
 							M.real_name = "Unknown"
 
 					else
@@ -189,6 +194,10 @@ datum
 						if (volume > 35)
 							M.emote("scream")
 							boutput(M, "<span class='alert'>Your face has become disfigured!</span>")
+<<<<<<< Updated upstream
+=======
+							M.acid_name = M.real_name
+>>>>>>> Stashed changes
 							M.real_name = "Unknown"
 
 					else
@@ -231,11 +240,21 @@ datum
 				. = ..()
 				if (method == TOUCH)
 					. = 0
+<<<<<<< Updated upstream
 					if (volume >= 75)
 						M.TakeDamage("head", 0, ((holder.get_reagent_amount("acetic_acid")) / 5), 0, DAMAGE_BURN)
 						M.emote("scream")
 						boutput(M, "<span class='alert'>Your face has become disfigured!</span>")
 						M.real_name = "Unknown"
+=======
+					if (volume >= 100)
+						M.TakeDamage("head", 0, ((holder.get_reagent_amount("acetic_acid")) / 5), 0, DAMAGE_BURN)
+						M.emote("scream")
+						if(M.acid_name == null && M.real_name != "Unknown")
+							boutput(M, "<span class='alert'>Your face has become disfigured!</span>")
+							M.acid_name = M.real_name
+							M.real_name = "Unknown"
+>>>>>>> Stashed changes
 					else
 						random_burn_damage(M, min(5, volume * 0.25))
 				else
@@ -250,7 +269,11 @@ datum
 		harmful/bleach
 			name = "bleach"
 			id = "bleach"
+<<<<<<< Updated upstream
 			description = "A foul-smelling clear liquid that turns everything white."
+=======
+			description = "A foul-smelling clear liquid that is useful for cleaning"
+>>>>>>> Stashed changes
 			reagent_state = LIQUID
 			overdose = 30
 			fluid_r = 255
@@ -268,6 +291,7 @@ datum
 				..()
 				return
 
+<<<<<<< Updated upstream
 			reaction_obj(var/obj/O, var/volume)
 				O.color = rgb(255,255,255)
 				return
@@ -277,6 +301,8 @@ datum
 				return
 
 
+=======
+>>>>>>> Stashed changes
 		harmful/chloramine
 			name = "chloramine"
 			id = "chloramine"

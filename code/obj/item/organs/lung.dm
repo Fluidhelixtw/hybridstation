@@ -88,9 +88,17 @@
 			else 									// We're in safe limits
 				donor.take_oxygen_deprivation(-6 * mult/LUNG_COUNT)
 				oxygen_used = breath.oxygen/6
-
+				if (donor.reagents.has_reagent("spacewalker"))
+					donor.take_toxin_damage(4 * mult/LUNG_COUNT) //UNTESTED
 			breath.oxygen -= oxygen_used
 			breath.carbon_dioxide += oxygen_used
+
+
+
+
+
+
+
 
 		if (CO2_pp > safe_co2_max)
 			if (!donor.co2overloadtime) // If it's the first breath with too much CO2 in it, lets start a counter, then have them pass out after 12s or so.
@@ -109,6 +117,9 @@
 			var/ratio = breath.toxins/safe_toxins_max
 			donor.take_toxin_damage(min(ratio * 125,20) * mult/LUNG_COUNT)
 			update.show_tox_indicator = TRUE
+
+
+
 
 		if (length(breath.trace_gases))	// If there's some other shit in the air lets deal with it here.
 			var/datum/gas/sleeping_agent/SA = breath.get_trace_gas_by_type(/datum/gas/sleeping_agent)

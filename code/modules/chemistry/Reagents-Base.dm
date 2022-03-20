@@ -501,8 +501,13 @@ datum
 
 			on_mob_life(var/mob/M, var/mult = 1)
 				if(!M) M = holder.my_atom
+<<<<<<< Updated upstream
 				if(holder.has_reagent("epinephrine"))
 					holder.remove_reagent("epinephrine", 2 * mult)
+=======
+				if(holder.has_reagent("phrine"))
+					holder.remove_reagent("phrine", 2 * mult)
+>>>>>>> Stashed changes
 				if(holder.has_reagent("ephedrine"))
 					holder.remove_reagent("ephedrine", 2 * mult)
 				M.take_toxin_damage(1 * mult)
@@ -627,7 +632,7 @@ datum
 				M.make_jittery(2 )
 				M.changeStatus("drowsy", -10 SECONDS)
 				if(prob(4))
-					M.reagents.add_reagent("epinephrine", 1.2 * mult) // let's not metabolize into meth anymore
+					M.reagents.add_reagent("phrine", 1.2 * mult) // let's not metabolize into meth anymore
 				//if(prob(2))
 					//M.reagents.add_reagent("cholesterol", rand(1,3))
 				..()
