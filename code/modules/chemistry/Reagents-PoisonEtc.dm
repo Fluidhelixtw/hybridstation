@@ -77,10 +77,10 @@ datum
 						M.TakeDamage("head", 0, ((holder.get_reagent_amount("acid")) / 2.5) * stack_mult, 0, DAMAGE_BURN)
 						if (volume > 75)
 							M.emote("scream")
-							boutput(M, "<span class='alert'>Your face has become disfigured!</span>")
-							M.acid_name = M.real_name
-							M.real_name = "Unknown"
-							M.unlock_medal("Red Hood", 1)
+							if(M.acid_name == null && M.real_name != "Unknown")
+								boutput(M, "<span class='alert'>Your face has become disfigured!</span>")
+								M.acid_name = M.real_name
+								M.real_name = "Unknown"
 					else
 						M.TakeDamage("All", 0, 50 * stack_mult, 0, DAMAGE_BURN)
 
@@ -133,9 +133,10 @@ datum
 						M.TakeDamage("head", 0, ((holder.get_reagent_amount("acid")) * 2) * stack_mult, 0, DAMAGE_BURN)
 						if (volume > 35)
 							M.emote("scream")
-							boutput(M, "<span class='alert'>Your face has become disfigured!</span>")
-							M.acid_name = M.real_name
-							M.real_name = "Unknown"
+							if(M.acid_name == null && M.real_name != "Unknown")
+								boutput(M, "<span class='alert'>Your face has become disfigured!</span>")
+								M.acid_name = M.real_name
+								M.real_name = "Unknown"
 
 					else
 						M.TakeDamage("head", 0, 50 * stack_mult, 0, DAMAGE_BURN)
@@ -190,9 +191,10 @@ datum
 						M.TakeDamage("head", 0, ((holder.get_reagent_amount("acid"))) * stack_mult, 0, DAMAGE_BURN)
 						if (volume > 35)
 							M.emote("scream")
-							boutput(M, "<span class='alert'>Your face has become disfigured!</span>")
-							M.acid_name = M.real_name
-							M.real_name = "Unknown"
+							if(M.acid_name == null && M.real_name != "Unknown")
+								boutput(M, "<span class='alert'>Your face has become disfigured!</span>")
+								M.acid_name = M.real_name
+								M.real_name = "Unknown"
 
 					else
 						M.TakeDamage("head", 0, 100 * stack_mult, 0, DAMAGE_BURN)
