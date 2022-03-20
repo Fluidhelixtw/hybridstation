@@ -501,13 +501,8 @@ datum
 
 			on_mob_life(var/mob/M, var/mult = 1)
 				if(!M) M = holder.my_atom
-<<<<<<< Updated upstream
-				if(holder.has_reagent("epinephrine"))
-					holder.remove_reagent("epinephrine", 2 * mult)
-=======
 				if(holder.has_reagent("phrine"))
 					holder.remove_reagent("phrine", 2 * mult)
->>>>>>> Stashed changes
 				if(holder.has_reagent("ephedrine"))
 					holder.remove_reagent("ephedrine", 2 * mult)
 				M.take_toxin_damage(1 * mult)

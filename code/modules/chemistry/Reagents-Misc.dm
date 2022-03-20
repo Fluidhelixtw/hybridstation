@@ -25,11 +25,7 @@ datum
 						if(1)
 							boutput(M, "<b>You feel mentally and physically unstable.</b>")
 						if(2)
-<<<<<<< Updated upstream
-							boutput(M, "<b>You realize that the Matrix is the best movie ever made.</b>")
-=======
 							boutput(M, "<b>Reality suddenly feels less real.</b>")
->>>>>>> Stashed changes
 						if(3)
 							boutput(M, "<b>Colors seem louder than usual.</b>")
 						if(4)
@@ -39,8 +35,6 @@ datum
 				..()
 				return
 
-<<<<<<< Updated upstream
-=======
 		pseudosoul //UNTESTED
 			name = "pseudosoul"
 			id = "pseudosoul"
@@ -83,7 +77,6 @@ datum
 				return
 
 
->>>>>>> Stashed changes
 		stabiliser
 			name = "exothermic inhibitor"
 			id = "stabiliser"

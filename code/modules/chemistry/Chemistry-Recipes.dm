@@ -261,8 +261,6 @@ datum
 					holder.del_reagent("water")
 				return
 
-<<<<<<< Updated upstream
-=======
 		pseudosoul
 			name = "pseudosoul"
 			id = "pseudosoul"
@@ -272,9 +270,6 @@ datum
 			mix_phrase = "The mixture starts whispering quietly."
 			mix_sound = 'sound/effects/ghostbreath.ogg'
 
-
-
->>>>>>> Stashed changes
 		acetylene
 			name = "acetylene"
 			id = "fuel"
@@ -2923,11 +2918,7 @@ datum
 			name = "Foam surfactant"
 			id = "foam surfactant"
 			result = "fluorosurfactant"
-<<<<<<< Updated upstream
-			required_reagents = list("fluorine" = 1, "oil" = 1, "acid" = 1, "phoron")
-=======
 			required_reagents = list("fluorine" = 1, "oil" = 1, "acid" = 1, "plasma" = 1)
->>>>>>> Stashed changes
 			result_amount = 3
 			mix_phrase = "A head of foam results from the mixture's constant fizzing."
 			mix_sound = 'sound/misc/drinkfizz.ogg'

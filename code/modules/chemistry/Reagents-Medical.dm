@@ -298,11 +298,7 @@ datum
 				return
 
 		medical/calomel
-<<<<<<< Updated upstream
-			name = "calomel"
-=======
 			name = "Purgative"
->>>>>>> Stashed changes
 			id = "calomel"
 			description = "This potent purgative rids the body of impurities. It is highly toxic however and close supervision is required."
 			reagent_state = LIQUID
@@ -438,11 +434,7 @@ datum
 
 
 
-<<<<<<< Updated upstream
-		medical/synaptizine // COGWERKS CHEM REVISION PROJECT. remove this, make epinephrine (epinephrine) do the same thing
-=======
 		medical/synaptizine
->>>>>>> Stashed changes
 			name = "synaptizine"
 			id = "synaptizine"
 			description = "A potent concussion treatment and mild stimulant, extremely good at preventing brain death."
@@ -992,11 +984,7 @@ datum
 				return
 
 		medical/silver_sulfadiazine // COGWERKS CHEM REVISION PROJECT. marked for revision
-<<<<<<< Updated upstream
-			name = "disinfectant"
-=======
 			name = "silvadene"
->>>>>>> Stashed changes
 			id = "silver_sulfadiazine"
 			description = "This antibacterial compound is used to treat burn victims."
 			reagent_state = LIQUID
