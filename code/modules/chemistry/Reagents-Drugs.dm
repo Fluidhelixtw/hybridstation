@@ -17,26 +17,20 @@ datum
 			fluid_b = 75
 			transparency = 200
 			depletion_rate = 0.1
-			overdose = 10
+
 
 			on_mob_life(var/mob/M, var/mult = 1)
 				if(!M) M = holder.my_atom
-				if(M.bodytemperature < M.base_body_temp)
-					M.bodytemperature = min(M.base_body_temp, M.bodytemperature+(25 * mult))
-				else if(M.bodytemperature > M.base_body_temp)
-					M.bodytemperature = max(M.base_body_temp, M.bodytemperature-(25 * mult))
-				var/oxyloss = M.get_oxygen_deprivation()
-				M.take_oxygen_deprivation(-5)
+				M.take_oxygen_deprivation(-15)
 				if(M.losebreath)
-					M.losebreath = max(0, M.losebreath-(2 * mult))
-				M.take_brain_damage(oxyloss * 0.025)
-
-			do_overdose(var/mob/M, var/mult = 1)
-				M.take_oxygen_deprivation(-500)
-
+					M.losebreath = max(0, M.losebreath-(5 * mult))
+				M.take_brain_damage(0.5 * mult)
+				..()
+				return
 
 
-		drug/bathsalts
+
+		bathsalts
 			name = "bath salts"
 			id = "bathsalts"
 			description = "Sometimes packaged as a refreshing bathwater additive, these crystals are definitely not for human consumption."
@@ -385,7 +379,7 @@ datum
 				if(method == INGEST)
 					boutput(M, "Your ears start buzzing.")
 
-		drug/lean //UNTESTED
+		drug/lean
 			name = "lean"
 			id = "lean"
 			description = "A cheap and unsafe painkiller drink."
@@ -395,6 +389,7 @@ datum
 			fluid_b = 220
 			addiction_prob = 35
 			depletion_rate = 0.5
+			viscosity = 0.1
 			thirst_value = 0.7
 			overdose = 20
 			var/counter = 0
@@ -422,6 +417,8 @@ datum
 						if(probmult(7)) M.emote(pick("twitch","drool","moan","giggle"))
 					if (6 to INFINITY)
 						M.change_misstep_chance(2 * mult)
+				..()
+				return
 
 			do_overdose(var/mob/M, var/mult = 1)
 				APPLY_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_lean", -3)
@@ -1016,21 +1013,12 @@ datum
 					APPLY_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_methamphetamine", 1.5)
 					M.add_stam_mod_max("methamphetamine", 30)
 
-				if (ismob(holder?.my_atom))
-					var/mob/M = holder.my_atom
-					APPLY_MOVEMENT_MODIFIER(M, /datum/movement_modifier/reagent/energydrink, src.type)
-				..()
-
 			on_remove()
 				if(ismob(holder?.my_atom))
 					var/mob/M = holder.my_atom
 					REMOVE_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_methamphetamine")
 					M.remove_stam_mod_max(src.id)
 
-				if (ismob(holder?.my_atom))
-					var/mob/M = holder.my_atom
-					REMOVE_MOVEMENT_MODIFIER(M, /datum/movement_modifier/reagent/energydrink, src.type)
-				..()
 
 			on_mob_life(var/mob/M, var/mult = 1)
 				var/meth_amt = holder.get_reagent_amount("methamphetamine")
@@ -1049,8 +1037,8 @@ datum
 			do_overdose(var/severity, var/mob/M, var/mult = 1)
 				if (severity >= 0)
 					M.take_toxin_damage(2 * mult)
-				if(probmult(15))
-					M.take_brain_damage(1 * mult)
+				if(probmult(50))
+					M.take_brain_damage(2 * mult)
 
 
 

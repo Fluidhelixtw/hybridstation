@@ -3083,7 +3083,7 @@ datum
 			mix_phrase = "A horrible smell pours forth from the mixture."
 
 		lean
-			name = "purple drank"
+			name = "lean"
 			id = "lean"
 			result = "lean"
 			required_reagents = list("sodawater" = 1, "cold_medicine" = 1, "cocktail_citrus" = 1)

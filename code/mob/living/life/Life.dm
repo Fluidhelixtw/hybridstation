@@ -614,6 +614,9 @@
 		if (!src)
 			return 0
 
+		if (src.reagents.has_reagent("spacewalker"))
+			return 100
+
 		// Sealed space suit? If so, consider it to be full protection
 		if (src.protected_from_space())
 			return 100

@@ -110,7 +110,6 @@ datum
 				..()
 				return
 
-		//UNTESTED
 		medical/russiancyan
 			name = "russian cyan"
 			id = "russian cyan"
@@ -241,7 +240,6 @@ datum
 			addiction_prob = 1//20
 			addiction_prob2 = 10
 			addiction_min = 10
-			overdose = 50
 			value = 7 // 5c + 1c + 1c
 
 			on_mob_life(var/mob/M, var/mult = 1)
@@ -1336,7 +1334,7 @@ datum
 								H.organHolder.damage_organ(0, 0, severity*mult, "left_kidney")
 				..(severity, M)
 
-		medical/ //UNTESTED
+		medical/oxydecazine
 			name = "oxydecazine"
 			id = "oxydecazine"
 			description = "A potent medicinal chemical that heals scarred lung tissue and oxygenates tissues."

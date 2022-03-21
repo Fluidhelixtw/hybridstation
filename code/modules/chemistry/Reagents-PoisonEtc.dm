@@ -83,6 +83,10 @@ datum
 								M.real_name = "Unknown"
 					else
 						M.TakeDamage("All", 0, 50 * stack_mult, 0, DAMAGE_BURN)
+						if(M.acid_name == null && M.real_name != "Unknown")
+							boutput(M, "<span class='alert'>Your face has become disfigured!</span>")
+							M.acid_name = M.real_name
+							M.real_name = "Unknown"
 
 			reaction_obj(var/obj/O, var/volume)
 				if (istype(O,/obj/fluid))
@@ -113,12 +117,13 @@ datum
 			fluid_r = 0
 			fluid_g = 200
 			fluid_b = 255
+			penetrates_skin = 1
 			blob_damage = 1.2
 
 			on_mob_life(var/mob/M, var/mult = 1)
 				if (!M) M = holder.my_atom
 				//M.take_toxin_damage(1)
-				M.TakeDamage("chest", 0, 2 * mult, 0, DAMAGE_BURN)
+				M.TakeDamage("chest", 0, 1 * mult, 0, DAMAGE_BURN)
 				..()
 				return
 
@@ -130,7 +135,7 @@ datum
 					if(ON_COOLDOWN(M, "basic_acid_stack_check", 0.1 SECONDS))
 						stack_mult = 0.5
 					if (volume < 50)
-						M.TakeDamage("head", 0, ((holder.get_reagent_amount("acid")) * 2) * stack_mult, 0, DAMAGE_BURN)
+						M.TakeDamage("head", 0, ((holder.get_reagent_amount("hydroacid")) * 2) * stack_mult, 0, DAMAGE_BURN)
 						if (volume > 35)
 							M.emote("scream")
 							if(M.acid_name == null && M.real_name != "Unknown")
@@ -140,6 +145,10 @@ datum
 
 					else
 						M.TakeDamage("head", 0, 50 * stack_mult, 0, DAMAGE_BURN)
+						if(M.acid_name == null && M.real_name != "Unknown")
+							boutput(M, "<span class='alert'>Your face has become disfigured!</span>")
+							M.acid_name = M.real_name
+							M.real_name = "Unknown"
 
 			reaction_obj(var/obj/O, var/volume)
 				if (istype(O,/obj/fluid))
@@ -176,7 +185,7 @@ datum
 			on_mob_life(var/mob/M, var/mult = 1)
 				if (!M) M = holder.my_atom
 				M.take_toxin_damage(1)
-				M.TakeDamage("chest", 0, 1 * mult, 0, DAMAGE_BURN)
+				M.TakeDamage("chest", 0, 2 * mult, 0, DAMAGE_BURN)
 				..()
 				return
 
@@ -188,7 +197,7 @@ datum
 					if(ON_COOLDOWN(M, "basic_acid_stack_check", 0.1 SECONDS))
 						stack_mult = 0.5
 					if (volume < 100)
-						M.TakeDamage("head", 0, ((holder.get_reagent_amount("acid"))) * stack_mult, 0, DAMAGE_BURN)
+						M.TakeDamage("head", 0, ((holder.get_reagent_amount("nitric_acid"))* 1) * stack_mult, 0, DAMAGE_BURN)
 						if (volume > 35)
 							M.emote("scream")
 							if(M.acid_name == null && M.real_name != "Unknown")
@@ -198,7 +207,10 @@ datum
 
 					else
 						M.TakeDamage("head", 0, 100 * stack_mult, 0, DAMAGE_BURN)
-
+						if(M.acid_name == null && M.real_name != "Unknown")
+							boutput(M, "<span class='alert'>Your face has become disfigured!</span>")
+							M.acid_name = M.real_name
+							M.real_name = "Unknown"
 			reaction_obj(var/obj/O, var/volume)
 				if (istype(O,/obj/fluid))
 					return 1

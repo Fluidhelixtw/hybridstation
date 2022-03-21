@@ -2653,11 +2653,13 @@
 		space_suit++
 	else if (wear_mask && (wear_mask.c_flags & SPACEWEAR))
 		space_suit++
-
 	if (space_suit >= 2)
 		return 1
 	else
 		return 0
+
+
+
 
 /mob/living/carbon/human/list_ejectables()
 	var/list/ret = list()

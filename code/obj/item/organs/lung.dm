@@ -89,7 +89,7 @@
 				donor.take_oxygen_deprivation(-6 * mult/LUNG_COUNT)
 				oxygen_used = breath.oxygen/6
 				if (donor.reagents.has_reagent("spacewalker"))
-					donor.take_toxin_damage(4 * mult/LUNG_COUNT) //UNTESTED
+					donor.take_toxin_damage(4 * mult/LUNG_COUNT)
 			breath.oxygen -= oxygen_used
 			breath.carbon_dioxide += oxygen_used
 

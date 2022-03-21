@@ -35,7 +35,7 @@ datum
 				..()
 				return
 
-		pseudosoul //UNTESTED
+		pseudosoul
 			name = "pseudosoul"
 			id = "pseudosoul"
 			description = "Liquid consciousness, a useful component in more advanced medicines."
