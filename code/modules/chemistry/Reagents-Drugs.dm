@@ -426,7 +426,7 @@ datum
 		drug/space_drugs
 			name = "MDMA"
 			id = "space_drugs"
-			description = "An illegal chemical compound used as a cheap hallucinogen."
+			description = "An illegal chemical compound used as a cheap hallucinogen and party enhancer."
 			reagent_state = LIQUID
 			fluid_r = 200
 			fluid_g = 185
@@ -441,12 +441,43 @@ datum
 			on_mob_life(var/mob/M, var/mult = 1)
 				if(!M) M = holder.my_atom
 				M.druggy = max(M.druggy, 15)
-				// if(M.canmove && isturf(M.loc))
-				// 	step(M, pick(cardinal))
-				if (M.canmove && prob(40))
-					M.change_misstep_chance(5 * mult)
+				if(probmult(50)) M.emote(pick("giggle","smile","laugh"))
+				if(probmult(30))
+					. = ""
+					switch (rand(1, 9))
+						if (1)
+							. = "appreciated"
+						if (2)
+							. = "loved"
+						if (3)
+							. = "pretty good"
+						if (4)
+							. = "really nice"
+						if (5)
+							. = "cared for"
+						if (6)
+							. = "like you belong"
+						if (7)
+							. = "accepted for who you are"
+						if (8)
+							. = "like things will be okay"
+						if (9)
+							. = "pretty happy with yourself, even though things haven't always gone as well as they could"
 
-				if(probmult(7)) M.emote(pick("twitch","drool","moan","giggle"))
+
+					boutput(M, "<span class='notice'>You feel [.].</span>")
+
+				if (prob(50) && !M.restrained() && ishuman(M)) // only humans hug, I think?
+					var/mob/living/carbon/human/H = M
+					for (var/mob/living/carbon/human/hugTarget in orange(1,H))
+						if (hugTarget == H)
+							continue
+						if (!hugTarget.stat)
+							H.emote(prob(50)?"sidehug":"hug", emoteTarget="[hugTarget]")
+							break
+
+
+
 				..()
 				return
 

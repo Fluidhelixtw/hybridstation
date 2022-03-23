@@ -1984,8 +1984,8 @@ datum
 			name = "MDMA"
 			id = "space_drugs"
 			result = "space_drugs"
-			required_reagents = list("mercury" = 1, "sugar" = 1, "lithium" = 1)
-			result_amount = 3
+			required_reagents = list("mercury" = 1, "sugar" = 1, "chlorine" = 1, "weedkiller" = 1)
+			result_amount = 4
 			required_temperature = 374
 			mix_phrase = "Slightly dizzying fumes drift from the solution."
 			mix_sound = 'sound/misc/drinkfizz.ogg'
@@ -2829,8 +2829,9 @@ datum
 			name = "Nitric Acid"
 			id = "nitric_acid"
 			result = "nitric_acid"
-			required_reagents = list("water" = 1, "nitrogen_dioxide" = 3)
-			result_amount = 2
+			required_reagents = list("copper" = 1, "nitrogen" = 1, "water" = 2, "oxygen" = 2, "plasma" = 1)
+			result_amount = 4
+			required_temperature = 374
 			mix_phrase = "The mixture gives off a sharp acidic tang."
 			on_reaction(var/datum/reagents/holder, created_volume)
 				var/location = get_turf(holder.my_atom)

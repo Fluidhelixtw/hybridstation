@@ -383,17 +383,18 @@ datum
 				if(!volume_passed)
 					return
 				volume_passed = clamp(volume_passed, 0, 10)
-
 				if(method == TOUCH)
 					. = 0
 					if(issilicon(M)) //Metal flesh isn't repaired by synthflesh
 						return
-					M.HealDamage("All", volume_passed * 1.5, volume_passed * 1.5)
 					if (isliving(M))
 						var/mob/living/H = M
+						if(!isdead(M))
+							M.HealDamage("All", volume_passed * 3, volume_passed * 3)
+						else
+							M.HealDamage("All", volume_passed * 0.5, volume_passed * 0.5)
 						if (H.bleeding)
-							repair_bleeding_damage(H, 80, 2)
-
+							repair_bleeding_damage(H, 50, 1)
 					var/silent = 0
 					if (length(paramslist))
 						if ("silent" in paramslist)
@@ -407,7 +408,11 @@ datum
 					M.UpdateDamageIcon()
 
 
-
+			on_mob_life(var/mob/M, var/mult = 1, var/volume_passed,)
+				if(!M) M = holder.my_atom
+				M.HealDamage("All", volume_passed * 0.5, volume_passed * 0.5)
+				..()
+				return
 
 
 			reaction_turf(var/turf/T, var/volume)
@@ -419,18 +424,6 @@ datum
 					if(!locate(/obj/decal/cleanable/blood/gibs) in T)
 						playsound(T, "sound/impact_sounds/Slimy_Splat_1.ogg", 50, 1)
 						make_cleanable(/obj/decal/cleanable/blood/gibs,T)
-			/*reaction_obj(var/obj/O, var/volume)
-				if(istype(O,/obj/item/parts/robot_parts/robot_frame))
-					if (O.check_completion() && volume >= 20)
-						O.replicant = 1
-						O.overlays = null
-						O.icon_state = "repli_suit"
-						O.name = "Unfinished Replicant"
-						for(var/mob/V in AIviewers(O, null)) V.show_message(text("<span class='alert'>The solution molds itself around [].</span>", O), 1)
-					else
-						for(var/mob/V in AIviewers(O, null)) V.show_message(text("<span class='alert'>The solution fails to cling to [].</span>", O), 1)*/
-
-
 
 		medical/synaptizine
 			name = "synaptizine"
@@ -1191,7 +1184,9 @@ datum
 				volume_passed = clamp(volume_passed, 0, 10)
 				if(method == TOUCH)
 					. = 0
-					repair_bleeding_damage(M, 100, 2)
+					var/mob/living/L = M
+					if (L.bleeding)
+						repair_bleeding_damage(L, 100, 1)
 				else if(method == INGEST)
 					boutput(M, "<span class='alert'>You feel gross!</span>")
 					if (volume_passed > 0)
@@ -1220,10 +1215,10 @@ datum
 					if(M.get_oxygen_deprivation())
 						M.take_oxygen_deprivation(-10 * mult)
 					if(M.get_toxin_damage())
-						M.take_toxin_damage(-3 * mult)
+						M.take_toxin_damage(-2 * mult)
 					if (M.get_brain_damage())
 						M.take_brain_damage(-2 * mult)
-					M.HealDamage("All", 12 * mult, 12 * mult)
+					M.HealDamage("All", 2 * mult, 2 * mult)
 					M.updatehealth() //I hate this, but we actually need the health on time here.
 					if(M.health > health_before)
 						var/increase = min((M.health - health_before)/37*25,25) //12+12+3+10 = 37 health healed possible, 25 max temp increase possible
