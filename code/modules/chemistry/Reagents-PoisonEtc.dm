@@ -50,7 +50,7 @@ datum
 		harmful/acid
 			name = "sulfuric acid"
 			id = "acid"
-			description = "A strong mineral acid with the molecular formula H2SO4."
+			description = "A pretty strong mineral acid with the molecular formula H2SO4."
 			reagent_state = LIQUID
 			fluid_r = 0
 			fluid_g = 255
@@ -62,42 +62,67 @@ datum
 			on_mob_life(var/mob/M, var/mult = 1)
 				if (!M) M = holder.my_atom
 				//M.take_toxin_damage(1)
-				M.TakeDamage("chest", 0, 1 * mult, 0, DAMAGE_BURN)
+				M.TakeDamage("chest", 0, 0.5 * mult, 0, DAMAGE_BURN)
 				..()
 				return
 
 			reaction_mob(var/mob/M, var/method=TOUCH, var/volume)
 				. = ..()
-				if (method == TOUCH)
+				if(method == TOUCH)
 					. = 0
-					var/stack_mult = 1
-					if(ON_COOLDOWN(M, "basic_acid_stack_check", 0.1 SECONDS))
-						stack_mult = 0.5
-					if (volume < 125)
-						M.TakeDamage("head", 0, ((holder.get_reagent_amount("acid")) / 2.5) * stack_mult, 0, DAMAGE_BURN)
-						if (volume > 75)
-							M.emote("scream")
-							if(M.acid_name == null && M.real_name != "Unknown")
-								boutput(M, "<span class='alert'>Your face has become disfigured!</span>")
-								M.acid_name = M.real_name
-								M.real_name = "Unknown"
-					else
-						M.TakeDamage("All", 0, 50 * stack_mult, 0, DAMAGE_BURN)
-						if(M.acid_name == null && M.real_name != "Unknown")
-							boutput(M, "<span class='alert'>Your face has become disfigured!</span>")
-							M.acid_name = M.real_name
-							M.real_name = "Unknown"
+					if (volume >= 50)
+						if (ishuman(M))
+							var/mob/living/carbon/human/H = M
+							var/blocked = 0
+							if (!H.wear_mask && !H.head)
+								H.emote("scream")
+								if(M.acid_name == null && M.real_name != "Unknown")
+									boutput(M, "<span class='alert'>Your face has become disfigured!</span>")
+									M.acid_name = M.real_name
+									M.real_name = "Unknown"
+								return
+							else
+								if (H.head)
+									var/obj/item/clothing/head/D = H.head
+									if (!(D.item_function_flags & IMMUNE_TO_ACID))
+										if(!D.hasStatus("acid"))
+											boutput(M, "<span class='alert'>Your [H.head] begins to melt!</span>")
+											D.changeStatus("acid", 15 SECONDS, list("mob_owner" = M))
+									else
+										H.visible_message("<span class='alert>The greenish acidic substance slides off \the [D] harmlessly.</span>", "<span class='alert'>Your [H.head] protects you from the acid!</span>")
+									blocked = 1
+								if (!(H.head?.c_flags & SPACEWEAR) || !(H.head?.item_function_flags & IMMUNE_TO_ACID))
+									if (H.wear_mask)
+										var/obj/item/clothing/mask/K = H.wear_mask
+										if (!(K.item_function_flags & IMMUNE_TO_ACID))
+											if(!K.hasStatus("acid"))
+												boutput(M, "<span class='alert'>Your [H.wear_mask] begins to melt away!</span>")
+												K.changeStatus("acid", 15 SECONDS, list("mob_owner" = M))
+										else
+											H.visible_message("<span class='alert'>The greenish acidic substance slides off \the [K] harmlessly.</span>", "<span class='alert'>Your [H.wear_mask] protects you from the acid!</span>")
+										blocked = 1
+								if (blocked)
+									return
+
+					if (volume < 100)
+						M.TakeDamage("head", 0, (volume * 0.4), 0, DAMAGE_BURN)
+					else if (volume >= 100)
+						M.TakeDamage("head", 0, 40, 0, DAMAGE_BURN)
+					boutput(M, "<span class='alert'>The greenish acidic substance stings[volume < 50 ? ", but isn't concentrated enough to disfigure you" : null]!</span>")
+				return
+
+
 
 			reaction_obj(var/obj/O, var/volume)
 				if (istype(O,/obj/fluid))
 					return 1
 				if (istype(O,/obj/item/clothing/head/chemhood || /obj/item/clothing/suit/chemsuit))
 					return 1
-				if (isitem(O) && prob(40))
+				if (isitem(O))
 					var/obj/item/toMelt = O
 					if (!(toMelt.item_function_flags & IMMUNE_TO_ACID))
 						if(!O.hasStatus("acid"))
-							O.changeStatus("acid", 5 SECONDS, list("leave_cleanable" = 1))
+							O.changeStatus("acid", 15 SECONDS, list("leave_cleanable" = 1))
 					else
 						O.visible_message("The acidic substance slides off \the [O] harmlessly.")
 
@@ -117,6 +142,7 @@ datum
 			fluid_r = 0
 			fluid_g = 200
 			fluid_b = 255
+			depletion_rate = 0.05
 			penetrates_skin = 1
 			blob_damage = 1.2
 
@@ -129,26 +155,48 @@ datum
 
 			reaction_mob(var/mob/M, var/method=TOUCH, var/volume)
 				. = ..()
-				if (method == TOUCH)
+				if(method == TOUCH)
 					. = 0
-					var/stack_mult = 1
-					if(ON_COOLDOWN(M, "basic_acid_stack_check", 0.1 SECONDS))
-						stack_mult = 0.5
-					if (volume < 50)
-						M.TakeDamage("head", 0, ((holder.get_reagent_amount("hydroacid")) * 2) * stack_mult, 0, DAMAGE_BURN)
-						if (volume > 35)
-							M.emote("scream")
-							if(M.acid_name == null && M.real_name != "Unknown")
-								boutput(M, "<span class='alert'>Your face has become disfigured!</span>")
-								M.acid_name = M.real_name
-								M.real_name = "Unknown"
+					if (volume >= 25)
+						if (ishuman(M))
+							M.TakeDamage("head", 0, 50, 0, DAMAGE_BURN)
+							var/mob/living/carbon/human/H = M
+							var/blocked = 0
+							if (!H.wear_mask && !H.head)
+								H.emote("scream")
+								if(M.acid_name == null && M.real_name != "Unknown")
+									boutput(M, "<span class='alert'>Your face has become disfigured!</span>")
+									M.acid_name = M.real_name
+									M.real_name = "Unknown"
+								return
+							else
+								if (H.head)
+									var/obj/item/clothing/head/D = H.head
+									if (!(D.item_function_flags & IMMUNE_TO_ACID))
+										if(!D.hasStatus("acid"))
+											boutput(M, "<span class='alert'>Your [H.head] begins to melt!</span>")
+											D.changeStatus("acid", 10 SECONDS, list("mob_owner" = M))
+									else
+										H.visible_message("<span class='alert>The blueish acidic substance slides off \the [D] harmlessly.</span>", "<span class='alert'>Your [H.head] protects you from the acid!</span>")
+									blocked = 1
+								if (!(H.head?.c_flags & SPACEWEAR) || !(H.head?.item_function_flags & IMMUNE_TO_ACID))
+									if (H.wear_mask)
+										var/obj/item/clothing/mask/K = H.wear_mask
+										if (!(K.item_function_flags & IMMUNE_TO_ACID))
+											if(!K.hasStatus("acid"))
+												boutput(M, "<span class='alert'>Your [H.wear_mask] begins to melt away!</span>")
+												K.changeStatus("acid", 10 SECONDS, list("mob_owner" = M))
+										else
+											H.visible_message("<span class='alert'>The blueish acidic substance slides off \the [K] harmlessly.</span>", "<span class='alert'>Your [H.wear_mask] protects you from the acid!</span>")
+										blocked = 1
+								if (blocked)
+									return
+					else if (volume < 25)
+						M.TakeDamage("head", 0, (volume * 2), 0, DAMAGE_BURN)
+					boutput(M, "<span class='alert'>The blueish acidic substance stings[volume < 25 ? ", but isn't concentrated enough to disfigure you" : null]!</span>")
+				return
 
-					else
-						M.TakeDamage("head", 0, 50 * stack_mult, 0, DAMAGE_BURN)
-						if(M.acid_name == null && M.real_name != "Unknown")
-							boutput(M, "<span class='alert'>Your face has become disfigured!</span>")
-							M.acid_name = M.real_name
-							M.real_name = "Unknown"
+
 
 			reaction_obj(var/obj/O, var/volume)
 				if (istype(O,/obj/fluid))
@@ -159,7 +207,7 @@ datum
 					var/obj/item/toMelt = O
 					if (!(toMelt.item_function_flags & IMMUNE_TO_ACID))
 						if(!O.hasStatus("acid"))
-							O.changeStatus("acid", 5 SECONDS, list("leave_cleanable" = 1))
+							O.changeStatus("acid", 10 SECONDS, list("leave_cleanable" = 1))
 					else
 						O.visible_message("The acidic substance slides off \the [O] harmlessly.")
 
@@ -176,7 +224,7 @@ datum
 		harmful/nitric_acid
 			name = "nitric acid"
 			id = "nitric_acid"
-			description = "A strong acid."
+			description = "A strong nitrogen-based acid."
 			fluid_r = 0
 			fluid_g = 200
 			fluid_b = 255
@@ -191,26 +239,55 @@ datum
 
 			reaction_mob(var/mob/M, var/method=TOUCH, var/volume)
 				. = ..()
-				if (method == TOUCH)
+				if(method == TOUCH)
 					. = 0
-					var/stack_mult = 1
-					if(ON_COOLDOWN(M, "basic_acid_stack_check", 0.1 SECONDS))
-						stack_mult = 0.5
 					if (volume < 100)
-						M.TakeDamage("head", 0, ((holder.get_reagent_amount("nitric_acid"))* 1) * stack_mult, 0, DAMAGE_BURN)
-						if (volume > 35)
-							M.emote("scream")
-							if(M.acid_name == null && M.real_name != "Unknown")
-								boutput(M, "<span class='alert'>Your face has become disfigured!</span>")
-								M.acid_name = M.real_name
-								M.real_name = "Unknown"
+						M.TakeDamage("head", 0, volume, 0, DAMAGE_BURN)
+					else if (volume >= 100)
+						M.TakeDamage("head", 0, 100, 0, DAMAGE_BURN)
+					if (volume >= 25)
+						if (ishuman(M))
+							var/mob/living/carbon/human/H = M
+							var/blocked = 0
+							if (!H.wear_mask && !H.head)
+								H.emote("scream")
+								if(M.acid_name == null && M.real_name != "Unknown")
+									boutput(M, "<span class='alert'>Your face has become disfigured!</span>")
+									M.acid_name = M.real_name
+									M.real_name = "Unknown"
+								return
+							else
+								if (H.head)
+									var/obj/item/clothing/head/D = H.head
+									if (!(D.item_function_flags & IMMUNE_TO_ACID))
+										if(!D.hasStatus("acid"))
+											boutput(M, "<span class='alert'>Your [H.head] begins to melt!</span>")
+											D.changeStatus("acid", 10 SECONDS, list("mob_owner" = M))
+									else
+										H.visible_message("<span class='alert>The blueish acidic substance slides off \the [D] harmlessly.</span>", "<span class='alert'>Your [H.head] protects you from the acid!</span>")
+									blocked = 1
+								if (!(H.head?.c_flags & SPACEWEAR) || !(H.head?.item_function_flags & IMMUNE_TO_ACID))
+									if (H.wear_mask)
+										var/obj/item/clothing/mask/K = H.wear_mask
+										if (!(K.item_function_flags & IMMUNE_TO_ACID))
+											if(!K.hasStatus("acid"))
+												boutput(M, "<span class='alert'>Your [H.wear_mask] begins to melt away!</span>")
+												K.changeStatus("acid", 10 SECONDS, list("mob_owner" = M))
+										else
+											H.visible_message("<span class='alert'>The blueish acidic substance slides off \the [K] harmlessly.</span>", "<span class='alert'>Your [H.wear_mask] protects you from the acid!</span>")
+										blocked = 1
+								if (blocked)
+									return
 
-					else
-						M.TakeDamage("head", 0, 100 * stack_mult, 0, DAMAGE_BURN)
-						if(M.acid_name == null && M.real_name != "Unknown")
-							boutput(M, "<span class='alert'>Your face has become disfigured!</span>")
-							M.acid_name = M.real_name
-							M.real_name = "Unknown"
+					if (volume < 100)
+						M.TakeDamage("head", 0, volume, 0, DAMAGE_BURN)
+					else if (volume >= 100)
+						M.TakeDamage("head", 0, 100, 0, DAMAGE_BURN)
+					boutput(M, "<span class='alert'>The blueish acidic substance stings[volume < 25 ? ", but isn't concentrated enough to disfigure you" : null]!</span>")
+				return
+
+
+
 			reaction_obj(var/obj/O, var/volume)
 				if (istype(O,/obj/fluid))
 					return 1
@@ -220,9 +297,10 @@ datum
 					var/obj/item/toMelt = O
 					if (!(toMelt.item_function_flags & IMMUNE_TO_ACID))
 						if(!O.hasStatus("acid"))
-							O.changeStatus("acid", 5 SECONDS, list("leave_cleanable" = 1))
+							O.changeStatus("acid", 10 SECONDS, list("leave_cleanable" = 1))
 					else
 						O.visible_message("The acidic substance slides off \the [O] harmlessly.")
+
 
 			on_plant_life(var/obj/machinery/plantpot/P)
 				P.HYPdamageplant("acid",5)
@@ -246,22 +324,63 @@ datum
 
 			reaction_mob(var/mob/M, var/method=TOUCH, var/volume)
 				. = ..()
-				if (method == TOUCH)
+				if(method == TOUCH)
 					. = 0
 					if (volume >= 100)
-						M.TakeDamage("head", 0, ((holder.get_reagent_amount("acetic_acid")) / 5), 0, DAMAGE_BURN)
-						M.emote("scream")
-						if(M.acid_name == null && M.real_name != "Unknown")
-							boutput(M, "<span class='alert'>Your face has become disfigured!</span>")
-							M.acid_name = M.real_name
-							M.real_name = "Unknown"
+						if (ishuman(M))
+							var/mob/living/carbon/human/H = M
+							var/blocked = 0
+							H.TakeDamage("head", 0, (20), 0, DAMAGE_BURN)
+							if (!H.wear_mask && !H.head)
+								H.emote("scream")
+								if(M.acid_name == null && M.real_name != "Unknown")
+									boutput(M, "<span class='alert'>Your face has become disfigured!</span>")
+									M.acid_name = M.real_name
+									M.real_name = "Unknown"
+								return
+							else
+								if (H.head)
+									var/obj/item/clothing/head/D = H.head
+									if (!(D.item_function_flags & IMMUNE_TO_ACID))
+										if(!D.hasStatus("acid"))
+											boutput(M, "<span class='alert'>Your [H.head] begins to melt!</span>")
+											D.changeStatus("acid", 30 SECONDS, list("mob_owner" = M))
+									else
+										H.visible_message("<span class='alert>The blueish acidic substance slides off \the [D] harmlessly.</span>", "<span class='alert'>Your [H.head] protects you from the acid!</span>")
+									blocked = 1
+								if (!(H.head?.c_flags & SPACEWEAR) || !(H.head?.item_function_flags & IMMUNE_TO_ACID))
+									if (H.wear_mask)
+										var/obj/item/clothing/mask/K = H.wear_mask
+										if (!(K.item_function_flags & IMMUNE_TO_ACID))
+											if(!K.hasStatus("acid"))
+												boutput(M, "<span class='alert'>Your [H.wear_mask] begins to melt away!</span>")
+												K.changeStatus("acid", 30 SECONDS, list("mob_owner" = M))
+										else
+											H.visible_message("<span class='alert'>The blueish acidic substance slides off \the [K] harmlessly.</span>", "<span class='alert'>Your [H.wear_mask] protects you from the acid!</span>")
+										blocked = 1
+								if (blocked)
+									return
 					else
-						random_burn_damage(M, min(5, volume * 0.25))
-				else
-					boutput(M, "<span class='alert'>The transparent acidic substance stings[volume < 25 ? " you, but isn't concentrated enough to harm you" : null]!</span>")
-					if (volume >= 25)
-						random_burn_damage(M, 2)
-						M.emote("scream")
+						M.TakeDamage("head", 0, (volume * 0.2), 0, DAMAGE_BURN)
+					boutput(M, "<span class='alert'>The blueish acidic substance stings[volume < 100 ? ", but isn't concentrated enough to disfigure you" : null]!</span>")
+				return
+
+
+
+			reaction_obj(var/obj/O, var/volume)
+				var/list/covered = holder.covered_turf()
+				if (covered.len > 16)
+					volume = (volume/covered.len)
+
+				if (istype(O,/obj/fluid))
+					return 1
+				if (isitem(O) && volume > O:w_class)
+					var/obj/item/toMelt = O
+					if (!(toMelt.item_function_flags & IMMUNE_TO_ACID))
+						if(!O.hasStatus("acid"))
+							O.changeStatus("acid", 30 SECONDS, list("leave_cleanable" = 1))
+					else
+						O.visible_message("The blueish acidic substance slides off \the [O] harmlessly.")
 
 			on_plant_life(var/obj/machinery/plantpot/P)
 				P.HYPdamageplant("acid", 1)
@@ -891,98 +1010,68 @@ datum
 				return
 
 		harmful/pacid // COGWERKS CHEM REVISION PROJECT.. Change this to Fluorosulfuric Acid
-			name = "fluorosulfuric acid"
+			name = "fluoroantimonic acid"
 			id = "pacid"
-			description = "Fluorosulfuric acid is a an extremely corrosive super-acid."
+			description = "Fluoroantimonic acid is a an extremely corrosive super-acid with a pH in the negative."
 			reagent_state = LIQUID
-			fluid_r = 80
-			fluid_g = 80
-			fluid_b = 255
-			transparency = 40
+			fluid_r = 90
+			fluid_g = 30
+			fluid_b = 0
+			transparency = 200
 			dispersal = 1
 			blob_damage = 4
 
 			on_mob_life(var/mob/M, var/mult = 1)
 				if (!M) M = holder.my_atom
 				M.take_toxin_damage(1 * mult)
-				M.TakeDamage("chest", 0, 1 * mult, 0, DAMAGE_BURN)
+				M.TakeDamage("chest", 0, 3 * mult, 0, DAMAGE_BURN)
 				..()
 				return
+
 
 			reaction_mob(var/mob/M, var/method=TOUCH, var/volume)
 				. = ..()
 				if(method == TOUCH)
 					. = 0
-				if (method == TOUCH && volume >= 10)
-					if (ishuman(M))
-						var/mob/living/carbon/human/H = M
-						var/blocked = 0
-						if (!H.wear_mask && !H.head)
-							H.TakeDamage("head", 0, clamp((volume - 5) * 2, 8, 50), 0, DAMAGE_BURN)
-							H.emote("scream")
-							boutput(H, "<span class='alert'>Your face has become disfigured!</span>")
-							H.real_name = "Unknown"
-							H.unlock_medal("Red Hood", 1)
-							return
-						else
-							if (H.head)
-								var/obj/item/clothing/head/D = H.head
-								if (!(D.item_function_flags & IMMUNE_TO_ACID))
-									if(!D.hasStatus("acid"))
-										boutput(M, "<span class='alert'>Your [H.head] begins to melt!</span>")
-										D.changeStatus("acid", 5 SECONDS, list("mob_owner" = M))
-								else
-									H.visible_message("<span class='alert>The blueish acidic substance slides off \the [D] harmlessly.</span>", "<span class='alert'>Your [H.head] protects you from the acid!</span>")
-								blocked = 1
-							if (!(H.head?.c_flags & SPACEWEAR) || !(H.head?.item_function_flags & IMMUNE_TO_ACID))
-								if (H.wear_mask)
-									var/obj/item/clothing/mask/K = H.wear_mask
-									if (!(K.item_function_flags & IMMUNE_TO_ACID))
-										if(!K.hasStatus("acid"))
-											boutput(M, "<span class='alert'>Your [H.wear_mask] begins to melt away!</span>")
-											K.changeStatus("acid", 5 SECONDS, list("mob_owner" = M))
-									else
-										H.visible_message("<span class='alert'>The blueish acidic substance slides off \the [K] harmlessly.</span>", "<span class='alert'>Your [H.wear_mask] protects you from the acid!</span>")
-									blocked = 1
-
-							if (blocked)
+					M.TakeDamage("head", 0, (volume * 3), 0, DAMAGE_BURN)
+					if (volume >= 5)
+						if (ishuman(M))
+							var/mob/living/carbon/human/H = M
+							var/blocked = 0
+							if (!H.wear_mask && !H.head)
+								H.emote("scream")
+								if(M.acid_name == null && M.real_name != "Unknown")
+									boutput(M, "<span class='alert'>Your face has become disfigured!</span>")
+									M.acid_name = M.real_name
+									M.real_name = "Unknown"
 								return
-					else
-						random_brute_damage(M, min(15,volume))
-				else if (method == TOUCH && volume <= 10 && prob(20))
-					if (ishuman(M))
-						var/mob/living/carbon/human/H = M
-						var/blocked = 0
-						if (H.wear_mask || H.head)
-							if (H.head)
-								var/obj/item/clothing/head/D = H.head
-								if (!(D.item_function_flags & IMMUNE_TO_ACID))
-									if(!D.hasStatus("acid"))
-										boutput(M, "<span class='alert'>Your [H.head] begins to melt!</span>")
-										D.changeStatus("acid", 5 SECONDS, list("mob_owner" = M))
-								else
-									H.visible_message("<span class='alert>The blueish acidic substance slides off \the [D] harmlessly.</span>", "<span class='alert'>Your [H.head] protects you from the acid!</span>")
-								blocked = 1
-							if (!(H.head?.c_flags & SPACEWEAR))
-								if (H.wear_mask)
-									var/obj/item/clothing/mask/K = H.wear_mask
-									if (!(K.item_function_flags & IMMUNE_TO_ACID))
-										if(!K.hasStatus("acid"))
-											boutput(M, "<span class='alert'>Your [H.wear_mask] begins to melt away!</span>")
-											K.changeStatus("acid", 5 SECONDS, list("mob_owner" = M))
+							else
+								if (H.head)
+									var/obj/item/clothing/head/D = H.head
+									if (!(D.item_function_flags & IMMUNE_TO_ACID))
+										if(!D.hasStatus("acid"))
+											boutput(M, "<span class='alert'>Your [H.head] begins to melt!</span>")
+											D.changeStatus("acid", 3 SECONDS, list("mob_owner" = M))
 									else
-										H.visible_message("<span class='alert'>The blueish acidic substance slides off \the [K] harmlessly.</span>", "<span class='alert'>Your [H.wear_mask] protects you from the acid!</span>")
+										H.visible_message("<span class='alert>The brownish acidic substance slides off \the [D] harmlessly.</span>", "<span class='alert'>Your [H.head] protects you from the acid!</span>")
 									blocked = 1
+								if (!(H.head?.c_flags & SPACEWEAR) || !(H.head?.item_function_flags & IMMUNE_TO_ACID))
+									if (H.wear_mask)
+										var/obj/item/clothing/mask/K = H.wear_mask
+										if (!(K.item_function_flags & IMMUNE_TO_ACID))
+											if(!K.hasStatus("acid"))
+												boutput(M, "<span class='alert'>Your [H.wear_mask] begins to melt away!</span>")
+												K.changeStatus("acid", 3 SECONDS, list("mob_owner" = M))
+										else
+											H.visible_message("<span class='alert'>The brownish acidic substance slides off \the [K] harmlessly.</span>", "<span class='alert'>Your [H.wear_mask] protects you from the acid!</span>")
+										blocked = 1
+								if (blocked)
+									return
 
-							if (blocked)
-								return
-						M.TakeDamage("head", 0, clamp((volume - 5) * 2, 8, 50), 0, DAMAGE_BURN)
-				else if (volume >= 5)
-					M.emote("scream")
-					M.TakeDamage("All", 0, clamp((volume - 5) * 3, 8, 75), 0, DAMAGE_BURN)
-
-				boutput(M, "<span class='alert'>The blueish acidic substance stings[volume < 5 ? " you, but isn't concentrated enough to harm you" : null]!</span>")
+				boutput(M, "<span class='alert'>The brownish acidic substance stings[volume < 5 ? ", but isn't concentrated enough to disfigure you" : null]!</span>")
 				return
+
+
 
 			reaction_obj(var/obj/O, var/volume)
 				var/list/covered = holder.covered_turf()
@@ -995,13 +1084,10 @@ datum
 					var/obj/item/toMelt = O
 					if (!(toMelt.item_function_flags & IMMUNE_TO_ACID))
 						if(!O.hasStatus("acid"))
-							O.changeStatus("acid", 5 SECONDS, list("leave_cleanable" = 1))
+							O.changeStatus("acid", 3 SECONDS, list("leave_cleanable" = 1))
 					else
 						O.visible_message("The blueish acidic substance slides off \the [O] harmlessly.")
 
-			on_plant_life(var/obj/machinery/plantpot/P)
-				P.HYPdamageplant("acid",10)
-				P.growth -= 5
 
 			reaction_blob(var/obj/blob/B, var/volume)
 				if (!blob_damage)

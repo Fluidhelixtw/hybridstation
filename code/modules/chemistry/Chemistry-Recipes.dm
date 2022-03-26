@@ -2058,6 +2058,7 @@ datum
 			result_amount = 3
 			mix_phrase = "The mixture gives off a sharp acidic tang."
 			required_temperature = 374
+
 			on_reaction(var/datum/reagents/holder, created_volume)
 				var/location = get_turf(holder.my_atom)
 				for(var/mob/living/carbon/human/H in location)
@@ -2069,12 +2070,12 @@ datum
 				return
 
 		pacid
-			name = "Fluorosulfuric Acid" // COGWERKS CHEM REVISION PROJECT: This could be Fluorosulfuric Acid instead
+			name = "Fluoroantimonic Acid"
 			id = "pacid"
 			result = "pacid"
-			required_reagents = list("acid" = 1, "fluorine" = 1, "hydrogen" = 1, "potassium" = 1) // tobba chem revision: change to SO3 + HF
-			result_amount = 3
-			required_temperature = T0C + 100
+			required_reagents = list("antimony" = 1, "fluorine" = 1, "hydroacid" = 1, "nitric_acid" = 1, "catalyst" = 1)
+			result_amount = 4
+			required_temperature = 374
 			mix_phrase = "The mixture deepens to a dark blue, and slowly begins to corrode its container."
 			on_reaction(var/datum/reagents/holder, created_volume)
 				var/location = get_turf(holder.my_atom)

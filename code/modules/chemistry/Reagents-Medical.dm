@@ -378,7 +378,7 @@ datum
 			transparency = 255
 			value = 9 // 6c + 2c + 1c
 
-			reaction_mob(var/mob/M, var/method=TOUCH, var/volume_passed, var/list/paramslist = 0)
+			reaction_mob(var/mob/M, var/method=TOUCH, var/volume_passed, var/list/paramslist = 0, var/volume)
 				. = ..()
 				if(!volume_passed)
 					return
@@ -392,7 +392,7 @@ datum
 						if(!isdead(M))
 							M.HealDamage("All", volume_passed * 3, volume_passed * 3)
 						else
-							M.HealDamage("All", volume_passed * 0.5, volume_passed * 0.5)
+							M.HealDamage("All", volume, volume)
 						if (H.bleeding)
 							repair_bleeding_damage(H, 50, 1)
 					var/silent = 0

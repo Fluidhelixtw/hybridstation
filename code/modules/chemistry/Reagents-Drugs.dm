@@ -18,13 +18,13 @@ datum
 			transparency = 200
 			depletion_rate = 0.1
 
-
 			on_mob_life(var/mob/M, var/mult = 1)
 				if(!M) M = holder.my_atom
-				M.take_oxygen_deprivation(-15)
-				if(M.losebreath)
-					M.losebreath = max(0, M.losebreath-(5 * mult))
-				M.take_brain_damage(0.5 * mult)
+				if(M.health > 0)
+					M.take_oxygen_deprivation(-15)
+					if(M.losebreath)
+						M.losebreath = max(0, M.losebreath-(5 * mult))
+					M.take_brain_damage(0.5 * mult)
 				..()
 				return
 
