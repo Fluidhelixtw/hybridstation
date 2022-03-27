@@ -87,6 +87,23 @@ datum
 			fluid_b = 50
 			transparency = 100
 
+		antimonic_alkaline
+			name = "antimonic alkaline"
+			id = "antimonic_alkaline"
+			description = "An unusual compound that is capable of neutralizing all acids"
+			fluid_r = 110
+			fluid_g = 60
+			fluid_b = 90
+			transparency = 255
+
+		alkaline_salts
+			name = "alkaline salts"
+			id = "alkaline_salts"
+			description = "A blue salt formed by combining a powerful acid with a powerful base."
+			fluid_r = 150
+			fluid_g = 150
+			fluid_b = 250
+			transparency = 255
 
 		nitroglycerin // Yes, this is a bad idea.
 			name = "nitroglycerin"
@@ -625,7 +642,7 @@ datum
 				if (isdead(M) || istype(get_area(M),/area/afterlife/bar))
 					if (M.get_brute_damage() + M.get_burn_damage() >= 100 || M.get_brain_damage() <= 90)
 						return
-					if (!holder.has_reagent("phrine"))
+					if (!holder.has_reagent("epinephrine"))
 						return
 					if (ismobcritter(M))
 						M.full_heal() // same as with objcritters basically
@@ -1078,7 +1095,7 @@ datum
 			transparency = 255
 			viscosity = 0.15
 			depletion_rate = 1
-			var/static/list/booster_enzyme_reagents_to_check = list("charcoal","synaptizine","styptic_powder","teporone","salbutamol","methamphetamine","omnizine","perfluorodecalin","penteticacid","oculine","phrine","mannitol","synthflesh", "saline", "anti_rad", "salicylic_acid", "menthol", "silver_sulfadiazine"/*,"coffee", "sugar", "espresso", "energydrink", "ephedrine", "crank"*/) //these last ones are probably an awful idea. Uncomment to buff booster a decent amount
+			var/static/list/booster_enzyme_reagents_to_check = list("charcoal","synaptizine","styptic_powder","teporone","salbutamol","methamphetamine","omnizine","perfluorodecalin","penteticacid","oculine","epinephrine","mannitol","synthflesh", "saline", "anti_rad", "salicylic_acid", "menthol", "silver_sulfadiazine"/*,"coffee", "sugar", "espresso", "energydrink", "ephedrine", "crank"*/) //these last ones are probably an awful idea. Uncomment to buff booster a decent amount
 
 			on_mob_life(var/mob/M, var/mult = 1)
 				for (var/i = 1, i <= booster_enzyme_reagents_to_check.len, i++)

@@ -11,16 +11,29 @@ datum
 			fluid_g = 255
 			fluid_b = 255
 			transparency = 200
+
 			on_mob_life(var/mob/M, var/mult = 1)
-				if(!M) M = holder.my_atom
 				if (probmult(10))
-					. = get_offset_target_turf(get_turf(M), rand(-6, 6), rand(-6, 6))
+					if (isrestrictedz(M.z))
+						boutput(M, "<span class='notice'>You feel strange. Almost a sense of guilt.</span>")
+						return
+					var/telerange = 6
+					elecflash(M,power=2)
+					var/list/randomturfs = new/list()
+					for(var/turf/T in orange(M, telerange))
+						if(istype(T, /turf/space) || T.density) continue
+						randomturfs.Add(T)
+					if (!randomturfs.len)
+						..()
+						return
+					boutput(M, text("<span class='alert'>You blink, and suddenly you're somewhere else!</span>"))
 					M.visible_message("<span class='alert'>[M] is warped away!</span>")
-					playsound(M.loc, "warp", 50)
-					boutput(M, "<span class='alert'>You suddenly teleport...</span>")
-					M.set_loc(.)
+					playsound(M.loc, "sound/effects/mag_warp.ogg", 25, 1, -1)
+					M.set_loc(pick(randomturfs))
 				..()
 				return
+
+
 
 
 		antimony

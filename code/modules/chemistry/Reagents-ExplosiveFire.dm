@@ -303,7 +303,7 @@ datum
 			fluid_b = 200
 			transparency = 230
 			penetrates_skin = 1 // coat them with it?
-			minimum_reaction_temperature = T0C+100
+			/*minimum_reaction_temperature = T0C+100
 			var/no_fluff = 0
 
 			reaction_temperature(exposed_temperature, exposed_volume)
@@ -363,8 +363,21 @@ datum
 			name = "hootingium"
 			id = "sonicpowder_nofluff"
 			no_fluff = 1
+*/
 
-// Don't forget to update Reagents-Recipes.dm too, we have duplicate code for sonic and flash powder there (Convair880).
+		combustible/potassium_perchlorate
+			name = "potassium perchlorate"
+			id = "potassium_perchlorate"
+			description = "A pile of white salt-like crystals that makes a very loud and bright explosion when it touches aluminum."
+			reagent_state = SOLID
+			fluid_r = 255
+			fluid_g = 255
+			fluid_b = 255
+			transparency = 255
+			viscosity = 0.5
+
+
+
 
 		combustible/flashpowder
 			name = "flash powder"
@@ -378,7 +391,7 @@ datum
 			penetrates_skin = 1 // coat them with it?
 			viscosity = 0.5
 			minimum_reaction_temperature = T0C+100
-
+/*
 			reaction_temperature(exposed_temperature, exposed_volume)
 				if(!reacting)
 					reacting = 1
@@ -386,7 +399,7 @@ datum
 					var/location = covered.len ? covered[1] : 0
 					flashpowder_reaction(location, holder.get_reagent_amount(id))
 				holder?.del_reagent(id)
-
+*/
 		combustible/infernite // COGWERKS CHEM REVISION PROJECT. this could be Chlorine Triflouride, a really mean thing
 			name = "chlorine triflouride"
 			id = "infernite"
@@ -465,7 +478,7 @@ datum
 					L.changeStatus("burning", 10 SECONDS * mult)
 				..()
 
-		combustible/foof // this doesn't work yet
+		combustible/foof
 			name = "FOOF"
 			id = "foof"
 			description = "Dioxygen Diflouride, a ludicrously powerful oxidizer. Run away."
@@ -513,7 +526,7 @@ datum
 					L.update_burning(50 * mult)
 				..()
 
-		combustible/thalmerite 
+		combustible/thalmerite
 			name = "pyrosium"
 			id = "thalmerite"
 			description = "This strange compound seems to slowly heat up all by itself. Very sticky."

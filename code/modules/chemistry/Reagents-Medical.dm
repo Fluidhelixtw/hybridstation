@@ -749,8 +749,8 @@ datum
 					holder.remove_reagent("catdrugs", 5 * mult)
 				if(holder.has_reagent("methamphetamine"))
 					holder.remove_reagent("methamphetamine", 5 * mult)
-				if(holder.has_reagent("phrine"))
-					holder.remove_reagent("phrine", 5 * mult)
+				if(holder.has_reagent("epinephrine"))
+					holder.remove_reagent("epinephrine", 5 * mult)
 				if(holder.has_reagent("ephedrine"))
 					holder.remove_reagent("ephedrine", 5 * mult)
 				if(holder.has_reagent("synaptizine"))
@@ -767,23 +767,23 @@ datum
 				..()
 				return
 
-		medical/phrine // COGWERKS CHEM REVISION PROJECT. Could be phrine instead
-			name = "phrine"
-			id = "phrine"
-			description = "phrine is a potent neurotransmitter, used in medical emergencies to halt anaphylactic shock and prevent cardiac arrest."
+		medical/epinephrine
+			name = "epinephrine"
+			id = "epinephrine"
+			description = "Epinephrine is a potent neurotransmitter, used in medical emergencies to halt anaphylactic shock and prevent cardiac arrest."
 			reagent_state = LIQUID
 			fluid_r = 210
 			fluid_g = 255
 			fluid_b = 250
 			depletion_rate = 0.2
-			overdose = 20
+			overdose = 30
 			value = 17 // 5c + 5c + 4c + 1c + 1c + 1c
 			stun_resist = 10
 
 			on_add()
 				if(ismob(holder?.my_atom))
 					var/mob/M = holder.my_atom
-					APPLY_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_phrine", 3)
+					APPLY_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_epinephrine", 3)
 
 				..()
 
@@ -792,7 +792,7 @@ datum
 			on_remove()
 				if(ismob(holder?.my_atom))
 					var/mob/M = holder.my_atom
-					REMOVE_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_phrine")
+					REMOVE_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_epinephrine")
 
 				..()
 

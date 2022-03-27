@@ -1,6 +1,6 @@
 /obj/item/device/flash
 	name = "flash"
-	desc = "A device that emits an extremely bright light when used. Useful for briefly stunning people or starting a dance party."
+	desc = "A device that emits an extremely bright light when used. Useful for briefly blinding people or starting a dance party."
 	uses_multiple_icon_states = 1
 	icon_state = "flash"
 	force = 1
@@ -155,20 +155,18 @@
 	var/burning
 
 	if (src.turboflash)
-		animation_duration = 60
-		weakened = (10 + src.stun_mod) * flash_power
+		animation_duration = 200
 		eye_blurry = src.eye_damage_mod + rand(2, (4 * flash_power))
 		eye_damage = src.eye_damage_mod + rand(5, (10 * flash_power))
 		burning = 15 * flash_power
 	else
-		animation_duration = 30
-		weakened = (8 + src.stun_mod) * flash_power
+		animation_duration = 100
 		eye_damage = src.eye_damage_mod + rand(0, (1 * flash_power))
 
 	// We're flashing somebody directly, hence the 100% chance to disrupt cloaking device at the end.
-	var/blind_success = M.apply_flash(animation_duration, weakened, 0, 0, eye_blurry, eye_damage, 0, burning, 100, stamina_damage = 70 * flash_power, disorient_time = 30)
+	var/blind_success = M.apply_flash(animation_duration, weakened, 0, 0, eye_blurry, eye_damage, 0, burning, 100, stamina_damage = 0 * flash_power, disorient_time = 30)
 	if (src.emagged)
-		user.apply_flash(animation_duration, weakened, 0, 0, eye_blurry, eye_damage, 0, burning, 100, stamina_damage = 70 * flash_power, disorient_time = 30)
+		user.apply_flash(animation_duration, weakened, 0, 0, eye_blurry, eye_damage, 0, burning, 100, stamina_damage = 0 * flash_power, disorient_time = 30)
 
 	convert(M,user)
 

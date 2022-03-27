@@ -133,7 +133,7 @@
 			W.see_face = !W.see_face
 			W.icon_state = "welding-up"
 			boutput(the_mob, "You flip the mask up. The mask is now providing greater armor to your head.")
-			W.color_r = 1 // default
+			W.color_r = 1
 			W.color_g = 1
 			W.color_b = 1
 			the_mob.set_clothing_icon_dirty()

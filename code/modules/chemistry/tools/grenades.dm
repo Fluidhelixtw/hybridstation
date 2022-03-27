@@ -335,13 +335,9 @@
 		var/obj/item/reagent_containers/glass/B2 = new(src)
 
 		B1.reagents.add_reagent("aluminium", 10)
-		B1.reagents.add_reagent("potassium", 10)
-		B1.reagents.add_reagent("cola", 10)
-		B1.reagents.add_reagent("chlorine", 10)
 
-		B2.reagents.add_reagent("sulfur", 10)
-		B2.reagents.add_reagent("oxygen", 10)
-		B2.reagents.add_reagent("phosphorus", 10)
+		B2.reagents.add_reagent("potassium_perchlorate", 10)
+
 
 		beakers += B1
 		beakers += B2

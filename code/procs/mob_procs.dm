@@ -280,7 +280,7 @@
 
 	// Stun target mob.
 	if (safety == 0)
-		//src.flash(animation_duration)
+		src.flash(animation_duration)
 #ifdef USE_STAMINA_DISORIENT
 		src.do_disorient(stamina_damage, weakened = weak*20, stunned = stun*20, disorient = disorient_time, remove_stamina_below_zero = 0, target_type = DISORIENT_EYE)
 #else

@@ -261,6 +261,64 @@ datum
 					holder.del_reagent("water")
 				return
 
+
+
+		antimonic_alkaline
+			name = "antimonic alkaline"
+			id = "antimonic_alkaline"
+			required_reagents = list("bleach" = 1, "diethylamine" = 1, "plasma" = 1, "antimony" = 1)
+			result_amount = 4
+			result = "antimonic_alkaline"
+			mix_phrase = "The chemicals give off fumes that smell similar to ammonia."
+
+		aa_a
+			name = "antimonic alkaline acetic reaction"
+			id = "aa_a"
+			required_reagents = list("acetic_acid" = 4, "antimonic_alkaline" = 1)
+			result_amount = 1
+			result = "alkaline_salts"
+			mix_phrase = "The acids are quickly neutralized!"
+
+		aa_s
+			name = "antimonic alkaline sulfuric reaction"
+			id = "aa_s"
+			required_reagents = list("acetic_acid" = 2, "antimonic_alkaline" = 1)
+			result_amount = 1
+			result = "alkaline_salts"
+			mix_phrase = "The acids are quickly neutralized!"
+
+		aa_lsd
+			name = "antimonic alkaline lsd reaction"
+			id = "aa_lsd"
+			required_reagents = list("LSD" = 3, "antimonic_alkaline" = 1)
+			result_amount = 1
+			result = "alkaline_salts"
+			mix_phrase = "The acids are quickly neutralized!"
+
+		aa_n
+			name = "antimonic alkaline nitric reaction"
+			id = "aa_n"
+			required_reagents = list("nitric_acid" = 1, "antimonic_alkaline" = 1)
+			result_amount = 1
+			result = "alkaline_salts"
+			mix_phrase = "The acids are quickly neutralized!"
+
+		aa_hc
+			name = "antimonic alkaline hydrochloric reaction"
+			id = "aa_hc"
+			required_reagents = list("hydroacid" = 1, "antimonic_alkaline" = 1)
+			result_amount = 1
+			result = "alkaline_salts"
+			mix_phrase = "The acids are quickly neutralized!"
+
+		aa_fa
+			name = "antimonic alkaline fluoroantimonic reaction"
+			id = "aa_fa"
+			required_reagents = list("pacid" = 1, "antimonic_alkaline" = 2)
+			result_amount = 2
+			result = "alkaline_salts"
+			mix_phrase = "The acids are quickly neutralized!"
+
 		pseudosoul
 			name = "pseudosoul"
 			id = "pseudosoul"
@@ -2457,43 +2515,36 @@ datum
 						flashpowder_reaction(get_turf(pick(holder.covered_cache)), created_volume)
 
 
+		potassium_perchlorate
+			name = "Potassium Perchlorate"
+			id = "potassium_perchlorate"
+			result = "potassium_perchlorate"
+			required_reagents = list("salt" = 1, "plasma" = 1, "potassium" = 1, "chlorine" = 1)
+			result_amount = 3
+			mix_phrase = "The mixture becomes agitated."
 
 
-// Don't forget to update Reagents-ExplosiveFire.dm too, we have duplicate code for sonic and flash powder there (Convair880).
-
-		sonic_powder
-			name = "Hootingium"
-			id = "sonicpowder"
-			result = "sonicpowder"
-			required_reagents = list("oxygen" = 1, "cola" = 1, "phosphorus" = 1, "stabiliser" = 1)
-			result_amount = 2
-			mix_phrase = "The mixture begins to bubble slighly!"
-
-		sonic_boom //The "bang" part of "flashbang"
-			name = "Hootingium"
-			id = "sonic_boom"
-			required_reagents = list("oxygen" = 1, "cola" = 1, "phosphorus" = 1)
-			inhibitors = list("stabiliser")
+		pp_boom //heh
+			name = "Potassium Perchlorate Explosion"
+			id = "pp_boom" // heheh
+			required_reagents = list("potassium_perchlorate" = 1, "aluminium" = 1)
 			instant = 1
-			mix_phrase = "The mixture begins to bubble furiously!"
+			inhibitors = list("stabiliser")
 			mix_sound = 'sound/weapons/flashbang.ogg'
+			mix_phrase = "The mixture suddenly explodes!."
 
 			on_reaction(var/datum/reagents/holder, var/created_volume)
-				var/hootmode = prob(5)
 				var/turf/location = 0
-
 				if (holder?.my_atom)
 					location = get_turf(holder.my_atom)
-					if (hootmode)
-						playsound(location, 'sound/voice/animal/hoot.ogg', 100, 1)
-					else
-						playsound(location, 'sound/weapons/flashbang.ogg', 25, 1)
+					flashpowder_reaction(location, holder.get_reagent_amount(id))
+					playsound(location, 'sound/weapons/flashbang.ogg', 50, 1)
 
 					for (var/mob/living/M in all_hearers(world.view, location))
 						if (isintangible(M))
 							continue
 						if (!M.ears_protected_from_sound())
-							boutput(M, "<span class='alert'><b>[hootmode ? "HOOT" : "BANG"]</b></span>")
+							boutput(M, "<span class='alert'><b>BANG!</b></span>")
 						else
 							continue
 
@@ -2501,13 +2552,12 @@ datum
 						var/weak = max(0, created_volume * 0.2 * (3 - checkdist))
 						var/misstep = clamp(1 + 6 * (5 - checkdist), 0, 40)
 						var/ear_damage = max(0, created_volume * 0.2 * (3 - checkdist))
-						var/ear_tempdeaf = max(0, created_volume * 0.2 * (5 - checkdist)) //annoying and unfun so reduced dramatically
-						var/stamina = clamp(created_volume * (5 + 1 * (7 - checkdist)), 0, 120)
+						var/ear_tempdeaf = created_volume * (5 - checkdist)
 
 						if (issilicon(M))
 							M.apply_sonic_stun(weak, 0)
 						else
-							M.apply_sonic_stun(weak, 0, misstep, 0, 0, ear_damage, ear_tempdeaf, stamina)
+							M.apply_sonic_stun(weak, 0, misstep, 0, 0, ear_damage, ear_tempdeaf, 0)
 				else
 					var/amt = max(1, (holder.covered_cache.len * (created_volume / holder.covered_cache_volume)))
 					var/sound_plays = 4
@@ -2515,17 +2565,14 @@ datum
 					for (var/i = 0, i < amt && holder.covered_cache.len, i++)
 						if (sound_plays > 0)
 							sound_plays--
-							if (hootmode)
-								playsound(location, 'sound/voice/animal/hoot.ogg', 100, 1)
-							else
-								playsound(location, 'sound/weapons/flashbang.ogg', 25, 1)
+							playsound(location, 'sound/weapons/flashbang.ogg', 50, 1)
 						location = pick(holder.covered_cache)
 						holder.covered_cache -= location
 						for (var/mob/living/M in all_hearers(world.view, location))
 							if (isintangible(M))
 								continue
 							if (!M.ears_protected_from_sound())
-								boutput(M, "<span class='alert'><b>[hootmode ? "HOOT" : "BANG"]</b></span>")
+								boutput(M, "<span class='alert'><b>BANG!</b></span>")
 							else
 								continue
 
@@ -2533,13 +2580,13 @@ datum
 							var/weak = max(0, created_volume * 0.2 * (3 - checkdist))
 							var/misstep = clamp(1 + 6 * (5 - checkdist), 0, 40)
 							var/ear_damage = max(0, created_volume * 0.2 * (3 - checkdist))
-							var/ear_tempdeaf = max(0, created_volume * 0.2 * (5 - checkdist)) //annoying and unfun so reduced dramatically
-							var/stamina = clamp(created_volume * (5 + 1 * (7 - checkdist)), 0, 120)
+							var/ear_tempdeaf = max(0, created_volume * (5 - checkdist)) //annoying and unfun so reduced dramatically //HAHA I MADE IT BAD AGAIN!!! -fluidhelix
 
 							if (issilicon(M))
 								M.apply_sonic_stun(weak, 0)
 							else
-								M.apply_sonic_stun(weak, 0, misstep, 0, 0, ear_damage, ear_tempdeaf, stamina)
+								M.apply_sonic_stun(weak, 0, misstep, 0, 0, ear_damage, ear_tempdeaf, 0)
+
 
 		chlorine_azide  // death 2 chemists
 			name = "Chlorine Azide"
