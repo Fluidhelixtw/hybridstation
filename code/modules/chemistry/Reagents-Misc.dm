@@ -104,6 +104,12 @@ datum
 			fluid_g = 150
 			fluid_b = 250
 			transparency = 255
+			on_mob_life(var/mob/M, var/mult = 1)
+				if(!M) M = holder.my_atom
+				M.take_toxin_damage(0.5 * mult)
+				..()
+				return
+
 
 		nitroglycerin // Yes, this is a bad idea.
 			name = "nitroglycerin"

@@ -1150,7 +1150,7 @@ proc/generate_space_color()
 						if (grave.special)
 							new grave.special (src)
 						else
-							switch (rand(1,5))
+							switch (rand(1,3))
 								if (1)
 									new /obj/item/skull {desc = "A skull.  That was robbed.  From a grave.";} ( src )
 								if (2)

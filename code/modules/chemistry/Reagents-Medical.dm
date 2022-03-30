@@ -1350,6 +1350,7 @@ datum
 					var/mob/living/carbon/human/H = M
 					if (H.organHolder)
 						H.organHolder.heal_organs(2*mult, 2*mult, 2*mult, target_organs)
+				..()
 
 				//simple drug, might need more effects -fluidhelix
 

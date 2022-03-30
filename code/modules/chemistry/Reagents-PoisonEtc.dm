@@ -637,7 +637,7 @@ datum
 				if (!M) M = holder.my_atom
 
 				if (!M.nutrition)
-					switch(rand(1,3))
+					switch(rand(1,2))
 						if (1)
 							boutput(M, "<span class='alert'>You feel hungry...</span>")
 						if (2)

@@ -402,6 +402,7 @@ datum
 				if(!M) M = holder.my_atom
 				if(prob(10))
 					M.change_misstep_chance(20 * mult)
+				..()
 				return
 
 		magnesium

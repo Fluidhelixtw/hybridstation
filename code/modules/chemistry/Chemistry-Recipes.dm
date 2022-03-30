@@ -2489,13 +2489,13 @@ datum
 			mix_sound = 'sound/misc/drinkfizz.ogg'
 			mix_phrase = "The chemicals hiss and fizz briefly, followed by one big bubble that smells like a fart."
 
-		flash_powder
+		/*flash_powder
 			name = "Flash Powder"
 			id = "flashpowder"
 			result = "flashpowder"
 			required_reagents = list("aluminium" = 1, "potassium" = 1, "sulfur" = 1, "chlorine" = 1, "stabiliser" = 1)
 			result_amount = 5
-			mix_phrase = "The chemicals hiss and fizz briefly before falling still."
+			mix_phrase = "The chemicals hiss and fizz briefly before falling still." */
 
 		flash
 			name = "Flash"
