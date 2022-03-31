@@ -316,11 +316,15 @@ triggerOnEntered(var/atom/owner, var/atom/entering)
 	execute(var/atom/owner, var/atom/movable/entering)
 		var/turf/T = get_turf(entering)
 		if(prob(50) && owner && isturf(owner) && !isrestrictedz(T.z))
-			. = get_offset_target_turf(get_turf(entering), rand(-2, 2), rand(-2, 2))
-			entering.visible_message("<span class='alert'>[entering] is warped away!</span>")
-			playsound(owner.loc, "warp", 50)
-			boutput(entering, "<span class='alert'>You suddenly teleport...</span>")
-			entering.set_loc(.)
+			if(!entering.reagents.has_reagent("raf"))
+				. = get_offset_target_turf(get_turf(entering), rand(-2, 2), rand(-2, 2))
+				entering.visible_message("<span class='alert'>[entering] is warped away!</span>")
+				playsound(owner.loc, "warp", 50)
+				boutput(entering, "<span class='alert'>You suddenly teleport...</span>")
+				entering.set_loc(.)
+			else
+				boutput(entering, "<span class='alert'>Something tries to teleport you, but you're anchored to reality!</span>"")
+				random_brute_damage(entering, (15))
 		return
 
 
@@ -337,20 +341,28 @@ triggerOnEntered(var/atom/owner, var/atom/entering)
 					playsound(attacker.loc, "sound/effects/poof.ogg", 90)
 				else
 					playsound(attacker.loc, "warp", 50)
-				attacked.visible_message("<span class='alert'>[attacked] is warped away!</span>")
-				boutput(attacked, "<span class='alert'>You suddenly teleport... [fail_msg]</span>")
-				attacked.set_loc(.)
+				if(!attacked.reagents.has_reagent("raf"))
+					attacked.visible_message("<span class='alert'>[attacked] is warped away!</span>")
+					boutput(attacked, "<span class='alert'>You suddenly teleport... [fail_msg]</span>")
+					attacked.set_loc(.)
+				else
+					boutput(attacked, "<span class='alert'>Something tries to teleport you, but you're anchored to reality!</span>"")
+					random_brute_damage(attacked, (15))
 		return
 
 /datum/materialProc/telecrystal_life
 	execute(var/mob/M, var/obj/item/I, mult)
 		var/turf/T = get_turf(M)
 		if(prob(percentmult(5, mult)) && M && !isrestrictedz(T.z))
-			. = get_offset_target_turf(get_turf(M), rand(-8, 8), rand(-8, 8))
-			M.visible_message("<span class='alert'>[M] is warped away!</span>")
-			playsound(M.loc, "warp", 50)
-			boutput(M, "<span class='alert'>You suddenly teleport...</span>")
-			M.set_loc(.)
+			if(!M.reagents.has_reagent("raf"))
+				. = get_offset_target_turf(get_turf(M), rand(-8, 8), rand(-8, 8))
+				M.visible_message("<span class='alert'>[M] is warped away!</span>")
+				playsound(M.loc, "warp", 50)
+				boutput(M, "<span class='alert'>You suddenly teleport...</span>")
+				M.set_loc(.)
+			else
+				boutput(M, "<span class='alert'>Something tries to teleport you, but you're anchored to reality!</span>"")
+				random_brute_damage(M, (15))
 		return
 
 /datum/materialProc/plasmastone

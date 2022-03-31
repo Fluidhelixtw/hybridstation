@@ -788,6 +788,61 @@ datum
 					if (M.hasStatus("burning"))
 						M.changeStatus("burning", -M.getStatusDuration("burning"))
 
+		raf //Note, if theres any ways of teleporting that arent prevented by this chemical, fix that!!!
+			name = "Reality Anchor Fluid"
+			id = "raf"
+			description = "The area around the fluid somehow seems more real than other space."
+			fluid_r = 105
+			fluid_g = 105
+			fluid_b = 130
+			reagent_state = LIQUID
+			transparency = 150
+			on_mob_life(var/mob/M, var/method=INGEST, var/mult = 1)
+				if(!M)
+					M = holder.my_atom
+				if(holder.has_reagent("pseudosoul"))
+					holder.remove_reagent("pseudosoul", 10 * mult)
+				if(holder.has_reagent("chronospeculo"))
+					holder.remove_reagent("chronospeculo", 10 * mult)
+				..()
+				return
+
+
+
+		chronospeculo
+			name = "chronospeculo"
+			id = "chronospeculo"
+			description = "The surface turns mirror-like as you look at it. Inside you see an image of yourself from a few minutes ago. Trippy."
+			fluid_r = 255
+			fluid_g = 255
+			fluid_b = 255
+			transparency = 255
+			var/initial_quantity = 0
+
+			on_add()
+				..()
+				var/mob/M
+				if(ismob(holder.my_atom))
+					initial_quantity = volume
+					M = holder.my_atom
+					specmobs.Add(M)
+					specmobs[M] = get_turf(M)
+
+			on_remove()
+				..()
+				var/mob/M
+				if(ismob(holder.my_atom))
+					M = holder.my_atom
+					showswirl(M)
+					if (!M.reagents.has_reagent("raf"))
+						M.set_loc(specmobs[M])
+					else
+						random_brute_damage(M, (initial_quantity))
+					showswirl(M)
+					specmobs -= M
+
+
+
 		silicate
 			name = "silicate reinforcement"
 			id = "silicate"

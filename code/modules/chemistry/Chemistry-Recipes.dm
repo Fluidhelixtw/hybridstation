@@ -2586,8 +2586,14 @@ datum
 								M.apply_sonic_stun(weak, 0)
 							else
 								M.apply_sonic_stun(weak, 0, misstep, 0, 0, ear_damage, ear_tempdeaf, 0)
-
-
+/*
+		chronospeculo
+			name = "chronospeculo"
+			id = "chronospeculo"
+			result = "chronospeculo"
+			2 strange matter, 1 catalyst, 1 copper, 1 silver azide, 1 RAF => 5 chronomirror
+			required_reagents = list("strange_matter" = 2, "catalyst" = 1, "copper" = 1, "silver" = 1, "" = 1)
+*/
 		chlorine_azide  // death 2 chemists
 			name = "Chlorine Azide"
 			id = "chlorine_azide"
@@ -2881,15 +2887,7 @@ datum
 			result_amount = 4
 			required_temperature = 374
 			mix_phrase = "The mixture gives off a sharp acidic tang."
-			on_reaction(var/datum/reagents/holder, created_volume)
-				var/location = get_turf(holder.my_atom)
-				for (var/mob/living/carbon/human/H in location)
-					if (ishuman(H))
-						if (!H.wear_mask)
-							boutput(H, "<span class='alert'>The acidic vapors burn you!</span>")
-							H.TakeDamage("head", 0, created_volume, 0, DAMAGE_BURN) // why are the acids doing brute????
-							H.emote("scream")
-				return
+
 
 		// Ag + 2 HNO3 + (heat) -> AgNO3 + H2O + NO2
 		silver_nitrate
@@ -3308,7 +3306,6 @@ datum
 			result = "cleaner"
 			required_reagents = list("ammonia" = 1, "bleach" = 1, "acetone" = 1)
 			result_amount = 3
-			mix_phrase = "The mixture begins to emit a distinct smell of bleach."
 			mix_phrase = "Ick, this stuff really stinks. Sure does make the container sparkle though!"
 
 		strange_reagent
@@ -3317,6 +3314,16 @@ datum
 			required_reagents = list("blood" = 1, "synthflesh" = 1, "dna_mutagen" = 1, "epinephrine" = 1, "pseudosoul" = 1, "plasma" = 1)
 			result_amount = 1
 			mix_phrase = "The mixture compacts itself into a thick moving goo."
+
+		raf
+			name = "Reality Anchor Fluid"
+			id = "raf"
+			result = "raf"
+			required_reagents = list("plasma" = 1, "magnesium" = 2, "nitric_acid" = 2, "diethylamine" = 1)
+			result_amount = 5
+			mix_phrase = "The space around the chemical suddenly feels a lot more stable."
+
+
 
 		carpet
 			name = "Carpet"

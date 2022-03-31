@@ -48,7 +48,7 @@ var/global
 	list/processing_fluid_spreads = list()
 	list/processing_fluid_drains = list()
 	list/processing_fluid_turfs = list()
-	list/warping_mobs = list()
+	list/specmobs = list()
 	datum/hotspot_controller/hotspot_controller = new
 		//items that ask to be called every cycle
 

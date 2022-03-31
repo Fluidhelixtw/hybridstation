@@ -26,10 +26,15 @@ datum
 					if (!randomturfs.len)
 						..()
 						return
+					if (M.reagents.has_reagent("raf"))
+						..()
+						return
 					boutput(M, text("<span class='alert'>You blink, and suddenly you're somewhere else!</span>"))
 					M.visible_message("<span class='alert'>[M] is warped away!</span>")
 					playsound(M.loc, "sound/effects/mag_warp.ogg", 25, 1, -1)
+					showswirl(M)
 					M.set_loc(pick(randomturfs))
+					showswirl(M)
 				..()
 				return
 
@@ -124,7 +129,7 @@ datum
 		copper
 			name = "copper"
 			id = "copper"
-			description = "A chemical element."
+			description = "A metallic element."
 			reagent_state = SOLID
 			fluid_r = 184
 			fluid_g = 115
@@ -384,7 +389,7 @@ datum
 							O.show_message(text("<span class='alert'>[] vomits on the floor profusely!</span>", M), 1)
 						M.vomit()
 						M.nutrition -= rand(3,5)
-						M.take_toxin_damage(10) // im bad
+						M.take_toxin_damage(3) // im bad
 						M.setStatus("stunned", max(M.getStatusDuration("stunned"), 3 SECONDS))
 						M.setStatus("weakened", max(M.getStatusDuration("weakened"), 3 SECONDS))
 
@@ -515,10 +520,12 @@ datum
 
 			on_mob_life(var/mob/M, var/mult = 1)
 				if(!M) M = holder.my_atom
-				if(holder.has_reagent("phrine"))
-					holder.remove_reagent("phrine", 2 * mult)
+				if(holder.has_reagent("epinephrine"))
+					holder.remove_reagent("epinephrine", 2 * mult)
 				if(holder.has_reagent("ephedrine"))
 					holder.remove_reagent("ephedrine", 2 * mult)
+				if(holder.has_reagent("atropine"))
+					holder.remove_reagent("atropine", 2 * mult)
 				M.take_toxin_damage(1 * mult)
 				..()
 				return
@@ -627,7 +634,7 @@ datum
 			on_add()
 				if(ismob(holder?.my_atom))
 					var/mob/M = holder.my_atom
-					APPLY_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_sugar", 2)
+					APPLY_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_sugar", 1)
 				..()
 
 			on_remove()
@@ -641,7 +648,7 @@ datum
 				M.make_jittery(2 )
 				M.changeStatus("drowsy", -10 SECONDS)
 				if(prob(4))
-					M.reagents.add_reagent("phrine", 1.2 * mult) // let's not metabolize into meth anymore
+					M.reagents.add_reagent("epinephrine", 1.2 * mult) // let's not metabolize into meth anymore
 				//if(prob(2))
 					//M.reagents.add_reagent("cholesterol", rand(1,3))
 				..()
