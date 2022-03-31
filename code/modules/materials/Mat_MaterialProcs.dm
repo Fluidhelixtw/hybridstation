@@ -323,7 +323,7 @@ triggerOnEntered(var/atom/owner, var/atom/entering)
 				boutput(entering, "<span class='alert'>You suddenly teleport...</span>")
 				entering.set_loc(.)
 			else
-				boutput(entering, "<span class='alert'>Something tries to teleport you, but you're anchored to reality!</span>"")
+				boutput(entering, "<span class='alert'>Something tries to teleport you, but you're anchored to reality!</span>")
 				random_brute_damage(entering, (15))
 		return
 
@@ -346,7 +346,7 @@ triggerOnEntered(var/atom/owner, var/atom/entering)
 					boutput(attacked, "<span class='alert'>You suddenly teleport... [fail_msg]</span>")
 					attacked.set_loc(.)
 				else
-					boutput(attacked, "<span class='alert'>Something tries to teleport you, but you're anchored to reality!</span>"")
+					boutput(attacked, "<span class='alert'>Something tries to teleport you, but you're anchored to reality!</span>")
 					random_brute_damage(attacked, (15))
 		return
 
@@ -361,7 +361,7 @@ triggerOnEntered(var/atom/owner, var/atom/entering)
 				boutput(M, "<span class='alert'>You suddenly teleport...</span>")
 				M.set_loc(.)
 			else
-				boutput(M, "<span class='alert'>Something tries to teleport you, but you're anchored to reality!</span>"")
+				boutput(M, "<span class='alert'>Something tries to teleport you, but you're anchored to reality!</span>")
 				random_brute_damage(M, (15))
 		return
 
