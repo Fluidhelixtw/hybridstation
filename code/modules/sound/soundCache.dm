@@ -1811,5 +1811,9 @@ var/global/list/soundCache = list(
  	"sound/weapons/energy/laser_alastor.ogg" = 'sound/weapons/energy/laser_alastor.ogg',\
  	"sound/weapons/energy/LightningCannon.ogg" = 'sound/weapons/energy/LightningCannon.ogg',\
  	"sound/weapons/energy/LightningCannonImpact.ogg" = 'sound/weapons/energy/LightningCannonImpact.ogg',\
+	"sound/radio_station/music/union1.mp3" = 'sound/radio_station/music/union1.mp3',\
+	"sound/radio_station/music/union2.mp3" = 'sound/radio_station/music/union2.mp3',\
+	"sound/radio_station/music/union3.mp3" = 'sound/radio_station/music/union3.mp3',\
+	"sound/radio_station/music/union4.mp3" = 'sound/radio_station/music/union4.mp3',\
 
 "NONE" = null)

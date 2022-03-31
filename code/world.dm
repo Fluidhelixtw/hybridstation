@@ -725,10 +725,7 @@ var/f_color_selector_handler/F_Color_Selector
 	SPAWN_DBG(world.tick_lag)
 		for (var/client/C)
 			if (C.mob)
-				if (prob(40))
-					C.mob << sound(pick('sound/misc/NewRound2.ogg', 'sound/misc/NewRound3.ogg', 'sound/misc/NewRound4.ogg', 'sound/misc/TimeForANewRound.ogg'))
-				else
-					C.mob << sound('sound/misc/NewRound.ogg')
+				C.mob << sound(pick('sound/misc/knockout.ogg', 'sound/misc/lose.ogg', 'sound/misc/sad_server_death.ogg', 'sound/misc/NewRound4.ogg',))
 
 #ifdef DATALOGGER
 	SPAWN_DBG(world.tick_lag*2)

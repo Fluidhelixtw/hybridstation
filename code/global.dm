@@ -270,7 +270,7 @@ var/global
 	deadchat_allowed = 1
 	debug_mixed_forced_wraith = 0
 	debug_mixed_forced_blob = 0
-	farting_allowed = 1
+	farting_allowed = 0
 	blood_system = 1
 	bone_system = 0
 	pull_slowing = 0
@@ -493,7 +493,7 @@ var/global
 
 	list/cooldowns
 
-	syndicate_currency = "[pick("Syndie","Baddie","Evil","Spooky","Dread","Yee","Murder","Illegal","Totally-Legit","Crime","Awful")][pick("-"," ")][pick("Credits","Bux","Tokens","Cash","Dollars","Tokens","Dollarydoos","Tickets","Souls","Doubloons","Pesos","Rubles","Rupees")]"
+	syndicate_currency = "Requisition Tokens"
 
 	list/valid_modes = list("secret","action","intrigue","random","traitor","meteor","extended","monkey",
 		"nuclear","blob","restructuring","wizard","revolution", "revolution_extended","malfunction",
