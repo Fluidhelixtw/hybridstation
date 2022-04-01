@@ -2,7 +2,6 @@ You can step over crates by click-dragging yourself onto them.
 Hold SPACE and click on a tile to throw your current item there
 Hold ALT and click on something to examine it.
 Hold CTRL and click on a nearby object to start pulling it.
-Hit CTRL-F to fart. All the cool kids are doing it.
 If you suspect someone's being shit, adminhelp it with F1.
 Admins can always see adminhelps no matter whether they are currently on the server or not.
 Admins and mentors may not be able to give you feedback about certain subjects, e.g. identities of traitors.
@@ -12,7 +11,6 @@ Lie down on the ground and hit Z to RESIST if you're on fire to try and extingui
 Make sure the AI is actually alive before asking it for help.
 You can pass by people when both parties are on Help intent.
 Dying is not uncommon. Don't get frustrated if it happens to you.
-If the current server has too many players, try out a different one.
 Soda, candy, smokes, and coffee can help you recover from stuns more quickly. Check the vending machines!
 Hard drugs can give you a major advantage in combat, if you're willing to face the risks.
 Never trust a vigilante. They're probably committing all sorts of crimes too.
@@ -100,9 +98,7 @@ Fire extinguishers must have their pin pulled before they can be used. It's regu
 There is a MAP button in the upper-right corner of the screen to help you navigate.
 You will frequently start with a breath mask and an emergency 02 tank in a box in your backpack. Check to make sure! They can save your life.
 The chaplain is more than just a spiritual guide. They're the station's greatest weapon when facing magical and supernatural foes.
-God doesn't like it when you fart on their book.
 Never trust a wizard.
-Styptic powder, silver sulfadiazine, charcoal, and salbumatol are the four common treatments for BRUTE, BURN, TOX, and OXY damage respectively.
 Administering sedatives and painkillers to patients improves the odds of a successful surgery.
 There is a right and wrong way to use a stun baton. Trying to use it on HARM intent will stun you instead!
 If you're desperate, you can use your own money to buy shipments from Cargo.

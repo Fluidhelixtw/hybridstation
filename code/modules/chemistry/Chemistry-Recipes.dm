@@ -357,9 +357,29 @@ datum
 					C.reagents.add_reagent("chloramine", (1 * created_volume) / length(mobs_affected))
 				return
 
+		neurotoxin
+			name = "nitric oxide"
+			id = "neurotoxin"
+			required_reagents = list("nitric_acid" = 1, "mannitol" = 1, "stabiliser" = 1, "mercury" = 2)
+			result_amount = 4
+			result = "neurotoxin"
+			mix_phrase = "A sickly sweet smell wafts through the air."
 
+		pyromethium
+			name = "pyromethium"
+			id = "pyromethium"
+			required_reagents = list("radium" = 1, "infernite" = 1, "plasma" = 2, "sulfonal" = 2)
+			result_amount = 4
+			result = "pyromethium"
+			mix_phrase = "The area around the chemical starts to glow red slightly."
 
-
+		ricin
+			name = "artificial ricin"
+			id = "ricin"
+			required_reagents = list("cyanide" = 1, "phenol" = 1, "hydroacid" = 1, "potassium_perchlorate" = 1, "catalyst" = 1)
+			result_amount = 2.5
+			result = "ricin"
+			mix_phrase = "The solution clears up ominously."
 
 		booster_enzyme
 			name = "Booster Enzyme"
@@ -1913,7 +1933,7 @@ datum
 			name = "Stable mutagen"
 			id = "dna_mutagen"
 			result = "dna_mutagen"
-			required_reagents = list("mutagen" = 1, "silicon" = 2, "stabilizer" = 1, "plasma" = 1)
+			required_reagents = list("mutagen" = 1, "silicon" = 2, "stabiliser" = 1, "plasma" = 1)
 			result_amount = 3
 			mix_phrase = "The substance turns a drab green and begins to bubble."
 		//  required_temperature = 170
@@ -1935,9 +1955,9 @@ datum
 			name = "Cyanide"
 			id = "cyanide"
 			result = "cyanide"
-			required_reagents = list("oil" = 1, "ammonia" = 1, "oxygen" = 1) // more or less the industrial route to cyanide
+			required_reagents = list("fuel" = 1, "ammonia" = 1, "oxygen" = 2, "plasma" = 1)
 			required_temperature = T0C + 100
-			result_amount = 1 // let's not make it too easy to mass produce
+			result_amount = 3
 			mix_phrase = "The mixture gives off a faint scent of almonds."
 			mix_sound = 'sound/misc/drinkfizz.ogg'
 
@@ -2258,7 +2278,7 @@ datum
 			name = "Epinephrine"
 			id = "epinephrine"
 			result = "epinephrine"
-			required_reagents = list("phenol" = 1, "plasma" = 1, "oxygen" = 1, "acetone" = 1, "diethylamine" = 1)
+			required_reagents = list("phenol" = 1, "plasma" = 1, "oxygen" = 1, "acetone" = 1)
 			result_amount = 4
 			mix_phrase = "Tiny white crystals precipitate out of the solution."
 			mix_sound = 'sound/misc/drinkfizz.ogg'
@@ -2381,8 +2401,8 @@ datum
 			name = "Mutadone"
 			id = "mutadone"
 			result = "mutadone"
-			required_reagents = list("mutagen" = 1, "acetone" = 1, "bromine" = 1)
-			result_amount = 3
+			required_reagents = list("mutagen" = 2, "stabiliser" = 1, "phosphorus" = 1, "magnesium")
+			result_amount = 4
 			mix_phrase = "A foul astringent liquid emerges from the reaction."
 
 		cryoxadone
@@ -2411,22 +2431,12 @@ datum
 			result_amount = 2
 			mix_phrase = "The solvent extracts an antibiotic compound from the fungus."
 
-		mutagen2
-			name = "Strange Toxin"
-			id = "mutagen2"
-			result = "mutagen"
-			required_reagents = list("neurotoxin" = 1, "epinephrine" = 1)
-			result_amount = 2
-			mix_phrase = "An unpleasant, shifting green mass of liquid forms from the reaction."
-			mix_sound = 'sound/misc/drinkfizz.ogg'
-
 		initropidril
 			name = "initropidril"
 			id = "initropidril"
 			result = "initropidril"
-			//required_reagents = list("crank" = 1, "histamine" = 1, "krokodil" = 1, "bathsalts" = 1, "atropine" = 1, "nicotine" = 1, "morphine" = 1)
-			required_reagents = list("triplepiss" = 1, "histamine" = 1, "methamphetamine" = 1, "water_holy" = 1, "pacid" = 1, "neurotoxin" = 1, "stabiliser" = 1)
-			result_amount = 4 // lowered slightly
+			required_reagents = list("mercury" = 1, "ephedrine" = 1, "methamphetamine" = 2, "heparin" = 1, "catalyst" = 1)
+			result_amount = 3
 			mix_phrase = "A sweet and sugary scent drifts from the unpleasant milky substance."
 
 /*
@@ -3098,18 +3108,6 @@ datum
 			result_amount = 5
 			mix_phrase = "The solution seems to highlight stains in the container."
 
-/*		fuckthisshit
-			name = "fuck this shit"
-			id = "fuckthisshit"
-			result = null
-			required_reagents = list("carbon" = 5, "flourine" = 5, "acid" = 5, "sugar" = 5,  "phosphorus" = 5, "potassium" = 5, "water" = 15)
-			result_amount = 5
-			mix_phrase = "The chemicals mix into a shade of brown and begin to bubble."
-			mix_sound = 'poo2.ogg'
-
-			on_reaction(var/datum/reagents/holder, var/created_volume)
-				holder.clear_reagents()
-				message_admins("[] attempted to make infinifoam what a piece of shit", usr) */
 
 		// Synthesizing these three chemicals is pretty complex in real life, but fuck it, it's just a game!
 		ammonia
@@ -3638,6 +3636,28 @@ datum
 			required_reagents = list("plasma" = 1, "radium" = 1, "stabiliser" = 1, "space_drugs" = 1, "cryoxadone" = 1, "cocktail_citrus" = 1)
 			result_amount = 6
 			mix_phrase = "The substance flashes multiple colors and emits the smell of a pocket protector."
+
+		ketamine
+			name = "ketamine"
+			id = "ketamine"
+			result = "ketamine"
+			required_reagents = list("plasmorphine" = 1, "antimony" = 1, "pyromethium" = 1, "lithium" = 1, "catalyst" = 1)
+			result_amount = 3
+			mix_phrase = "The reagents swirl together and half of it quickly evaporates."
+			on_reaction(var/datum/reagents/holder, var/created_volume)
+				var/location = get_turf(holder.my_atom)
+
+				for(var/mob/M in all_viewers(null, location))
+					boutput(M, "<span class='alert'>The solution generates a strong vapor!</span>")
+
+				var/list/mob/living/carbon/mobs_affected = list()
+				for(var/mob/living/carbon/C in range(location, 1))
+					if(!issmokeimmune(C))
+						mobs_affected += C
+				for(var/mob/living/carbon/C as anything in mobs_affected)
+					C.reagents.add_reagent("ketamine", created_volume / length(mobs_affected))
+				return
+
 
 		fliptonium
 			name = "fliptonium"

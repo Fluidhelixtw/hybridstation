@@ -494,7 +494,7 @@ CONTAINS:
 
 		else
 
-			if ((patient.hasStatus("defibbed") && prob(90)) || prob(75)) // it was a 100% chance before... probably
+			if ((patient.hasStatus("defibbed") && prob(90)) || prob(75) || (patient.reagents.has_reagent("epinepherine"))) // it was a 100% chance before... probably
 				patient.cure_disease_by_path(/datum/ailment/malady/flatline)
 			if (!patient.find_ailment_by_type(/datum/ailment/malady/flatline))
 				speak("Normal cardiac rhythm restored.")

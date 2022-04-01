@@ -41,7 +41,7 @@ datum
 
 
 		medical/spaceacillin
-			name = "spaceacillin"
+			name = "phenocillin"
 			id = "spaceacillin"
 			description = "An all-purpose antibiotic agent extracted from space fungus."
 			reagent_state = LIQUID
@@ -478,7 +478,7 @@ datum
 			depletion_rate = 0.2
 			overdose = 30
 			value = 22
-			target_organs = list("brain", "left_eye", "right_eye", "heart", "left_lung", "right_lung", "left_kidney", "right_kidney", "liver", "stomach", "intestines", "spleen", "pancreas", "appendix", "tail")	//RN this is all the organs. Probably I'll remove some from this list later.
+			target_organs = list("brain", "left_eye", "right_eye", "heart", "left_lung", "right_lung", "left_kidney", "right_kidney", "liver", "stomach", "intestines", "spleen", "pancreas", "appendix", "tail")
 
 			on_mob_life(var/mob/M, var/mult = 1)
 				if(!M)
@@ -778,16 +778,13 @@ datum
 			depletion_rate = 0.2
 			overdose = 30
 			value = 17 // 5c + 5c + 4c + 1c + 1c + 1c
-			stun_resist = 10
 
 			on_add()
 				if(ismob(holder?.my_atom))
 					var/mob/M = holder.my_atom
-					APPLY_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_epinephrine", 3)
+					APPLY_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_epinephrine", 2)
 
 				..()
-
-
 
 			on_remove()
 				if(ismob(holder?.my_atom))
@@ -798,21 +795,23 @@ datum
 
 			on_mob_life(var/mob/M, var/mult = 1)
 				if(!M) M = holder.my_atom
-				if(M.bodytemperature < M.base_body_temp) // So it doesn't act like supermint
-					M.bodytemperature = min(M.base_body_temp, M.bodytemperature+(7 * mult))
 				if(probmult(10))
 					M.make_jittery(4)
 				M.changeStatus("drowsy", -10 SECONDS)
-				if(M.sleeping && probmult(5)) M.sleeping = 0
-				if(M.get_brain_damage() && prob(5)) M.take_brain_damage(-1 * mult)
+				if(M.sleeping) M.sleeping = 0
+				if(M.get_brain_damage()) M.take_brain_damage(-0.5 * mult)
 				if(holder.has_reagent("histamine"))
-					holder.remove_reagent("histamine", 2 * mult) //combats symptoms not source //ok combats source a bit more
-				if(M.losebreath > 3)
-					M.losebreath -= (1 * mult)
-				if(M.get_oxygen_deprivation() > 35)
-					M.take_oxygen_deprivation(-10 * mult)
-				if(M.health < -10 && M.health > -65)
-					M.HealDamage("All", 1 * mult, 1 * mult, 1 * mult)
+					holder.remove_reagent("histamine", 2 * mult)
+				if(M.health < -10 && M.health > -150)
+					M.HealDamage("All", 2 * mult, 2 * mult, 1 * mult)
+					M.take_oxygen_deprivation(-5 * mult)
+					if(M.losebreath > 3)
+						M.losebreath -= (1 * mult)
+				if (ishuman(M))
+					var/mob/living/carbon/human/H = M
+					if (H.organHolder)
+						H.organHolder.heal_organs(5*mult, 5*mult, 5*mult, "heart")
+
 				..()
 				return
 
@@ -1026,7 +1025,7 @@ datum
 		medical/mutadone // COGWERKS CHEM REVISION PROJECT. - marked for revision. Magic bullshit chem, ought to be related to mutagen somehow
 			name = "mutadone"
 			id = "mutadone"
-			description = "Mutadone is an experimental bromide that can cure genetic abnomalities."
+			description = "Mutadone is an experimental drug that can cure genetic abnomalities."
 			reagent_state = SOLID
 			fluid_r = 80
 			fluid_g = 150
@@ -1063,7 +1062,7 @@ datum
 		medical/ephedrine
 			name = "ephedrine"
 			id = "ephedrine"
-			description = "Ephedrine is a cheap heart stimulant used in shitty medical establishments."
+			description = "Ephedrine is a cheap heart stimulant used in low-quality medical establishments."
 			reagent_state = LIQUID
 			fluid_r = 210
 			fluid_g = 255

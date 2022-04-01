@@ -419,12 +419,12 @@ datum
 			depletion_rate = 0.5
 			on_mob_life(var/mob/M, var/mult = 1)
 				if (!M) M = holder.my_atom
-				M.losebreath += (1 * mult)
 				if (probmult(10))
 					M.vomit()
-				if (probmult(50))
-					M.take_toxin_damage(1 * mult)
-
+				M.take_toxin_damage(1 * mult)
+				M.take_brain_damage(0.5 * mult)
+				if(M.health < 0)
+					M.take_oxygen_deprivation(1 * mult)
 				..()
 				return
 
@@ -510,30 +510,12 @@ datum
 			on_mob_life(var/mob/M, var/mult = 1) // -cogwerks. previous version
 				if (!M) M = holder.my_atom
 				if (!counter) counter = 1
-				M.take_toxin_damage(1.5 * mult)
+				M.take_toxin_damage(3 * mult)
 				if (probmult(8))
 					M.emote("drool")
 				if (prob(15))
-					boutput(M, "<span class='alert'>You cannot breathe!</span>")
-					M.losebreath += (1 * mult)
+					boutput(M, "<span class='alert'>You feel horrible!</span>")
 					M.emote("gasp")
-				switch(counter += (1 * mult))
-					if (20 to 30)
-						if (prob(15))
-							boutput(M, "<span class='alert'>You feel weak.</span>")
-							M.setStatus("stunned", max(M.getStatusDuration("stunned"), 0.5 SECONDS * mult))
-							M.take_toxin_damage(0.5 * mult)
-					if (30 to 45)
-						if (prob(20))
-							boutput(M, "<span class='alert'>You feel very weak.</span>")
-							M.setStatus("stunned", max(M.getStatusDuration("stunned"), 1 SECONDS * mult))
-							M.take_toxin_damage(1 * mult)
-					if (45 to INFINITY)
-						if (prob(25))
-							boutput(M, "<span class='alert'>You feel horribly weak.</span>")
-							M.setStatus("stunned", max(M.getStatusDuration("stunned"), 2 SECONDS * mult))
-							M.take_toxin_damage(1.5 * mult)
-
 				..()
 				return
 
@@ -663,39 +645,91 @@ datum
 			fluid_r = 127
 			fluid_g = 16
 			fluid_b = 192
+			depletion_rate = 0.1
 			transparency = 255
+			var/counter = 1
 
-			on_add()
-				if(ismob(holder?.my_atom))
-					var/mob/M = holder.my_atom
-					APPLY_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_initropidril", 33)
-				return
 
-			on_remove()
-				if(ismob(holder?.my_atom))
-					var/mob/M = holder.my_atom
-					REMOVE_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_initropidril")
-				return
-
-			on_mob_life(var/mob/living/M, var/mult = 1)
-
+			on_mob_life(var/mob/M, var/mult = 1)
 				if (!M) M = holder.my_atom
-				if (prob(33))
-					M.take_toxin_damage(rand(5,25) * mult)
-				if (prob(33))
-					boutput(M, "<span class='alert'>You feel horribly weak.</span>")
-					M.setStatus("stunned", max(M.getStatusDuration("stunned"), 3 SECONDS * mult))
+				if (!counter) counter = 1
+				counter += 1
+				if (counter == 6)
+					var/mob/living/carbon/human/H = M
+					if (H.organHolder)
+						H.organHolder.damage_organ(0, 0, 15, "heart")
+					counter = 1
 				if (prob(10))
-					boutput(M, "<span class='alert'>You cannot breathe!</span>")
-					M.take_oxygen_deprivation(10 * mult)
-					M.losebreath += (1 * mult)
-				if (prob(10))
-					boutput(M, "<span class='alert'>Your chest is burning with pain!</span>")
-					M.take_oxygen_deprivation(10 * mult)
-					M.losebreath += (1 * mult)
-					M.setStatus("weakened", max(M.getStatusDuration("weakened"), 4 SECONDS * mult))
-					M.contract_disease(/datum/ailment/malady/flatline, null, null, 1) // path, name, strain, bypass resist
+					M.reagents.add_reagent("histamine", 1 * mult)
 				..()
+				return
+
+		harmful/ricin
+			name = "space ricin"
+			id = "ricin"
+			reagent_state = LIQUID
+			fluid_r = 255
+			fluid_g = 255
+			fluid_b = 255
+			transparency = 255
+			description = "Extremely toxic, but slow acting, stealthy, and hard to cure agent that causes organ failure."
+			depletion_rate = 0.025
+			penetrates_skin = 0
+			target_organs = list("left_kidney","right_kidney","liver","stomach","intestines","spleen","pancreas")
+			var/counter = 1
+			var/flushing = 0.1 //standard efficacy against flushing
+
+			on_mob_life(var/mob/M, var/mult = 1)
+				if (!M) M = holder.my_atom
+				if (!counter) counter = 1
+
+				if(holder.has_reagent("charcoal")) //to make it a tad harder to treat
+					holder.remove_reagent("charcoal", flushing * mult)
+				if(holder.has_reagent("calomel"))
+					holder.remove_reagent("calomel", flushing * mult)
+				if(holder.has_reagent("penteticacid"))
+					holder.remove_reagent("penteticacid", flushing * mult)
+
+				switch(counter += (1 * mult))
+					if (75 to 125)
+						if (probmult(4))
+							M.emote(pick("sneeze","cough","moan","groan"))
+					if (125 to 175)
+						flushing = 1.5 //it gets a tad harder to cure here
+
+						if (probmult(8))
+							M.emote(pick("sneeze","cough","moan","groan"))
+						else if (probmult(5))
+							boutput(M, "<span class='alert'>You feel weak and tired.</span>")
+							M.setStatus("drowsy", 4 SECONDS)
+							M.change_eye_blurry(5, 5)
+						if (ishuman(M))
+							var/mob/living/carbon/human/H = M
+							if (H.organHolder)
+								H.organHolder.damage_organs(1*mult, 0, 1*mult, target_organs, 20)
+					if (175 to INFINITY)
+						flushing = 3 // time to ramp up that flusher flushing
+
+						if (probmult(10))
+							M.emote(pick("sneeze","drool","cough","moan","groan"))
+						if (probmult(20))
+							boutput(M, "<span class='alert'>You feel weak and drowsy.</span>")
+							M.setStatus("drowsy", 5 SECONDS)
+						if (probmult(8))
+							M.visible_message("<span class='alert'>[M] vomits a lot of blood!</span>")
+							playsound(M, "sound/impact_sounds/Slimy_Splat_1.ogg", 30, 1)
+							make_cleanable(/obj/decal/cleanable/blood/splatter,M.loc)
+						else if (probmult(5))
+							boutput(M, "<span class='alert'>You feel a sudden pain in your chest.</span>")
+							M.take_toxin_damage(3)
+						M.change_eye_blurry(5, 5)
+						if (ishuman(M))
+							var/mob/living/carbon/human/H = M
+							if (H.organHolder)
+								H.organHolder.damage_organs(1*mult, 0, 1*mult, target_organs, 50)
+				..()
+				return
+
 
 		harmful/initrobeedril_old
 			name = "old initrobeedril"
@@ -1217,7 +1251,7 @@ datum
 				return
 
 		harmful/ketamine // COGWERKS CHEM REVISION PROJECT. ketamine
-			name = "ketamine"
+			name = "detamine"
 			id = "ketamine"
 			description = "A potent veterinary tranquilizer."
 			reagent_state = LIQUID
@@ -1225,21 +1259,10 @@ datum
 			fluid_g = 150
 			fluid_b = 250
 			transparency = 20
-			depletion_rate = 0.8
-			penetrates_skin = 1
+			depletion_rate = 0.6
 			var/counter = 1
 			var/remove_buff = 0
 
-			on_add()
-				if (istype(holder) && istype(holder.my_atom) && hascall(holder.my_atom,"add_stam_mod_max"))
-					remove_buff = holder.my_atom:add_stam_mod_max("r_ketamine", -20)
-				return
-
-			on_remove()
-				if (remove_buff)
-					if (istype(holder) && istype(holder.my_atom) && hascall(holder.my_atom,"remove_stam_mod_max"))
-						holder.my_atom:remove_stam_mod_max("r_ketamine")
-				return
 
 			on_mob_life(var/mob/M, var/mult = 1) // sped this up a bit due to mob loop changes
 				if (!M) M = holder.my_atom
@@ -1247,13 +1270,13 @@ datum
 				switch(counter += 1)
 					if (1 to 5)
 						if (probmult(25)) M.emote("yawn")
-					if (6 to 9)
+					if (6 to 19)
 						M.change_eye_blurry(10, 10)
 						if (probmult(35)) M.emote("yawn")
-					if (10)
+					if (20)
 						M.emote("faint")
 						M.setStatus("weakened", max(M.getStatusDuration("weakened"), 5 SECONDS * mult))
-					if (11 to INFINITY)
+					if (21 to INFINITY)
 						M.setStatus("paralysis", max(M.getStatusDuration("paralysis"), 25 SECONDS * mult))
 
 				..()
@@ -1349,49 +1372,33 @@ datum
 				..()
 				return
 
-		harmful/neurotoxin // COGWERKS CHEM REVISION PROJECT. which neurotoxin?
-			name = "neurotoxin"
+		harmful/neurotoxin
+			name = "nitric oxide"
 			id = "neurotoxin"
-			description = "A dangerous toxin that attacks the nervous system"
+			description = "A dangerous toxin that attacks the nervous system and knocks victims unconscious"
 			reagent_state = LIQUID
 			fluid_r = 100
 			fluid_g = 145
 			fluid_b = 110
 			depletion_rate = 1
-			var/counter = 1
 			var/fainted = 0
 			blob_damage = 1
 			value = 4 // 3c + heat
 
 			on_mob_life(var/mob/M, var/mult = 1)
 				if (!M) M = holder.my_atom
-				if (!counter) counter = 1
-				switch(counter += (1 * mult))
-					if (1 to 4)
-						return // let's not be incredibly obvious about who stung you for changelings
-					if (5 to 10)
-						M.make_dizzy(1 * mult)
-						M.change_misstep_chance(10 * mult)
-						if (probmult(20)) M.emote("drool")
-					if (11 to 17)
-						M.setStatus("drowsy", 20 SECONDS)
-						M.make_dizzy(1 * mult)
-						M.change_misstep_chance(20 * mult)
-						if (probmult(35)) M.emote("drool")
-					if (18 to INFINITY)
-						if (!fainted)
-							M.emote("faint")
-							fainted = 1
-						M.setStatus("paralysis", max(M.getStatusDuration("paralysis"), 10 SECONDS * mult))
-						M.setStatus("drowsy", 40 SECONDS)
-
-				M.jitteriness = max(M.jitteriness-30,0)
-				if (M.get_brain_damage() <= 80)
-					M.take_brain_damage(1 * mult)
+				if (probmult(35)) M.emote("drool")
+				if (M.get_brain_damage() >= 90)
+					if (!fainted)
+						M.emote("faint")
+						fainted = 1
+					M.setStatus("paralysis", max(M.getStatusDuration("paralysis"), 10 SECONDS * mult))
+					M.setStatus("drowsy", 40 SECONDS)
 				else
-					if (prob(10)) M.take_brain_damage(1 * mult) // let's slow down a bit after 80
-				M.take_toxin_damage(1 * mult)
-				..(M, mult)
+					M.take_toxin_damage(1 * mult)
+					M.take_brain_damage(3 * mult)
+
+				..()
 				return
 
 		harmful/mutagen // COGWERKS CHEM REVISION PROJECT. magic chemical, fine as is
@@ -1635,6 +1642,26 @@ datum
 						M.setStatus("weakened", max(M.getStatusDuration("weakened"), 4 SECONDS * mult))
 						M.emote(pick("choke", "gasp"))
 						boutput(M, "<span class='alert'><b>You feel like you're dying!</b></span>")
+
+		harmful/pyromethium
+			name = "pyromethium"
+			id = "pyromethium"
+			description = "A synthetic compound that enhances the radioactive properties of it's components."
+			reagent_state = GAS
+			fluid_r = 255
+			fluid_g = 100
+			fluid_b = 100
+			transparency = 255
+			penetrates_skin = 1
+			depletion_rate = 0.5
+			on_mob_life(var/mob/M, var/mult = 1 )
+				if(!M) M = holder.my_atom
+				M.changeStatus("radiation", 3 SECONDS * mult, 2)
+				M.TakeDamage("chest", 0, 1*mult, 0, DAMAGE_BURN)
+				..()
+				return
+
+
 
 		harmful/sarin // yet another thing that will put ol' cogwerks on a watch list probably
 			name = "sarin"

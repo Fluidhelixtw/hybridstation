@@ -743,11 +743,6 @@ datum
 			touch_modifier = 0.5 //Half the dose lands on the floor
 			blob_damage = 1
 
-			New()
-				..()
-				if(prob(10))
-					description += " Keep away from forums."
-
 			on_mob_life(var/mob/M, var/mult = 1)
 				if(!M) M = holder.my_atom
 				M.changeStatus("radiation", 3 SECONDS * mult, 1)
