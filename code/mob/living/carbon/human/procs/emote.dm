@@ -519,10 +519,10 @@
 			if ("listbasic")
 				src.show_text("smile, grin, smirk, frown, scowl, grimace, sulk, pout, nod, blink, drool, shrug, tremble, quiver, shiver, shudder, shake, \
 				think, ponder, clap, wave, salute, flap, aflap, laugh, chuckle, giggle, chortle, guffaw, cough, hiccup, sigh, mumble, grumble, groan, moan, sneeze, \
-				wheeze, sniff, snore, whimper, yawn, choke, gasp, weep, sob, wail, whine, gurgle, gargle, blush, flinch, blink_r, eyebrow, shakehead, shakebutt, \
+				wheeze, sniff, snore, whimper, yawn, choke, gasp, weep, sob, wail, whine, gurgle, gargle, blush, flinch, blink_r, eyebrow, shakehead,\
 				pale, flipout, rage, shame, raisehand, crackknuckles, stretch, rude, cry, retch, raspberry, tantrum, gesticulate, wgesticulate, smug, \
 				nosepick, flex, facepalm, panic, snap, airquote, twitch, twitch_v, faint, deathgasp, signal, wink, collapse, trip, dance, scream, \
-				burp, fart, monologue, contemplate, custom")
+				burp, monologue, contemplate, custom")
 
 			if ("listtarget")
 				src.show_text("salute, bow, hug, wave, glare, stare, look, nod, flipoff, doubleflip, shakefist, handshake, daps, slap, boggle, highfive, fingerguns")
@@ -592,16 +592,16 @@
 
 	//april fools end
 
-			if ("birdwell")
+			/*if ("birdwell")
 				if ((src.client && src.client.holder) && src.emote_check(voluntary, 50))
 					message = "<B>[src]</B> birdwells."
 					maptext_out = "<I>birdwells</I>"
 					playsound(src.loc, 'sound/vox/birdwell.ogg', 50, 1, channel=VOLUME_CHANNEL_EMOTE)
 				else
 					src.show_text("Unusable emote '[act]'. 'Me help' for a list.", "blue")
-					return
+					return*/
 
-			if ("uguu")
+			/*if ("uguu")
 				if (istype(src.wear_mask, /obj/item/clothing/mask/anime) && !src.stat)
 
 					message = "<B>[src]</B> uguus!"
@@ -618,7 +618,7 @@
 						return
 				else
 					src.show_text("You just don't feel kawaii enough to uguu right now!", "red")
-					return
+					return*/
 
 			if ("juggle")
 				if (!src.restrained())
@@ -872,7 +872,7 @@
 				maptext_out = "<I>shakes [his_or_her(src)] head</I>"
 				m_type = 1
 
-			if ("shakebutt","shakebooty","shakeass","twerk")
+			/*if ("shakebutt","shakebooty","shakeass","twerk")
 				message = "<B>[src]</B> shakes [his_or_her(src)] ass!"
 				maptext_out = "<I>shakes [his_or_her(src)] ass!</I>"
 				m_type = 1
@@ -890,7 +890,7 @@
 						if (prob(75))
 							responseBee.visible_message("<b>[responseBee]</b> buzzes [pick("in a confused manner", "perplexedly", "in a perplexed manner")].", group = "responseBee")
 						else
-							responseBee.visible_message("<b>[responseBee]</b> can't understand [src]'s accent!")
+							responseBee.visible_message("<b>[responseBee]</b> can't understand [src]'s accent!")*/
 
 			if ("pale")
 				message = "<B>[src]</B> goes pale for a second."

@@ -3638,7 +3638,7 @@ datum
 			mix_phrase = "The substance flashes multiple colors and emits the smell of a pocket protector."
 
 		ketamine
-			name = "ketamine"
+			name = "detamine"
 			id = "ketamine"
 			result = "ketamine"
 			required_reagents = list("plasmorphine" = 1, "antimony" = 1, "pyromethium" = 1, "lithium" = 1, "catalyst" = 1)

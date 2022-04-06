@@ -1457,7 +1457,7 @@
 	if (isnull(src.mind))
 		return
 	if (isnull(src.mind.miranda))
-		src.say_verb("You have the right to remain silent. Anything you say can and will be used against you in a NanoTrasen court of Space Law. You have the right to a rent-an-attorney. If you cannot afford one, a monkey in a suit and funny hat will be appointed to you.")
+		src.say_verb("You have the right to remain silent. Anything you say can and will be used against you in a Union court of Company Law. You have the right to ask for an attorney, but security is under no obligation to give one to you. Tough luck, criminal.")
 		return
 	src.say_verb(src.mind.miranda)
 
@@ -1469,7 +1469,7 @@
 		src.mind.last_memory_time = world.time // why not?
 
 		if (isnull(src.mind.miranda))
-			src.mind.set_miranda("You have the right to remain silent. Anything you say can and will be used against you in a NanoTrasen court of Space Law. You have the right to a rent-an-attorney. If you cannot afford one, a monkey in a suit and funny hat will be appointed to you.")
+			src.mind.set_miranda("You have the right to remain silent. Anything you say can and will be used against you in a Union court of Company Law. You have the right to ask for an attorney, but security is under no obligation to give one to you. Tough luck, criminal.")
 
 		src.mind.show_miranda(src)
 
