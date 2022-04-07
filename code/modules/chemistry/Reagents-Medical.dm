@@ -43,7 +43,7 @@ datum
 		medical/spaceacillin
 			name = "phenocillin"
 			id = "spaceacillin"
-			description = "An all-purpose antibiotic agent extracted from space fungus."
+			description = "A synthetic and powerful antibiotic agent."
 			reagent_state = LIQUID
 			fluid_r = 10
 			fluid_g = 180
@@ -55,12 +55,50 @@ datum
 			on_mob_life(var/mob/M, var/mult = 1)
 				if(!M) M = holder.my_atom
 				for(var/datum/ailment_data/disease/virus in M.ailments)
-					if (virus.cure == "Antibiotics")
+					if (virus.name == "space_plague")
+						virus.state = "Remissive"
+					if (virus.name == "grave dust")
+						virus.state = "Remissive"
+					if (virus.name == "necrovirus")
 						virus.state = "Remissive"
 				if(M.hasStatus("poisoned"))
 					M.changeStatus("poisoned", -10 SECONDS * mult)
 				..()
 				return
+
+		medical/antidote
+			name = "antidote"
+			id = "antidote"
+			description = "A powerful, expensive and extremely potent antidote to Changeling toxins. Mildly toxic."
+			reagent_state = LIQUID
+			fluid_r = 50
+			fluid_g = 200
+			fluid_b = 50
+			transparency = 255
+			var/remove_buff = 0
+
+			on_add()
+				if (istype(holder) && istype(holder.my_atom) && hascall(holder.my_atom,"remove_stam_mod_max"))
+					holder.my_atom:remove_stam_mod_max("r_methyl")
+				return
+
+			on_remove()
+				if (holder.has_reagent("methyl_iodide"))
+					if (istype(holder) && istype(holder.my_atom) && hascall(holder.my_atom,"add_stam_mod_max"))
+						remove_buff = holder.my_atom:add_stam_mod_max("r_methyl", -50)
+				return
+
+
+			on_mob_life(var/mob/M, var/mult = 1)
+				if(!M) M = holder.my_atom
+				M.take_toxin_damage(1 * mult)
+				if (M.reagents.has_reagent("methyl_iodide"))
+					APPLY_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, src.id, 5)
+				holder.remove_reagent("methyl_iodide", 5)
+				holder.remove_reagent("funis_paralysin", 5)
+				..()
+
+
 
 		medical/morphine // // COGWERKS CHEM REVISION PROJECT. roll the antihistamine effects into this?
 			name = "morphine"
@@ -296,7 +334,7 @@ datum
 				return
 
 		medical/calomel
-			name = "Purgative"
+			name = "purgative"
 			id = "calomel"
 			description = "This potent purgative rids the body of impurities. It is highly toxic however and close supervision is required."
 			reagent_state = LIQUID

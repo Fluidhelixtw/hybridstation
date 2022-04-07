@@ -3658,6 +3658,27 @@ datum
 					C.reagents.add_reagent("ketamine", created_volume / length(mobs_affected))
 				return
 
+		methyl_iodide
+			name = "methyl iodide"
+			id = "methyl_iodide"
+			result = "methyl_iodide"
+			required_reagents = list("bloodc" = 1, "plasmorphine" = 1, "plasma" = 1, "anti_rad" = 1,)
+			result_amount = 3
+			mix_phrase = "The blood infuses with the phoron and consumes the other chemicals in the mixture."
+
+		funis_paralysin
+			name = "funis paralysin"
+			id = "funis_paralysin"
+			result = "funis_paralysin"
+			required_reagents = list("bloodc" = 1, "neurotoxin" = 1, "plasma" = 1, "acetone" = 1,)
+			result_amount = 3
+			mix_phrase = "The blood infuses with the phoron and consumes the other chemicals in the mixture."
+
+		antidote
+			name = "antidote"
+			id = "antidote"
+			result = "antidote"
+			required_reagents = list("bloodc" = 1, )
 
 		fliptonium
 			name = "fliptonium"

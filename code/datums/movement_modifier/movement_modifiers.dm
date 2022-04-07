@@ -67,10 +67,10 @@
 
 /datum/movement_modifier/reagent/lean
 	health_deficiency_adjustment = -50
-	
+
 /datum/movement_modifier/reagent/amphomine
 	health_deficiency_adjustment = -20
-	
+
 /datum/movement_modifier/reagent/plasmorphine
 	health_deficiency_adjustment = -20
 

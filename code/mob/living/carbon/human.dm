@@ -1602,7 +1602,7 @@
 			alt_name = " (as Unknown)"
 
 	// Mute disability
-	if (src.bioHolder.HasEffect("mute"))
+	if (src.bioHolder && src.bioHolder.HasEffect("mute") || ((src.reagents?.has_reagent("funis_paralysin")) && (!src.reagents?.has_reagent("antidote"))))
 		boutput(src, "<span class='alert'>You seem to be unable to speak.</span>")
 		return
 

@@ -1250,6 +1250,50 @@ datum
 				..()
 				return
 
+
+		harmful/funis_paralysin //changeling sting, no talk handled in living.dm, no whisper in human.dm
+			name = "funis paralysin"
+			id = "funis_paralysin"
+			description = "An organic chemical that paralyzes the vocal cords, making it impossible to make any noise with your mouth."
+			reagent_state = LIQUID
+			fluid_r = 175
+			fluid_g = 120
+			fluid_b = 120
+			transparency = 100
+			depletion_rate = 0.2
+
+		harmful/methyl_iodide //changeling sting
+			name = "methyl iodide"
+			id = "methyl_iodide"
+			description = "An organic chemical, also known as Monoiodomethane, that makes it near impossible to catch your breath."
+			reagent_state = LIQUID
+			fluid_r = 150
+			fluid_g = 100
+			fluid_b = 100
+			transparency = 100
+			var/remove_buff = 0
+			depletion_rate = 0.2
+
+			on_add()
+				if (istype(holder) && istype(holder.my_atom) && hascall(holder.my_atom,"add_stam_mod_max"))
+					remove_buff = holder.my_atom:add_stam_mod_max("r_methyl", -50)
+
+				return
+
+			on_remove()
+				if (remove_buff)
+					if (istype(holder) && istype(holder.my_atom) && hascall(holder.my_atom,"remove_stam_mod_max"))
+						holder.my_atom:remove_stam_mod_max("r_methyl")
+				return
+
+			on_mob_life(var/mob/M, var/mult = 1)
+				if (!M) M = holder.my_atom
+				APPLY_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, src.id, -5)
+				..()
+				return
+
+
+
 		harmful/ketamine // COGWERKS CHEM REVISION PROJECT. ketamine
 			name = "detamine"
 			id = "ketamine"

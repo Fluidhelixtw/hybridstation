@@ -18,7 +18,7 @@ datum
 			transparency = 200
 			depletion_rate = 0.1
 
-			on_mob_life(var/mob/M, var/mult = 1)
+			on_mob_life(var/mob/M, var/mult = 1) //oxygen toxicity handled in lung.dm, cold protection handled in life.dm
 				if(!M) M = holder.my_atom
 				if(M.health > 0)
 					M.take_oxygen_deprivation(-15)
