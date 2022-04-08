@@ -478,6 +478,18 @@ datum
 					L.changeStatus("burning", 10 SECONDS * mult)
 				..()
 
+
+		combustible/silver_azide
+			name = "silver azide"
+			id = "silver_azide"
+			description = "A colorless and extremely dangerous explosive. Treat with EXTREME CAUTION."
+			reagent_state = SOLID
+			fluid_r = 255
+			fluid_g = 255
+			fluid_b = 255
+			transparency = 0
+			//unfinished, doesnt explode yet
+
 		combustible/foof
 			name = "FOOF"
 			id = "foof"

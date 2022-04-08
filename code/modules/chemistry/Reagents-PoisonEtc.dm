@@ -665,7 +665,7 @@ datum
 				return
 
 		harmful/ricin
-			name = "space ricin"
+			name = "artificial ricin"
 			id = "ricin"
 			reagent_state = LIQUID
 			fluid_r = 255
@@ -1771,7 +1771,7 @@ datum
 				if (probmult(8))
 					M.visible_message("<span class='alert'>[M] pukes all over \himself.</span>", "<span class='alert'>You puke all over yourself!</span>")
 					M.vomit()
-				M.take_toxin_damage(1 * mult)
+				M.take_toxin_damage(2.5 * mult)
 				M.take_brain_damage(1 * mult)
 				M.TakeDamage("chest", 0, 1 * mult, 0, DAMAGE_BURN)
 				..()

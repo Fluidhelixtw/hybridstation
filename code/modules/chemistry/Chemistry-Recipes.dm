@@ -1975,12 +1975,12 @@ datum
 					C.reagents.add_reagent("cyanide", (0.4 * created_volume) / length(mobs_affected))
 				return
 
-		sarin // oh god why am i adding this
+		sarin
 			name = "Sarin"
 			id = "sarin"
 			result = "sarin"
-			required_reagents = list("chlorine" = 1, "fuel" = 1, "oxygen" = 1, "phosphorus" = 1, "fluorine" = 1, "hydrogen" = 1, "acetone" = 1, "weedkiller" = 1)
-			result_amount = 3 // it is super potent
+			required_reagents = list("chloramine" = 1, "oil" = 1, "oxygen" = 1, "phosphorus" = 1, "cyanide" = 1, "silver_azide" = 1, "acetone" = 1, "catalyst" = 1)
+			result_amount = 4
 			mix_phrase = "The mixture yields a colorless, odorless liquid."
 			mix_sound = 'sound/misc/drinkfizz.ogg'
 
@@ -1989,17 +1989,9 @@ datum
 				for(var/mob/M in all_viewers(null, location))
 					boutput(M, "<span class='alert'>The solution generates a strong vapor!</span>")
 				if(holder?.my_atom?.is_open_container())
-					// A slightly less stupid way of smoking contents. Maybe.
 					var/datum/reagents/smokeContents = new/datum/reagents/
 					smokeContents.add_reagent("sarin", holder.reagent_list["sarin"].volume / 6)
-					//particleMaster.SpawnSystem(new /datum/particleSystem/chemSmoke(location, smokeContents, 10, 2))
 					smoke_reaction(smokeContents, 2, location)
-					/*
-					for(var/mob/living/carbon/human/H in range(location, 2)) // nurfed.
-						if(ishuman(H))
-							if(!H.wear_mask)
-								H.reagents.add_reagent("sarin",4) // griff
-					*/
 					return
 
 
@@ -2292,13 +2284,21 @@ datum
 			result_amount = 4
 			mix_phrase = "A horrid smell like something died drifts from the mixture."
 
-		/*omnizine // COGWERKS CHEM REVISION PROJECT: magic bullshit drug, ought to involve plasma. far too easy to make right now
+		omnizine
 			name = "omnizine"
 			id = "omnizine"
 			result = "omnizine"
-			required_reagents = list("epinephrine" = 1, "charcoal" = 1)
-			result_amount = 2
-			mix_phrase = "The mixture seems to slosh around on its own, fizzing violently."*/
+			required_reagents = list("salicylic_acid" = 1, "charcoal" = 1, "salbutamol" = 1, "mannitol" = 1, "cryoxadone" = 1, "catalyst" = 1)
+			result_amount = 3
+			mix_phrase = "The mixture seems to slosh around on its own, fizzing violently."
+
+		leocizumab
+			name = "leocizumab"
+			id = "leocizumab"
+			result = "leocizumab"
+			required_reagents = list("synaptizine" = 1, "alkaline_salts" = 1, "iron" = 2, "catalyst" = 1)
+			result_amount = "3"
+			mix_phrase = "The resultant fluid starts faintly glowing purple."
 
 		oculine
 			name = "Oculine"
@@ -2590,25 +2590,35 @@ datum
 							var/weak = max(0, created_volume * 0.2 * (3 - checkdist))
 							var/misstep = clamp(1 + 6 * (5 - checkdist), 0, 40)
 							var/ear_damage = max(0, created_volume * 0.2 * (3 - checkdist))
-							var/ear_tempdeaf = max(0, created_volume * (5 - checkdist)) //annoying and unfun so reduced dramatically //HAHA I MADE IT BAD AGAIN!!! -fluidhelix
+							var/ear_tempdeaf = max(20, created_volume * (5 - checkdist)) //annoying and unfun so reduced dramatically //HAHA I MADE IT BAD AGAIN!!! -fluidhelix
 
 							if (issilicon(M))
 								M.apply_sonic_stun(weak, 0)
 							else
 								M.apply_sonic_stun(weak, 0, misstep, 0, 0, ear_damage, ear_tempdeaf, 0)
-/*
+
 		chronospeculo
 			name = "chronospeculo"
 			id = "chronospeculo"
 			result = "chronospeculo"
-			2 strange matter, 1 catalyst, 1 copper, 1 silver azide, 1 RAF => 5 chronomirror
-			required_reagents = list("strange_matter" = 2, "catalyst" = 1, "copper" = 1, "silver" = 1, "" = 1)
-*/
+			required_reagents = list("strange_matter" = 2, "catalyst" = 1, "copper" = 1, "raf" = 1, "silver_azide" = 1)
+			result_amount = 5
+			mix_phrase = "The reflective liquid shows you a few minutes in the past..."
+			mix_sound = "sound/misc/winding.ogg"
+
+		silver_azide  //this chemical hates you more than you hate you
+			name = "Silver Azide"
+			id = "silver_azide"
+			result = "silver_azide"
+			required_reagents = list("silver" = 1, "oil" = 1, "saltpetre" = 1)
+			mix_phrase = "The substance crystalizes and clears up."
+			result_amount = 3
+
 		chlorine_azide  // death 2 chemists
 			name = "Chlorine Azide"
 			id = "chlorine_azide"
 			result = "chlorine_azide"
-			required_reagents = list("salt" = 1, "ammonia" = 1, "nitrogen" = 1, "oxygen" = 1, "silver" = 1, "chlorine" = 1)
+			required_reagents = list("silver_azide" = 1, "chloramine" = 1)
 			instant = 1
 			mix_phrase = "The substance violently detonates!"
 			mix_sound = 'sound/impact_sounds/Metal_Hit_Heavy_1.ogg'
@@ -2626,6 +2636,9 @@ datum
 						holder.covered_cache -= location
 						explosion_new(my_atom, location, 3.4/amt, 2/amt)
 				return
+
+
+
 
 		clf3_firefoam
 			name = "CLF3 + FF Explosion"

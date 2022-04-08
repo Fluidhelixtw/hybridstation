@@ -500,6 +500,57 @@ datum
 
 			do_overdose(var/mob/M, var/mult = 1)
 
+		medical/leocizumab
+			name = "leocizumab"
+			id = "leocizumab"
+			description = "Leocizumab is an addictive amphetamine that boosts brain power and quickly heals suffocation-related damage"
+			reagent_state = LIQUID
+			fluid_r = 50
+			fluid_g = 30
+			fluid_b = 120
+			addiction_prob = 10
+			addiction_min = 10
+			transparency = 200
+			overdose = 20
+			depletion_rate = 1.2
+			target_organs = list("left_lung", "right_lung")
+
+
+			on_add()
+				if(ismob(holder?.my_atom))
+					var/mob/M = holder.my_atom
+					APPLY_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_leocizumab", 3)
+				return
+
+			on_remove()
+				if(ismob(holder?.my_atom))
+					var/mob/M = holder.my_atom
+					REMOVE_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_leocizumab")
+				return
+
+
+			on_mob_life(var/mob/M, var/mult = 1)
+				if(!M)M = holder.my_atom
+				M.take_brain_damage(-10 * mult)
+				if(M.get_oxygen_deprivation())
+					M.take_oxygen_deprivation(-10 * mult)
+				if(M.losebreath)
+					M.losebreath = 0
+				..()
+				return
+
+			do_overdose(var/severity, var/mob/M, var/mult = 1)
+				var/mob/living/carbon/human/H = M
+				if (severity == 1)
+					boutput(M, "<span class='notice'>Your lungs burn.</span>")
+					if (H.organHolder)
+						H.organHolder.damage_organs(1*mult, 0, 1*mult, target_organs, 5)
+				else if (severity == 2)
+					if(probmult(20)) boutput(M, "<span class='notice'>Your head is pounding and your lungs feel like they're melting!</span>")
+					M.take_brain_damage(12 * mult)
+					if (H.organHolder)
+						H.organHolder.damage_organs(1*mult, 0, 1*mult, target_organs, 10)
+
 
 		medical/omnizine
 			name = "omnizine"
@@ -510,22 +561,17 @@ datum
 			fluid_g = 220
 			fluid_b = 220
 			transparency = 40
-			addiction_prob = 1//5
-			addiction_prob2 = 20
-			addiction_min = 5
 			depletion_rate = 0.2
-			overdose = 30
+			overdose = 20
 			value = 22
-			target_organs = list("brain", "left_eye", "right_eye", "heart", "left_lung", "right_lung", "left_kidney", "right_kidney", "liver", "stomach", "intestines", "spleen", "pancreas", "appendix", "tail")
+			target_organs = list("left_eye", "right_eye", "heart", "left_lung", "right_lung", "left_kidney", "right_kidney", "liver", "stomach", "intestines", "spleen", "pancreas", "appendix", "tail")
 
 			on_mob_life(var/mob/M, var/mult = 1)
-				if(!M)
-					M = holder.my_atom
+				if(!M)M = holder.my_atom
 				if(M.get_oxygen_deprivation())
-					M.take_oxygen_deprivation(-1 * mult)
-				if(M.losebreath && prob(50))
-					M.lose_breath(-1 * mult)
-				M.HealDamage("All", 2 * mult, 2 * mult, 1 * mult)
+					M.take_oxygen_deprivation(-2.5 * mult)
+				M.take_brain_damage(-2.5 * mult)
+				M.HealDamage("All", 2.5 * mult, 2.5 * mult, 1 * mult)
 				if (isliving(M))
 					var/mob/living/L = M
 					if (L.bleeding)
@@ -535,42 +581,23 @@ datum
 					if (ishuman(M))
 						var/mob/living/carbon/human/H = M
 						if (H.organHolder)
-							H.organHolder.heal_organs(1*mult, 1*mult, 1*mult, target_organs)
+							H.organHolder.heal_organs(10*mult, 10*mult, 10*mult, target_organs)
 
 				//M.UpdateDamageIcon()
 				..()
 				return
 
 			do_overdose(var/severity, var/mob/M, var/mult = 1)
-				var/effect = ..(severity, M)
 				if (severity == 1) //lesser
 					M.stuttering += 1
-					if(effect <= 1)
-						M.visible_message("<span class='alert'><b>[M.name]</b> suddenly cluches their gut!</span>")
-						M.emote("scream")
-						M.setStatus("weakened", max(M.getStatusDuration("weakened"), 4 SECONDS * mult))
-					else if(effect <= 3)
-						M.visible_message("<span class='alert'><b>[M.name]</b> completely spaces out for a moment.</span>")
-						M.change_misstep_chance(15 * mult)
-					else if(effect <= 5)
-						M.visible_message("<span class='alert'><b>[M.name]</b> stumbles and staggers.</span>")
-						M.dizziness += 5
-						M.setStatus("weakened", max(M.getStatusDuration("weakened"), 4 SECONDS * mult))
-					else if(effect <= 7)
-						M.visible_message("<span class='alert'><b>[M.name]</b> shakes uncontrollably.</span>")
-						M.make_jittery(30)
+					M.bodytemperature = max(M.base_body_temp, M.bodytemperature+(50 * mult))
+					if(probmult(20)) boutput(M, "<span class='notice'>You feel like you're melting!</span>")
 				else if (severity == 2) // greater
-					if(effect <= 2)
-						M.visible_message("<span class='alert'><b>[M.name]</b> suddenly cluches their gut!</span>")
-						M.emote("scream")
-						M.setStatus("weakened", max(M.getStatusDuration("weakened"), 8 SECONDS * mult))
-					else if(effect <= 5)
-						M.visible_message("<span class='alert'><b>[M.name]</b> jerks bolt upright, then collapses!</span>")
-						M.setStatus("weakened", max(M.getStatusDuration("weakened"), 8 SECONDS * mult))
-					else if(effect <= 8)
-						M.visible_message("<span class='alert'><b>[M.name]</b> stumbles and staggers.</span>")
-						M.dizziness += 5
-						M.setStatus("weakened", max(M.getStatusDuration("weakened"), 4 SECONDS * mult))
+					M.stuttering += 2
+					M.bodytemperature = max(M.base_body_temp, M.bodytemperature+(100 * mult))
+					if(probmult(20)) boutput(M, "<span class='notice'>You feel like you're melting!</span>")
+					M.TakeDamage("chest", 0, 3 * mult, 0, DAMAGE_BURN)
+
 
 		medical/saline
 			name = "saline-glucose solution"
