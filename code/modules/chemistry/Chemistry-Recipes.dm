@@ -574,6 +574,14 @@ datum
 			result_amount = 3
 			mix_phrase = "The mixture produces an aromatic fume."
 
+		phoronic_smelling_salts
+			name = "phoronic smelling salts"
+			id = "phoronic_smelling_salts"
+			required_reagents = list("methamphetamine" = 1, "plasma" = 1, "sugar" = 1, "alkaline_salts" = 1)
+			result = "phoronic_smelling_salts"
+			result_amount = 3
+			mix_phrase = "The mixture produces a pleasant aroma."
+
 /*
 		merculite
 			name = "Merculite"
@@ -2169,14 +2177,13 @@ datum
 			result_amount = 2
 			mix_phrase = "The solution settles calmly and emits gentle fumes."
 
-		penteticacid // COGWERKS CHEM REVISION PROJECT: marked for revision. Pentetic Acid?
+		penteticacid
 			name = "Pentetic Acid"
 			id = "penteticacid"
 			result = "penteticacid"
-			required_reagents = list("fuel" = 1, "chlorine" = 1, "ammonia" = 1, "formaldehyde" = 1, "salt" = 1, "cyanide" = 1)
-			// (dichloroethane + ammonia) + formaldehyde (maybe that should be implemented?) + (sodium cyanide) yields EDTA which is almost DPTA
-			//required_temperature = 310
-			result_amount = 6
+			required_reagents = list("oil" = 1, "catalyst" = 1, "ammonia" = 1, "formaldehyde" = 1,"cyanide" = 1)
+			required_temperature = 374
+			result_amount = 4
 			mix_phrase = "The substance becomes very still, emitting a curious haze."
 
 		acetaldehyde
@@ -2232,10 +2239,10 @@ datum
 			result_amount = 4
 			mix_phrase = "The chemicals mix into an odd pink slush."
 
-		silver_sulfadiazine // COGWERKS CHEM REVISION PROJECT: marked for revision. maybe something like Silvadene?
-			name = "Silvadene"
-			id = "silver_sulfadiazine"
-			result = "silver_sulfadiazine"
+		tetracaine
+			name = "tetracaine"
+			id = "tetracaine"
+			result = "tetracaine"
 			required_reagents = list("silver" = 1, "sulfur" = 1, "oxygen" = 1, "chlorine" = 1, "ammonia" = 1)
 			result_amount = 3
 			mix_phrase = "A strong and cloying odor begins to bubble from the yellow mixture."
@@ -2276,11 +2283,11 @@ datum
 			mix_sound = 'sound/misc/drinkfizz.ogg'
 
 
-		atropine // COGWERKS CHEM REVISION PROJECT: maybe atropine, and give it a useful function in medbay?
+		atropine
 			name = "Atropine"
 			id = "atropine"
 			result = "atropine"
-			required_reagents = list("ethanol" = 1, "diethylamine" = 1, "acetone" = 1, "phenol" = 1, "acid" = 1)
+			required_reagents = list("ethanol" = 2, "hydroacid" = 1, "acetone" = 2, "phenol" = 2, "catalyst" = 1)
 			result_amount = 4
 			mix_phrase = "A horrid smell like something died drifts from the mixture."
 
@@ -2430,6 +2437,14 @@ datum
 			required_reagents = list("space_fungus" = 1, "ethanol" = 1)
 			result_amount = 2
 			mix_phrase = "The solvent extracts an antibiotic compound from the fungus."
+
+		necrotonium
+			name = "necrotonium"
+			id = "necrotonium"
+			result = "necrotonium"
+			required_reagents = list("psuedosoul" = 1, "calcium" = 1, "salt" = 1, "spaceacillin" = 1)
+			result_amount = 4
+			mix_phrase = "The mixture starts to smell like bone marrow."
 
 		initropidril
 			name = "initropidril"
@@ -3315,7 +3330,7 @@ datum
 			name = "Cleaner Fluid"
 			id = "cleaner"
 			result = "cleaner"
-			required_reagents = list("ammonia" = 1, "bleach" = 1, "acetone" = 1)
+			required_reagents = list("water" = 1, "bleach" = 1, "acetone" = 1)
 			result_amount = 3
 			mix_phrase = "Ick, this stuff really stinks. Sure does make the container sparkle though!"
 
@@ -3443,6 +3458,15 @@ datum
 			required_reagents = list("sorium" = 1, "ldmatter" = 1)
 			result_amount = 2
 			mix_phrase = "The solution swirls violently and forms...something."
+
+		ampuline
+			name = "ampuline"
+			id = "ampuline"
+			result = "ampuline"
+			required_reagents = list("luminol" = 1, "iodine" = 1, "copper" = 1, "silver" = 2)
+			result_amount = 5
+			mix_phrase = "The solution starts sparking wildly!"
+			mix_sound = 'sound/effects/elec_bigzap.ogg'
 
 		voltagen
 			name = "Voltagen"

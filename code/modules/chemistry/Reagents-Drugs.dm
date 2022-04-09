@@ -1024,7 +1024,7 @@ datum
 		drug/methamphetamine
 			name = "methamphetamine"
 			id = "methamphetamine"
-			description = "Methamphetamine is a highly effective and dangerous stimulant drug."
+			description = "Methamphetamine is a effective and dangerous stimulant drug."
 			reagent_state = SOLID
 			fluid_r = 250
 			fluid_g = 250
@@ -1052,10 +1052,6 @@ datum
 
 
 			on_mob_life(var/mob/M, var/mult = 1)
-				var/meth_amt = holder.get_reagent_amount("methamphetamine")
-				if(meth_amt >= 300)
-					M.emote("scream")
-					M.gib()//hehe
 				if(!M) M = holder.my_atom
 				M.take_brain_damage(0.5 * mult)
 				if(probmult(5)) M.emote(pick("twitch","blink_r","shiver"))
@@ -1071,8 +1067,111 @@ datum
 				if(probmult(50))
 					M.take_brain_damage(2 * mult)
 
+		drug/necrotonium
+			name = "necrotonium"
+			id = "necrotonium"
+			description = "A rare drug that causes the user to appear dead for some time." //dead appearance handled in human.dm
+			reagent_state = LIQUID
+			fluid_r = 100
+			fluid_g = 145
+			fluid_b = 110
+			transparency = 50
+			depletion_rate = 0.3
+
+		drug/ampuline
+			name = "ampuline"
+			id = "ampuline"
+			description = "An unusual drug that harmlessly eletrifies the user. Mostly safe."
+			reagent_state = LIQUID
+			fluid_r = 180
+			fluid_g = 250
+			fluid_b = 50
+			transparency = 150
+			depletion_rate = 0.4
+			addiction_prob = 50
+			addiction_min = 15
+
+			on_add()
+				if(ismob(holder?.my_atom))
+					var/mob/M = holder.my_atom
+					APPLY_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_ampuline", 1)
 
 
+			on_remove()
+				if(ismob(holder?.my_atom))
+					var/mob/M = holder.my_atom
+					REMOVE_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_ampuline")
+
+
+			on_mob_life(var/mob/M, var/mult = 1)
+				if(!M) M = holder.my_atom
+				M.make_jittery(5)
+				data = pick("You feel positively electric!","You've got some negative feelings.","You feel weird. How shocking.","You're snapping, crackling and popping all over.","Your hands buzz from static electricity.","You feel like a goddamned pikachu.")
+				if(probmult(10)) boutput(M, pick("<span class='notice'>[data]</span>"))
+				if(probmult(10)) elecflash(M, 1, 4, 1)
+
+				..()
+				return
+
+		drug/phoronic_smelling_salts
+			name = "phoronic smelling salts"
+			id = "phoronic_smelling_salts"
+			description = "A very potent stimulant. Mostly unsafe and extremely addictive."
+			reagent_state = SOLID
+			fluid_r = 70
+			fluid_g = 55
+			fluid_b = 65
+			transparency = 255
+			addiction_prob = 80
+			addiction_min = 5
+			depletion_rate = 0.5
+			overdose = 20
+
+			on_add()
+				if(ismob(holder?.my_atom))
+					var/mob/M = holder.my_atom
+					APPLY_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_phoronic_smelling_salts", 5)
+					APPLY_MOVEMENT_MODIFIER(M, /datum/movement_modifier/reagent/phoronic_smelling_salts, src.type)
+					M.add_stam_mod_max("phoronic smelling salts", 40)
+
+			on_remove()
+				if(ismob(holder?.my_atom))
+					var/mob/M = holder.my_atom
+					REMOVE_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_phoronic_smelling_salts")
+					REMOVE_MOVEMENT_MODIFIER(M, /datum/movement_modifier/reagent/phoronic_smelling_salts, src.type)
+					M.remove_stam_mod_max("phoronic smelling salts")
+
+
+			on_mob_life(var/mob/M, var/mult = 1)
+				if(!M) M = holder.my_atom
+				M.take_brain_damage(1 * mult)
+				if(probmult(5)) M.emote(pick("twitch","blink_r","shiver"))
+				M.make_jittery(5)
+				data = pick("Your heart is pounding!","You're sweating buckets. Thats concerning.","Your arms are twitching like crazy.","You feel UNSTOPPABLE. And warm. Mostly unstoppable, though","You feel like you're as powerful as a god.")
+				if(probmult(20)) boutput(M, pick("<span class='notice'>[data]</span>"))
+				M.bodytemperature = max(M.base_body_temp, M.bodytemperature+(10 * mult))
+				..()
+				return
+
+			do_overdose(var/severity, var/mob/M, var/mult = 1)
+				var/mob/living/carbon/human/H = M
+				if (severity == 1)
+					M.stuttering += 1
+					if(probmult(20))
+						M.visible_message("<span class='alert'>[M] pukes all over \himself.</span>", "<span class='alert'>You puke all over yourself!</span>")
+						M.vomit()
+					M.take_toxin_damage(1 * mult)
+					if (H.organHolder)
+						H.organHolder.damage_organ(0, 0, 2, "heart")
+				else if (severity >= 2)
+					M.stuttering += 2
+					if(probmult(35))
+						M.visible_message("<span class='alert'>[M] pukes all over \himself.</span>", "<span class='alert'>You puke all over yourself!</span>")
+						M.vomit()
+						M.take_toxin_damage(2 * mult)
+					if (H.organHolder)
+						H.organHolder.damage_organ(0, 0, 4, "heart")
+					M.take_toxin_damage(2 * mult)
 
 		drug/hellshroom_extract
 			name = "Hellshroom extract"

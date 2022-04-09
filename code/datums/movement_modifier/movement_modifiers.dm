@@ -80,8 +80,11 @@
 /datum/movement_modifier/reagent/cocktail_triple
 	multiplicative_slowdown = 0.333
 
-/datum/movement_modifier/reagent/energydrink // also meth
+/datum/movement_modifier/reagent/energydrink
 	ask_proc = 1
+
+/datum/movement_modifier/reagent/phoronic_smelling_salts
+	multiplicative_slowdown = 0.75
 
 /datum/movement_modifier/reagent/energydrink/modifiers(mob/user, move_target, running)
 	if (user.movement_modifiers[/datum/movement_modifier/disoriented])

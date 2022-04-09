@@ -1043,7 +1043,7 @@ datum
 				..()
 				return
 
-		harmful/pacid // COGWERKS CHEM REVISION PROJECT.. Change this to Fluorosulfuric Acid
+		harmful/pacid
 			name = "fluoroantimonic acid"
 			id = "pacid"
 			description = "Fluoroantimonic acid is a an extremely corrosive super-acid with a pH in the negative."

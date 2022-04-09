@@ -1400,7 +1400,7 @@
 
 			if ("deathgasp")
 				if (!voluntary || src.emote_check(voluntary,50))
-					if (prob(15) && !ischangeling(src) && !isdead(src))
+					if (prob(15) && !ischangeling(src) && !isdead(src) &&!src.reagents.has_reagent("necrotonium"))
 						message = "<span class='regular'><B>[src]</B> seizes up and falls limp, peeking out of one eye sneakily.</span>"
 					else
 						if (!isdead(src))

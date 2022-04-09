@@ -8,6 +8,7 @@ datum
 			name = "medical thing"
 			viscosity = 0.1
 
+
 		medical/lexorin // COGWERKS CHEM REVISION PROJECT. this is a totally pointless reagent
 			name = "lexorin"
 			id = "lexorin"
@@ -311,6 +312,27 @@ datum
 				..()
 				return
 
+		medical/tetracaine
+			name = "tetracaine"
+			id = "tetracaine"
+			description = "This is a weak pain reliever and burn healer."
+			reagent_state = LIQUID
+			fluid_r = 240
+			fluid_g = 220
+			fluid_b = 0
+			transparency = 200
+			overdose = 25
+			depletion_rate = 0.1
+			value = 11 // 5c + 3c + 1c + 1c + 1c
+
+			on_mob_life(var/mob/M, var/mult = 1)
+				if(!M) M = holder.my_atom
+				M.HealDamage("All", 0, 1 * mult)
+				if(prob(50))
+					M.HealDamage("All", 0, 0 * mult)
+				..()
+				return
+
 		medical/menthol
 			name = "menthol"
 			id = "menthol"
@@ -487,7 +509,7 @@ datum
 					REMOVE_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_synaptizine")
 				..()
 
-			on_mob_life(var/mob/M, var/mult = 1) //UNTESTED
+			on_mob_life(var/mob/M, var/mult = 1)
 				if(!M) M = holder.my_atom
 				M.changeStatus("drowsy", -10 SECONDS)
 				if(M.sleeping) M.sleeping = 0
@@ -1050,15 +1072,6 @@ datum
 			depletion_rate = 3
 			value = 6 // 2c + 1c + 1c + 1c + 1c
 
-			on_mob_life(var/mob/M, var/mult = 1)
-				if(!M) M = holder.my_atom
-				// Please don't set this to 8 again, medical patches add their contents to the bloodstream too.
-				// Consequently, a single patch would heal ~200 damage (Convair880).
-				M.HealDamage("All", 0, 1.5 * mult)
-				M.UpdateDamageIcon()
-				..()
-				return
-
 			reaction_mob(var/mob/M, var/method=TOUCH, var/volume_passed, var/list/paramslist = 0)
 				. = ..()
 				if(issilicon(M)) // borgs shouldn't heal from this
@@ -1174,7 +1187,7 @@ datum
 
 
 
-		medical/penteticacid // COGWERKS CHEM REVISION PROJECT. should be a potent chelation agent, maybe roll this into tribenzocytazine as Pentetic Acid
+		medical/penteticacid
 			name = "pentetic acid"
 			id = "penteticacid"
 			description = "Pentetic Acid is an aggressive chelation agent. May cause tissue damage. Use with caution."
@@ -1184,22 +1197,21 @@ datum
 			fluid_b = 209
 			transparency = 200
 			value = 16 // 7 2 4 1 1 1
-			target_organs = list("left_kidney", "right_kidney", "liver", "stomach", "intestines")
 
 			on_mob_life(var/mob/M, var/mult = 1)
 				if (!M) M = holder.my_atom
-				for (var/reagent_id in M.reagents.reagent_list)
-					if (reagent_id != id)
-						M.reagents.remove_reagent(reagent_id, 4 * mult)
-				M.changeStatus("radiation", -7 SECONDS, 1)
-				if (prob(75))
-					M.HealDamage("All", 0, 0, 4 * mult)
-				if (prob(33))
-					M.TakeDamage("chest", 1 * mult, 1 * mult, 0, DAMAGE_BLUNT)
-				if (ishuman(M))
-					var/mob/living/carbon/human/H = M
-					if (H.organHolder)
-						H.organHolder.heal_organs(3*mult, 3*mult, 3*mult, target_organs)
+				M.changeStatus("radiation", -30 SECONDS, 2 * mult)
+				M.HealDamage("All", 0, 0, 4)
+				M.TakeDamage("chest", 0.5, 0, 0, DAMAGE_BLUNT)
+				var/data = /datum/reagent/medical
+				for(var/reagent_id in M.reagents.reagent_list)
+					if(!istype(reagent_id, data))
+						M.reagents.remove_reagent(reagent_id, 5 * mult)
+						return
+					else if(reagent_id == id)
+						return
+					else
+						M.reagents.remove_reagent(reagent_id, 1 * mult)
 				..()
 				return
 
@@ -1295,62 +1307,84 @@ datum
 
 				..()
 
-		medical/atropine // COGWERKS CHEM REVISION PROJECT. i dunno what the fuck this would be, probably something bad. maybe atropine?
+		medical/atropine
 			name = "atropine"
 			id = "atropine"
-			description = "Atropine is a potent cardiac resuscitant but it can causes confusion, dizzyness and hyperthermia."
+			description = "Atropine is a potent cardiac stimulant that makes it difficult to die while its in your system."
 			reagent_state = LIQUID
 			fluid_r = 0
 			fluid_g = 0
 			fluid_b = 0
 			transparency = 255
 			depletion_rate = 0.2
-			overdose = 25
+			overdose = 20
 			var/remove_buff = 0
 			var/total_misstep = 0
 			value = 18 // 5 4 5 3 1
 
 			on_add()
-				if(istype(holder) && istype(holder.my_atom) && hascall(holder.my_atom,"add_stam_mod_max"))
-					remove_buff = holder.my_atom:add_stam_mod_max("atropine", -30)
-					src.total_misstep = 0
-				return
+				if(ismob(holder?.my_atom))
+					var/mob/M = holder.my_atom
+					APPLY_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_atropine", 3)
+
+				..()
 
 			on_remove()
-				if(remove_buff)
-					if(istype(holder) && istype(holder.my_atom))
-						if (hascall(holder.my_atom,"remove_stam_mod_max"))
-							holder.my_atom:remove_stam_mod_max("atropine")
+				if(ismob(holder?.my_atom))
+					var/mob/M = holder.my_atom
+					REMOVE_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_atropine")
 
-					if (ismob(holder.my_atom))
-						var/mob/M = holder.my_atom
-						M.change_misstep_chance(-src.total_misstep)
-				return
+				..()
+
 
 			on_mob_life(var/mob/M, var/mult = 1) //god fuck this proc
 				if(!M) M = holder.my_atom
 				M.make_dizzy(1 * mult)
-				M.change_misstep_chance(5 * mult)
-				src.total_misstep += 5 * mult
 				if(M.bodytemperature < M.base_body_temp)
 					M.bodytemperature = min(M.base_body_temp + 10, M.bodytemperature+(10 * mult))
 				if(probmult(4)) M.emote("collapse")
-				if(M.losebreath > 5)
-					M.losebreath = max(5, M.losebreath-(5 * mult))
-				if(M.get_oxygen_deprivation() > 65)
-					M.take_oxygen_deprivation(-10 * mult)
-				if(M.health < -25)
+				if(M.get_oxygen_deprivation() > 50)
+					M.take_oxygen_deprivation(-20 * mult)
+				if(M.health < -50)
 					if(M.get_toxin_damage())
-						M.take_toxin_damage(-1 * mult)
-					M.HealDamage("All", 3 * mult, 3 * mult)
+						M.take_toxin_damage(-2 * mult)
+					M.HealDamage("All", 4 * mult, 4 * mult)
 					if (M.get_brain_damage())
-						M.take_brain_damage(-2 * mult)
+						M.take_brain_damage(-2.5 * mult)
 				else if (M.health > 15 && M.get_toxin_damage() < 70)
 					M.take_toxin_damage(1 * mult)
 				if(M.reagents.has_reagent("sarin"))
 					M.reagents.remove_reagent("sarin",20 * mult)
+				if (ishuman(M))
+					var/mob/living/carbon/human/H = M
+					if (H.organHolder)
+						H.organHolder.heal_organs(10*mult, 10*mult, 10*mult, "heart")
 				..()
 				return
+
+			do_overdose(var/severity, var/mob/M, var/mult = 1)
+				var/effect = ..(severity, M)
+				var/mob/living/carbon/human/H = M
+				if (severity == 1)
+					if( effect <= 1)
+						M.visible_message("<span class='alert'>[M.name] suddenly and violently vomits!</span>")
+						M.vomit()
+					else if (effect <= 3) M.emote(pick("groan","moan"))
+					if (effect <= 8) M.emote("collapse")
+					if (H.organHolder)
+						H.organHolder.damage_organ(0, 0, 5, "heart")
+				else if (severity == 2)
+					if( effect <= 2)
+						M.visible_message("<span class='alert'>[M.name] suddenly and violently vomits!</span>")
+						M.vomit()
+					else if (effect <= 5)
+						M.visible_message("<span class='alert'><b>[M.name]</b> staggers and drools, their eyes bloodshot!</span>")
+						M.dizziness += 2
+						M.setStatus("weakened", max(M.getStatusDuration("weakened"), 4 SECONDS * mult))
+					if (effect <= 15) M.emote("collapse")
+					if (H.organHolder)
+						H.organHolder.damage_organ(0, 0, 10, "heart")
+
 
 		medical/salbutamol // COGWERKS CHEM REVISION PROJECT. marked for revision. Could be Dexamesathone
 			name = "salbutamol"

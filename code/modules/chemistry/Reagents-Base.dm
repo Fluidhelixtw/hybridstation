@@ -109,7 +109,7 @@ datum
 		chlorine
 			name = "chlorine"
 			id = "chlorine"
-			description = "A chemical element."
+			description = "A chemical element. Suprisingly toxic."
 			reagent_state = GAS
 			fluid_r = 220
 			fluid_g = 255
@@ -428,7 +428,7 @@ datum
 		mercury
 			name = "mercury"
 			id = "mercury"
-			description = "A chemical element."
+			description = "A chemical element. Horrible for your brain."
 			reagent_state = LIQUID
 			fluid_r = 160
 			fluid_g = 160
@@ -484,7 +484,7 @@ datum
 		phosphorus
 			name = "phosphorus"
 			id = "phosphorus"
-			description = "A chemical element."
+			description = "A chemical element. Doesn't do a whole lot on it's own."
 			reagent_state = SOLID
 			fluid_r = 150
 			fluid_g = 110
@@ -608,7 +608,7 @@ datum
 		sulfur
 			name = "sulfur"
 			id = "sulfur"
-			description = "A chemical element."
+			description = "A chemical element. Suprisingly non-toxic on it's own."
 			reagent_state = SOLID
 			fluid_r = 255
 			fluid_g = 255
@@ -708,7 +708,7 @@ datum
 		helium
 			name = "helium"
 			id = "helium"
-			description = "A chemical element."
+			description = "A chemical element. Famous for it's effect on the pitch of one's voice."
 			reagent_state = GAS
 			fluid_r = 255
 			fluid_g = 250
