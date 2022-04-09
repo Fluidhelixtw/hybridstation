@@ -171,55 +171,35 @@ datum
 				..()
 				return
 
-
-		medical/ether
-			name = "ether"
-			id = "ether"
-			description = "A strong but highly addictive anesthetic and sedative."
+		medical/detodox
+			name = "detodox"
+			id = "detodox"
+			description = "A dark liquid that lessens the reliance the brain has on addictive substances."
 			reagent_state = LIQUID
-			fluid_r = 169
-			fluid_g = 251
-			fluid_b = 251
-			transparency = 30
-			addiction_prob = 10//50
-			addiction_min = 15
-			overdose = 20
-			var/counter = 1 //Data is conserved...so some jerkbag could inject a monkey with this, wait for data to build up, then extract some instant KO juice.  Dumb.
-			value = 5
+			fluid_r = 0
+			fluid_g = 10
+			fluid_b = 200
+			transparency = 255
 
-			on_add()
-				if(ismob(holder?.my_atom))
-					var/mob/M = holder.my_atom
-					APPLY_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_ether", -5)
-				return
-
-			on_remove()
-				if(ismob(holder?.my_atom))
-					var/mob/M = holder.my_atom
-					REMOVE_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_ether")
-				return
-
-			on_mob_life(var/mob/M, var/mult = 1)
+			on_mob_life(var/mob/living/M, var/mult = 1) //Reminder to update this chem when we do the addiction rework - fluidhelix
 				if(!M) M = holder.my_atom
-				if(!counter) counter = 1
-				M.jitteriness = max(M.jitteriness-25,0)
-				if(M.hasStatus("stimulants"))
-					M.changeStatus("stimulants", -7.5 SECONDS * mult)
-
-				switch(counter += 1 * mult)
-					if(1 to 15)
-						if(probmult(7)) M.emote("yawn")
-					if(16 to 35)
-						M.setStatus("drowsy", 40 SECONDS)
-					if(36 to INFINITY)
-						M.setStatus("paralysis", max(M.getStatusDuration("paralysis"), 3 SECONDS * mult))
-						M.setStatus("drowsy", 40 SECONDS)
-
+				if (M.ailments)
+					for (var/datum/ailment_data/D in M.ailments)
+						if (istype(D.master, /datum/ailment/addiction))
+							var/datum/ailment_data/addiction/A = D
+							var/probability = 5
+							if (world.timeofday > A.last_reagent_dose + 2.5 MINUTES)
+								probability = 10
+							if (prob(probability))
+								M.show_text("You no longer feel reliant on [A.associated_reagent]!", "blue")
+								M.ailments -= A
+								qdel(A)
 				..()
 				return
 
+
 		medical/cold_medicine
-			name = "Mefenamic Acid"
+			name = "mefenamic acid"
 			id = "cold_medicine"
 			description = "A pharmaceutical compound used to treat minor colds, influenza, and food poisoning."
 			reagent_state = LIQUID
@@ -436,6 +416,7 @@ datum
 			fluid_b = 235
 			fluid_g = 235
 			transparency = 255
+			penetrates_skin = 1
 			value = 9 // 6c + 2c + 1c
 
 			reaction_mob(var/mob/M, var/method=TOUCH, var/volume_passed, var/list/paramslist = 0, var/volume)
@@ -451,8 +432,8 @@ datum
 						var/mob/living/H = M
 						if(!isdead(M))
 							M.HealDamage("All", volume_passed * 3, volume_passed * 3)
-						else
-							M.HealDamage("All", volume, volume)
+						if(isdead(M))
+							M.HealDamage("All", volume_passed * 0.5, volume_passed * 0.5)
 						if (H.bleeding)
 							repair_bleeding_damage(H, 50, 1)
 					var/silent = 0

@@ -408,7 +408,6 @@
 					if (world.timeofday > A.last_reagent_dose + 2.5 MINUTES)
 						probability = 10
 					if (prob(probability))
-						//DEBUG_MESSAGE("Healed [M]'s [A.associated_reagent] addiction.")
 						M.show_text("You no longer feel reliant on [A.associated_reagent]!", "blue")
 						M.ailments -= A
 						qdel(A)

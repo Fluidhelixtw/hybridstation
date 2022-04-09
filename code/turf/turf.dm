@@ -720,7 +720,7 @@ proc/generate_space_color()
 	return floor
 
 //This is for admin replacements (deletions) ONLY. I swear to god if any actual in-game code uses this I will be pissed - Wire
-//youre not my mom - fluidhelix
+
 /turf/proc/ReplaceWithSpaceForce()
 	var/area/my_area = loc
 	var/turf/floor

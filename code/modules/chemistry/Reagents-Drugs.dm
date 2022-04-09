@@ -887,7 +887,7 @@ datum
 					//add-effect fix-stamina
 				holder.remove_reagent("mannitol", 5)
 				holder.remove_reagent("syaptizine", 5)
-				//holder.remove_reagent("mindshield", 5)
+				holder.remove_reagent("leocizumab", 5)
 				..()
 
 
@@ -1108,7 +1108,7 @@ datum
 				M.make_jittery(5)
 				data = pick("You feel positively electric!","You've got some negative feelings.","You feel weird. How shocking.","You're snapping, crackling and popping all over.","Your hands buzz from static electricity.","You feel like a goddamned pikachu.")
 				if(probmult(10)) boutput(M, pick("<span class='notice'>[data]</span>"))
-				if(probmult(10)) elecflash(M, 1, 4, 1)
+				if(probmult(10)) elecflash(M, 1, 4, 1) //unfinished
 
 				..()
 				return

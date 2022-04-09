@@ -396,6 +396,15 @@ datum
 			fluid_b = 255
 			transparency = 200
 
+
+			reaction_obj(var/obj/O, var/volume)
+				O.color = rgb(255,255,255)
+				return
+
+			reaction_turf(var/turf/T, var/volume)
+				T.color = rgb(255,255,255)
+				return
+
 			on_mob_life(var/mob/M, var/mult = 1)
 				if (!M) M = holder.my_atom
 				M.TakeDamage("chest", 0, 1 * mult, 0, DAMAGE_BURN)
@@ -450,6 +459,45 @@ datum
 				if(M)
 					M.take_toxin_damage(damage_counter + (rand(2,3)))
 
+		harmful/ether
+			name = "ether"
+			id = "ether"
+			description = "A weak and moderately addictive anesthetic and sedative."
+			reagent_state = LIQUID
+			fluid_r = 169
+			fluid_g = 251
+			fluid_b = 251
+			transparency = 30
+			addiction_prob = 10//50
+			addiction_min = 15
+			var/counter = 1
+			value = 5
+
+			on_add()
+				if(ismob(holder?.my_atom))
+					counter = 1
+				return
+
+			on_mob_life(var/mob/M, var/mult = 1)
+				if(!M) M = holder.my_atom
+				if(!counter) counter = 1
+				M.jitteriness = max(M.jitteriness-25,0)
+				if(M.hasStatus("stimulants"))
+					M.changeStatus("stimulants", -7.5 SECONDS * mult)
+
+				switch(counter += 1 * mult)
+					if(1 to 15)
+						if(probmult(7)) M.emote("yawn")
+					if(16 to 35)
+						if(probmult(10))M.setStatus("drowsy", 10 SECONDS)
+					if(36 to 59)
+						M.setStatus("drowsy", 25 SECONDS)
+					if(60 to INFINITY)
+						M.setStatus("paralysis", max(M.getStatusDuration("paralysis"), 3 SECONDS * mult))
+						M.setStatus("drowsy", 40 SECONDS)
+
+				..()
+				return
 
 		harmful/chemilin
 			name = "chemilin"

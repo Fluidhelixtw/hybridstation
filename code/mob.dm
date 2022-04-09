@@ -69,7 +69,6 @@
 	var/stuttering = null
 	var/real_name = null
 	var/acid_name = null
-	var/cached_hair = list(null)
 	var/blinded = null
 	var/druggy = 0
 	var/sleeping = 0.0

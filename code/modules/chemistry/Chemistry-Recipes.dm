@@ -2207,9 +2207,8 @@ datum
 			name = "Ether"
 			id = "ether"
 			result = "ether"
-			required_reagents = list("ethanol" = 1, "clacid" = 1, "oxygen" = 1)
-			result_amount = 1
-			max_temperature = T0C + 150
+			required_reagents = list("ethanol" = 1, "ammonia" = 1, "oxygen" = 1, "fuel")
+			result_amount = 4
 			mix_phrase = "The mixture yields a pungent odor, which makes you tired."
 
 		kerosene
@@ -2759,6 +2758,13 @@ datum
 			result_amount = 3
 			mix_phrase = "The mixture congeals into a sticky gel."
 
+		detodox
+			name = "detodox"
+			id = "detodox"
+			result = "detodox"
+			required_reagents = list("weedkiller" = 1, "bromine" = 1, "plasma" = 1, "oil" = 2, "space_drugs" = 1)
+			result_amount = 5
+			mix_phrase = "The mixture quickly darkens and goes still."
 
 		big_bang_precursor
 			name = "stable bose-einstein macro-condensate"
