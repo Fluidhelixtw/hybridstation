@@ -232,7 +232,10 @@
 	if(corpse && ismob(corpse))
 		src.corpse = corpse
 		src.set_loc(get_turf(corpse))
-		src.real_name = corpse.real_name
+		if(src.acid_name != null)
+			src.real_name = corpse.real_name
+		else
+			src.real_name = corpse.acid_name
 		src.bioHolder.mobAppearance.CopyOther(corpse.bioHolder.mobAppearance)
 		src.gender = src.bioHolder.mobAppearance.gender
 		src.UpdateName()
@@ -804,7 +807,10 @@ mob/dead/observer/proc/insert_observer(var/atom/target)
 	newobs.attach_hud(hud)
 	newobs.set_observe_target(target)
 	newobs.name = src.name
-	newobs.real_name = src.real_name
+	if(src.acid_name != null)
+		src.real_name = corpse.real_name
+	else
+		src.real_name = corpse.acid_name
 	newobs.corpse = src.corpse
 	newobs.my_ghost = src
 	delete_on_logout_reset = delete_on_logout

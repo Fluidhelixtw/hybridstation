@@ -884,13 +884,11 @@ datum
 				if(!M) M = holder.my_atom
 				M.take_toxin_damage(1 * mult)
 				//if (M.health >= 0)
-					//add-effect fix-stamina
+					//add-effect fix-stamina (make this work)
 				holder.remove_reagent("mannitol", 5)
 				holder.remove_reagent("syaptizine", 5)
 				holder.remove_reagent("leocizumab", 5)
 				..()
-
-
 
 
 
@@ -1090,28 +1088,45 @@ datum
 			depletion_rate = 0.4
 			addiction_prob = 50
 			addiction_min = 15
+			overdose = 25
+
 
 			on_add()
 				if(ismob(holder?.my_atom))
 					var/mob/M = holder.my_atom
 					APPLY_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_ampuline", 1)
-
+					if(!M.bioHolder.HasEffect("resist_electric_heal"))
+						M.bioHolder.AddEffect("resist_electric_heal")
+					boutput(M, ("<span class='notice'>Electricity is flowing through your blood. It feels pleasant.</span>"))
 
 			on_remove()
 				if(ismob(holder?.my_atom))
 					var/mob/M = holder.my_atom
 					REMOVE_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_ampuline")
+					M.bioHolder.RemoveEffect("resist_electric_heal")
 
 
 			on_mob_life(var/mob/M, var/mult = 1)
 				if(!M) M = holder.my_atom
 				M.make_jittery(5)
 				data = pick("You feel positively electric!","You've got some negative feelings.","You feel weird. How shocking.","You're snapping, crackling and popping all over.","Your hands buzz from static electricity.","You feel like a goddamned pikachu.")
-				if(probmult(10)) boutput(M, pick("<span class='notice'>[data]</span>"))
-				if(probmult(10)) elecflash(M, 1, 4, 1) //unfinished
-
+				if(probmult(10)) boutput(M, ("<span class='notice'>[data]</span>"))
+				if(probmult(10)) elecflash(M, 1, 4, 1)
 				..()
 				return
+
+			do_overdose(var/severity, var/mob/M, var/mult = 1)
+				if (severity == 1)
+					M.stuttering += 1
+					if(probmult(10))
+						M.setStatus("weakened", max(M.getStatusDuration("weakened"), 3 SECONDS * mult))
+					M.TakeDamage("chest", 0, 2 * mult, 0, DAMAGE_BURN)
+				else if (severity >= 2)
+					M.stuttering += 2
+					if(probmult(20))
+						M.setStatus("weakened", max(M.getStatusDuration("weakened"), 3 SECONDS * mult))
+					M.TakeDamage("chest", 0, 4 * mult, 0, DAMAGE_BURN)
+
 
 		drug/phoronic_smelling_salts
 			name = "phoronic smelling salts"

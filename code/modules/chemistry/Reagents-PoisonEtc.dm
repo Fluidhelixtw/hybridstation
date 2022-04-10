@@ -69,6 +69,10 @@ datum
 			reaction_mob(var/mob/M, var/method=TOUCH, var/volume)
 				. = ..()
 				if(method == TOUCH)
+					if (volume < 100)
+						M.TakeDamage("head", 0, (volume * 0.4), 0, DAMAGE_BURN)
+					else if (volume >= 100)
+						M.TakeDamage("head", 0, 40, 0, DAMAGE_BURN)
 					. = 0
 					if (volume >= 50)
 						if (ishuman(M))
@@ -104,10 +108,6 @@ datum
 								if (blocked)
 									return
 
-					if (volume < 100)
-						M.TakeDamage("head", 0, (volume * 0.4), 0, DAMAGE_BURN)
-					else if (volume >= 100)
-						M.TakeDamage("head", 0, 40, 0, DAMAGE_BURN)
 					boutput(M, "<span class='alert'>The greenish acidic substance stings[volume < 50 ? ", but isn't concentrated enough to disfigure you" : null]!</span>")
 				return
 
@@ -1755,7 +1755,7 @@ datum
 
 
 
-		harmful/sarin // yet another thing that will put ol' cogwerks on a watch list probably
+		harmful/sarin
 			name = "sarin"
 			id = "sarin"
 			description = "A lethal organophosphate nerve agent. Can be neutralized with atropine."
