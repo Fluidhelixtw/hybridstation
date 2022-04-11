@@ -3701,11 +3701,19 @@ datum
 					C.reagents.add_reagent("ketamine", created_volume / length(mobs_affected))
 				return
 
+		plasmorphine
+			name = "plasmorphine"
+			id = "plasmorphine"
+			result = "plasmorphine"
+			required_reagents = list("amphomine" = 1, "cryoxadone" = 1, "methamphetamine" = 1, "epinepherine" = 1, "phosphorus" = 1)
+			result_amount = 3
+			mix_phrase = "The mixture bubbles violently for a few seconds and settles."
+
 		methyl_iodide
 			name = "methyl iodide"
 			id = "methyl_iodide"
 			result = "methyl_iodide"
-			required_reagents = list("bloodc" = 1, "plasmorphine" = 1, "plasma" = 1, "anti_rad" = 1,)
+			required_reagents = list("bloodc" = 1, "plasmorphine" = 1, "plasma" = 1, "anti_rad" = 1)
 			result_amount = 3
 			mix_phrase = "The blood infuses with the phoron and consumes the other chemicals in the mixture."
 
@@ -3713,7 +3721,7 @@ datum
 			name = "funis paralysin"
 			id = "funis_paralysin"
 			result = "funis_paralysin"
-			required_reagents = list("bloodc" = 1, "neurotoxin" = 1, "plasma" = 1, "acetone" = 1,)
+			required_reagents = list("bloodc" = 1, "neurotoxin" = 1, "plasma" = 1, "acetone" = 1)
 			result_amount = 3
 			mix_phrase = "The blood infuses with the phoron and consumes the other chemicals in the mixture."
 

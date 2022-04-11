@@ -873,26 +873,80 @@ datum
 					var/mob/M = holder.my_atom
 					boutput(M, "You stop feeling any pain from your less severe wounds...")
 					boutput(M, "<b>You hear a voice in your head say 'This chemical is under construction, its supposed to fix staminaloss from damage above crit but that feature hasn't been implimented yet!'. Wonder what that means./b>")
-/*			on_remove()
+/*					M.bioHolder.AddEffect("r_amphomine")
+
+			on_remove()
 				if (ismob(holder?.my_atom))
 					var/mob/M = holder.my_atom
-					//remove-effect fix-stamina (make this work)
-				..()
-*/
+					M.bioHolder.RemoveEffect("r_amphomine")
+				..()*/
 
 			on_mob_life(var/mob/M, var/mult = 1)
 				if(!M) M = holder.my_atom
 				M.take_toxin_damage(1 * mult)
-				//if (M.health >= 0)
-					//add-effect fix-stamina (make this work)
 				holder.remove_reagent("mannitol", 5)
 				holder.remove_reagent("syaptizine", 5)
 				holder.remove_reagent("leocizumab", 5)
 				..()
 
 
+		drug/plasmorphine
+			name = "plasmorphine"
+			id = "plasmorphine"
+			description = "Chemically similar to morphine, this drug has the same effects but doesn't damage the brain. Popular with spacers all over the Sphere."
+			reagent_state = LIQUID
+			fluid_r = 160
+			fluid_g = 150
+			fluid_b = 190
+			transpareny = 75
+			depletion_rate = 0.4
 
+			on_add()
+				if (ismob(holder?.my_atom))
+					var/mob/M = holder.my_atom
+					boutput(M, "Every sensation on your skin stops...")
+					boutput(M, "<b>You hear a voice in your head say 'This chemical is under construction, its supposed to undo disorientation from shocks and give you immunity to tasers but that feature hasn't been implimented yet!'. Wonder what that means./b>")
+/*					M.bioHolder.AddEffect("r_plasmorphine")
 
+			on_remove()
+				if (ismob(holder?.my_atom))
+					var/mob/M = holder.my_atom
+					M.bioHolder.RemoveEffect("r_plasmorphine")
+				..()*/
+
+			on_mob_life(var/mob/M, var/mult = 1)
+				if(!M) M = holder.my_atom
+				M.take_toxin_damage(0.5 * mult)
+				M.take_brain_damage(1 * mult)
+				..()
+
+		drug/jarhead
+			name = "jarhead"
+			id = "jarhead"
+			description = "The most powerful painkiller in the world. EXTREMELY expensive, dangerous and powerful. Popular with spec-ops units."
+			reagent_state = LIQUID
+			fluid_r = 30
+			fluid_g = 15
+			fluid_b = 25
+			transparency = 255
+
+				if (ismob(holder?.my_atom))
+					var/mob/M = holder.my_atom
+					boutput(M, "You feel like a living tank!")
+					boutput(M, "<b>You hear a voice in your head say 'This chemical is under construction, its supposed to prevent you from falling over in crit and give you immunity to stagger but that feature hasn't been implimented yet!'. Wonder what that means./b>")
+/*					M.bioHolder.AddEffect("r_plasmorphine")
+
+			on_remove()
+				if (ismob(holder?.my_atom))
+					var/mob/M = holder.my_atom
+					M.bioHolder.RemoveEffect("r_plasmorphine")
+				..()*/
+
+			on_mob_life(var/mob/M, var/mult = 1)
+				if(!M) M = holder.my_atom
+				M.take_brain_damage(1 * mult)
+				M.HealDamage("All", 1, 1)
+				..()
 
 		drug/catdrugs
 			name = "cat drugs"
@@ -1076,6 +1130,7 @@ datum
 			transparency = 50
 			depletion_rate = 0.3
 
+
 		drug/ampuline
 			name = "ampuline"
 			id = "ampuline"
@@ -1187,6 +1242,11 @@ datum
 					if (H.organHolder)
 						H.organHolder.damage_organ(0, 0, 4, "heart")
 					M.take_toxin_damage(2 * mult)
+
+		drug/adrenomax
+			name = "adreno-max"
+			id = "adreno-max"
+			description = "The most powerful stimulant in the world. Doesn't mix well with your brain or things that heal your brain."
 
 		drug/hellshroom_extract
 			name = "Hellshroom extract"
