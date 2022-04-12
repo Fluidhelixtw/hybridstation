@@ -387,6 +387,7 @@ datum
 			fluid_r = 150
 			fluid_g = 110
 			fluid_b = 220
+			addiction_min = 10
 			addiction_prob = 35
 			depletion_rate = 0.5
 			viscosity = 0.1
@@ -403,25 +404,21 @@ datum
 			on_remove()
 				if(ismob(holder?.my_atom))
 					var/mob/M = holder.my_atom
-					REMOVE_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_lean")
 					REMOVE_MOVEMENT_MODIFIER(M, /datum/movement_modifier/reagent/lean, src.type)
 				..()
 
 			on_mob_life(var/mob/M, var/mult = 1)
 				if(!M) M = holder.my_atom
+				if(probmult(7)) M.emote(pick("twitch","drool","moan","giggle"))
 				M.take_brain_damage(0.5 * mult)
-				REMOVE_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_lean") //put it in twice so it doesnt keep lowering stamina after it goes below 30 -fluidhelix
 				if (!counter) counter = 1
 				switch(counter+= (1 * mult))
-					if (1)
-						if(probmult(7)) M.emote(pick("twitch","drool","moan","giggle"))
-					if (6 to INFINITY)
+					if (1 to 11)
+						return
+					if (12 to INFINITY)
 						M.change_misstep_chance(2 * mult)
 				..()
 				return
-
-			do_overdose(var/mob/M, var/mult = 1)
-				APPLY_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_lean", -3)
 
 		drug/space_drugs
 			name = "MDMA"
@@ -872,7 +869,7 @@ datum
 				if (ismob(holder?.my_atom))
 					var/mob/M = holder.my_atom
 					boutput(M, "You stop feeling any pain from your less severe wounds...")
-					boutput(M, "<b>You hear a voice in your head say 'This chemical is under construction, its supposed to fix staminaloss from damage above crit but that feature hasn't been implimented yet!'. Wonder what that means./b>")
+					boutput(M, "<b>You hear a voice in your head say 'This chemical is under construction, its supposed to fix staminaloss from damage above crit but that feature hasn't been implimented yet!'. Wonder what that means.</b>")
 /*					M.bioHolder.AddEffect("r_amphomine")
 
 			on_remove()
@@ -898,14 +895,14 @@ datum
 			fluid_r = 160
 			fluid_g = 150
 			fluid_b = 190
-			transpareny = 75
+			transparency = 75
 			depletion_rate = 0.4
 
 			on_add()
 				if (ismob(holder?.my_atom))
 					var/mob/M = holder.my_atom
 					boutput(M, "Every sensation on your skin stops...")
-					boutput(M, "<b>You hear a voice in your head say 'This chemical is under construction, its supposed to undo disorientation from shocks and give you immunity to tasers but that feature hasn't been implimented yet!'. Wonder what that means./b>")
+					boutput(M, "<b>You hear a voice in your head say 'This chemical is under construction, its supposed to undo disorientation from shocks and give you immunity to tasers but that feature hasn't been implimented yet!'. Wonder what that means.</b>")
 /*					M.bioHolder.AddEffect("r_plasmorphine")
 
 			on_remove()
@@ -921,7 +918,7 @@ datum
 				..()
 
 		drug/jarhead
-			name = "jarhead"
+			name = "Jarhead"
 			id = "jarhead"
 			description = "The most powerful painkiller in the world. EXTREMELY expensive, dangerous and powerful. Popular with spec-ops units."
 			reagent_state = LIQUID
@@ -930,10 +927,11 @@ datum
 			fluid_b = 25
 			transparency = 255
 
+			on_add()
 				if (ismob(holder?.my_atom))
 					var/mob/M = holder.my_atom
 					boutput(M, "You feel like a living tank!")
-					boutput(M, "<b>You hear a voice in your head say 'This chemical is under construction, its supposed to prevent you from falling over in crit and give you immunity to stagger but that feature hasn't been implimented yet!'. Wonder what that means./b>")
+					boutput(M, "<b>You hear a voice in your head say 'This chemical is under construction, its supposed to prevent you from falling over in crit and give you immunity to stagger but that feature hasn't been implimented yet!'. Wonder what that means.</b>")
 /*					M.bioHolder.AddEffect("r_plasmorphine")
 
 			on_remove()
@@ -1200,7 +1198,7 @@ datum
 			on_add()
 				if(ismob(holder?.my_atom))
 					var/mob/M = holder.my_atom
-					APPLY_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_phoronic_smelling_salts", 5)
+					APPLY_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_phoronic_smelling_salts", 6)
 					APPLY_MOVEMENT_MODIFIER(M, /datum/movement_modifier/reagent/phoronic_smelling_salts, src.type)
 					M.add_stam_mod_max("phoronic smelling salts", 40)
 
@@ -1244,9 +1242,117 @@ datum
 					M.take_toxin_damage(2 * mult)
 
 		drug/adrenomax
-			name = "adreno-max"
+			name = "Adreno-Max"
 			id = "adreno-max"
 			description = "The most powerful stimulant in the world. Doesn't mix well with your brain or things that heal your brain."
+			reagent_state = SOLID
+			fluid_r = 15
+			fluid_g = 230
+			fluid_b = 190
+			addiction_min = 10
+			addiction_prob = 100
+			overdose = 20
+			transparency = 255
+			depletion_rate = 0.4
+
+			on_add()
+				if(ismob(holder?.my_atom))
+					var/mob/M = holder.my_atom
+					APPLY_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_adrenomax", 20)
+					APPLY_MOVEMENT_MODIFIER(M, /datum/movement_modifier/reagent/adrenomax, src.type)
+					M.add_stam_mod_max("adrenomax", 120)
+
+			on_remove()
+				if(ismob(holder?.my_atom))
+					var/mob/M = holder.my_atom
+					REMOVE_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_adrenomax")
+					REMOVE_MOVEMENT_MODIFIER(M, /datum/movement_modifier/reagent/adrenomax, src.type)
+					M.remove_stam_mod_max("adrenomax")
+
+
+			on_mob_life(var/mob/M, var/mult = 1)
+				if(!M) M = holder.my_atom
+				M.take_brain_damage(2 * mult)
+				if(probmult(30)) M.emote(pick("twitch","blink_r","shiver"))
+				M.make_jittery(5)
+				data = pick("<b>HAHAHAHAHAHAHAHAHAHAH!!!!</b>","You feel like you can fight the fucking sun and <b>WIN</b>!","KILL THEM! KILL THEM ALL!", "WOOOOOOOO!!!!!","You feel <b>GOOD</b>.")
+				if(probmult(20)) boutput(M, pick("<span class='notice'>[data]</span>"))
+				..()
+				return
+
+			do_overdose(var/severity, var/mob/M, var/mult = 1)
+				if (severity == 1)
+					M.stuttering += 1
+					if(probmult(20))
+						M.visible_message("<span class='alert'>[M] pukes all over \himself.</span>", "<span class='alert'>You puke all over yourself!</span>")
+						M.vomit()
+					M.take_toxin_damage(1 * mult)
+					M.take_brain_damage(2 * mult)
+				else if (severity >= 2)
+					M.stuttering += 2
+					if(probmult(35))
+						M.visible_message("<span class='alert'>[M] pukes all over \himself.</span>", "<span class='alert'>You puke all over yourself!</span>")
+						M.vomit()
+						M.take_toxin_damage(2 * mult)
+					M.take_brain_damage(4 * mult)
+					M.take_toxin_damage(2 * mult)
+
+
+		drug/ambrosia
+			name = "Ambrosia"
+			id = "ambrosia"
+			description = "I- how- damn, I dont even-"
+			reagent_state = SOLID
+			fluid_r = 80
+			fluid_g = 20
+			fluid_b = 130
+			transparency = 255
+			depletion_rate = 0.25
+			var/counter = 1
+
+			on_add()
+				if(ismob(holder?.my_atom))
+					var/mob/M = holder.my_atom
+					counter = 1
+					if(volume < 10) boutput(M, "You feel like you need more of... whatever this is before it becomes effective.")
+
+			on_mob_life(var/mob/M, var/mult = 1)
+				if(!M) M = holder.my_atom
+				if(M.deity == 0 && volume >= 10)
+					M.deity = 1
+					boutput(M, "<span class='alert'><b>You are as powerful as the gods.</b></span>")
+					APPLY_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_ambrosia", 999990)
+					M.add_stam_mod_max("ambrosia", 1000)
+				if(M.deity == 1)
+					if(volume < 3)boutput(M, "<span class='alert'><b>You need more ambrosia. Now. NOW.</b></span>")
+					if(volume <= 1)
+						holder.remove_reagent("ambrosia", 1)
+						M.gib()
+					if(M.get_oxygen_deprivation())
+						M.take_oxygen_deprivation(-250 * mult)
+					M.take_brain_damage(-250 * mult)
+					M.HealDamage("All", 250 * mult, 250 * mult, 250 * mult)
+					M.delStatus("radiation")
+					M.delStatus("paralysis")
+					M.delStatus("weakened")
+					M.delStatus("stunned")
+					M.stuttering = 0
+					M.take_ear_damage(-INFINITY)
+					M.take_ear_damage(-INFINITY, 1)
+					M.change_eye_blurry(-INFINITY)
+					if(M.losebreath > 0)
+						M.losebreath = (0 * mult)
+					counter += 1
+					if(counter > 280)boutput(M, "<span class='alert'><b>Time is running out. Nothing can save you now.</b></span>")
+					if(counter == 299) boutput(M, "<span class='alert'><b>The time has come.</b></span>")
+					if(counter == 300)
+						boutput(M, "<span class='alert'><b>It's too late.</b></span>")
+						holder.remove_reagent("ambrosia", 330)
+						M.gib()
+				..()
+				return
+
+
 
 		drug/hellshroom_extract
 			name = "Hellshroom extract"
@@ -1297,6 +1403,7 @@ datum
 						M.bodytemperature += rand(30,60)
 				..()
 				return
+
 
 datum/reagent/drug/hellshroom_extract/proc/breathefire(var/mob/M)
 	var/temp = 3000

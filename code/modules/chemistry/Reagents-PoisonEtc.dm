@@ -1754,6 +1754,49 @@ datum
 				return
 
 
+		harmful/antiphetamine
+			name = "antiphetamine"
+			id = "antiphetamine"
+			description = "A potent anti-stimulant used by riot control units all across the Sphere."
+			reagent_state = GAS
+			fluid_r = 110
+			fluid_g = 95
+			fluid_b = 225
+			transparency = 50
+			penetrates_skin = 1
+			depletion_rate = 0.4
+
+			on_mob_life(var/mob/M, var/mult = 1)
+				if(M.reagents.has_reagent("methamphetamine"))
+					M.reagents.remove_reagent("methamphetamine",15 * mult)
+				if(M.reagents.has_reagent("phoronic_smelling_salts"))
+					M.reagents.remove_reagent("phoronic_smelling_salts",10 * mult)
+				if(M.reagents.has_reagent("adrenomax"))
+					M.reagents.remove_reagent("adrenomax",5 * mult)
+				..()
+				return
+
+		harmful/antiprophen
+			name = "antiprophen"
+			id = "antiprophen"
+			description = "A potent anti-painkiller used by riot control units all across the Sphere."
+			reagent_state = GAS
+			fluid_r = 80
+			fluid_g = 90
+			fluid_b = 60
+			transparency = 50
+			penetrates_skin = 1
+			depletion_rate = 0.4
+
+			on_mob_life(var/mob/M, var/mult = 1)
+				if(M.reagents.has_reagent("amphomine"))
+					M.reagents.remove_reagent("amphomine",15 * mult)
+				if(M.reagents.has_reagent("plasmorphine"))
+					M.reagents.remove_reagent("plasmorphine",10 * mult)
+				if(M.reagents.has_reagent("jarhead"))
+					M.reagents.remove_reagent("jarhead",5 * mult)
+				..()
+				return
 
 		harmful/sarin
 			name = "sarin"

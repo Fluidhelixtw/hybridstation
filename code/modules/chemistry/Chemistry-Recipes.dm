@@ -319,6 +319,14 @@ datum
 			result = "alkaline_salts"
 			mix_phrase = "The acids are quickly neutralized!"
 
+		aa_pe
+			name = "antimonic alkaline pentetic reaction"
+			id = "aa_fa"
+			required_reagents = list("penteticacid" = 1, "antimonic_alkaline" = 2)
+			result_amount = 2
+			result = "alkaline_salts"
+			mix_phrase = "The acids are quickly neutralized!"
+
 		pseudosoul
 			name = "pseudosoul"
 			id = "pseudosoul"
@@ -582,6 +590,15 @@ datum
 			result_amount = 3
 			mix_phrase = "The mixture produces a pleasant aroma."
 
+
+		adrenomax
+			name = "Adreno-Max"
+			id = "adrenomax"
+			required_reagents = list("ephedrine" = 1, "nitric_acid" = 1, "catalyst" = 1, "phosphorus" = 1, "oxydecazine" = 1)
+			result = "adrenomax"
+			result_amount = 4
+			required_temperature = 553
+			mix_phrase = "The mixture crystalizes into many small blue shards."
 /*
 		merculite
 			name = "Merculite"
@@ -2238,6 +2255,14 @@ datum
 			result_amount = 4
 			mix_phrase = "The chemicals mix into an odd pink slush."
 
+		clozapine
+			name = "Clozapine"
+			id = "clozapine"
+			result = "clozapine"
+			required_reagents = list("copper" = 1, "magnesium" = 1, "fluorine" = 1, "anti_rad" = 1, "plasma" = 1)
+			result_amount = 4
+			mix_phrase = "The mixture bubbles fiercely."
+
 		tetracaine
 			name = "tetracaine"
 			id = "tetracaine"
@@ -2281,6 +2306,22 @@ datum
 			mix_phrase = "Tiny white crystals precipitate out of the solution."
 			mix_sound = 'sound/misc/drinkfizz.ogg'
 
+		antiphetamine
+			name = "antiphetamine"
+			id = "antiphetamine"
+			result = "antiphetamine"
+			required_reagents = list("methamphetamine" = 1, "phoronic_smelling_salts" = 1, "sulfur" = 1, "plasma" = 1)
+			result_amount = 3
+			required_temperature = 374
+			mix_phrase = "A strange smell emerges from the mixture. It smells an awful lot like sauerkraut..."
+
+		antiprophen
+			name = "antiprophen"
+			id = "antiprophen"
+			result = "antiprophen"
+			required_reagents = list("amphomine" = 1, "plasmorphine" = 1, "stabiliser" = 1, "plasma" = 1)
+			result_amount = 3
+			mix_phrase = "The mixture quickly forms an extremely heavy muddy green gas."
 
 		atropine
 			name = "Atropine"
@@ -3959,6 +4000,16 @@ datum
 			required_reagents = list("transparium" = 1, "water" = 2)
 			result_amount = 3
 			mix_phrase = "The solution gains a slight blue hue."
+
+		ambrosia
+			name = "ambrosia"
+			id = "ambrosia"
+			result = "ambrosia"
+			required_reagents = list("strange_matter" = 1, "catalyst" = 1, "pacid" = 1, "chronospeculo" = 1, "regengoo" = 1, "omnizine" = 1, "atropine" = 1, "penteticacid" = 1, "leocizumab" = 1, "jarhead" = 1, "adrenomax" = 1, "somnium" = 1, "ketamine" = 1, "initropidril" = 1, "ricin" = 1, "madness_toxin" = 1, "astrolite" = 1, "foof" = 1, "octonitrocubane" = 1, "ldmatter" = 1, "nitroglycerine" = 1)
+			result_amount = 20
+			required_temperature = -100
+			mix_phrase = "oh. oh no."
+			//mix_sound = 'something holy sounding'
 
 		expresso
 			name = "expresso"

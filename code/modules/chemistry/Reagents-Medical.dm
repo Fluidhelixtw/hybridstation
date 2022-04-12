@@ -351,7 +351,7 @@ datum
 				if(!M) M = holder.my_atom
 
 				for(var/reagent_id in M.reagents.reagent_list)
-					if(reagent_id != id)
+					if(reagent_id != id && reagent_id != "ambrosia")
 						M.reagents.remove_reagent(reagent_id, 12 * mult)
 				M.take_toxin_damage(2 * mult, 1)	//calomel doesn't damage organs.
 				if(probmult(6))
@@ -767,10 +767,49 @@ datum
 				..()
 				return
 
+		medical/clozapine
+			name = "clozapine"
+			id = "clozapine"
+			description = "Clozapine is a powerful antipsychotic and anti-hallucinogen."
+			reagent_state = LIQUID
+			fluid_r = 255
+			fluid_g = 255
+			fluid_b = 170
+			transparency = 200
+
+			on_mob_life(var/mob/living/M, var/mult = 1)
+				if(!M) M = holder.my_atom
+				M.jitteriness = max(M.jitteriness-50,0)
+				if (M.druggy > 0)
+					M.druggy -= 3
+					M.druggy = max(0, M.druggy)
+				if(holder.has_reagent("spacewalker"))
+					holder.remove_reagent("spacewalker", 5 * mult)
+				if(holder.has_reagent("necrotonium"))
+					holder.remove_reagent("necrotonium", 5 * mult)
+				if(holder.has_reagent("ampuline"))
+					holder.remove_reagent("ampuline", 5 * mult)
+				if(holder.has_reagent("space_drugs"))
+					holder.remove_reagent("space_drugs", 5 * mult)
+				if(holder.has_reagent("lean"))
+					holder.remove_reagent("lean", 5 * mult)
+				if(holder.has_reagent("THC"))
+					holder.remove_reagent("THC", 5 * mult)
+				if(holder.has_reagent("lsd"))
+					holder.remove_reagent("lsd", 5 * mult)
+				if(holder.has_reagent("somnium"))
+					holder.remove_reagent("somnium", 5 * mult)
+				if(M.hasStatus("stimulants"))
+					M.changeStatus("stimulants", -15 SECONDS * mult)
+				if(probmult(5))
+					for(var/datum/ailment_data/disease/virus in M.ailments)
+						if(istype(virus.master,/datum/ailment/disease/space_madness) || istype(virus.master,/datum/ailment/disease/berserker))
+							virus.state = "Remissive"
+				..()
+				return
 
 
-
-		medical/haloperidol // COGWERKS CHEM REVISION PROJECT. ought to be some sort of shitty illegal opiate or hypnotic drug
+		medical/haloperidol
 			name = "haloperidol"
 			id = "haloperidol"
 			description = "Haloperidol is a powerful antipsychotic and sedative. Will help control psychiatric problems, but may cause brain damage."
@@ -1186,6 +1225,8 @@ datum
 				M.TakeDamage("chest", 0.5, 0, 0, DAMAGE_BLUNT)
 				var/data = /datum/reagent/medical
 				for(var/reagent_id in M.reagents.reagent_list)
+					if(reagent_id == "ambrosia")
+						return
 					if(!istype(reagent_id, data))
 						M.reagents.remove_reagent(reagent_id, 5 * mult)
 						return
@@ -1499,7 +1540,7 @@ datum
 			on_mob_life(var/mob/M, var/mult = 1)
 				if(!M) M = holder.my_atom
 				for(var/reagent_id in M.reagents.reagent_list)
-					if(reagent_id != id) // slow this down a bit
+					if(reagent_id != id && reagent_id != "ambrosia") // slow this down a bit
 						M.reagents.remove_reagent(reagent_id, 0.5 * mult)
 				M.HealDamage("All", 0, 0, 1.25 * mult)
 

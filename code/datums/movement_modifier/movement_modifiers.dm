@@ -77,6 +77,9 @@
 /datum/movement_modifier/reagent/jarhead
 	health_deficiency_adjustment = -100
 
+/datum/movement_modifier/reagent/adrenomax
+	multiplicative_slowdown = 0.5
+
 /datum/movement_modifier/reagent/cocktail_triple
 	multiplicative_slowdown = 0.333
 

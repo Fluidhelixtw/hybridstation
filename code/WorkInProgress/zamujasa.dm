@@ -1234,7 +1234,7 @@ Read the rules, don't grief, and have fun!</div>"}
 			src.maptext_height = 400
 			src.set_text({"<span class='ol vga'>
 Welcome to Hybridstation!
-New? Sorry, our tutorial is under construction!
+New? Read our lore primer and getting started guide!
 Have questions? Ask mentors with \[F3]!
 Need an admin? Message us with \[F1].</span>"})
 

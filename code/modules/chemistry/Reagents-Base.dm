@@ -498,7 +498,7 @@ datum
 		plasma
 			name = "phoron"
 			id = "plasma"
-			description = "The liquid phase of an unusual extraterrestrial compound."
+			description = "The liquid phase of an unusual extraterrestrial non-metal. Flammable."
 			reagent_state = LIQUID
 
 			fluid_r = 130

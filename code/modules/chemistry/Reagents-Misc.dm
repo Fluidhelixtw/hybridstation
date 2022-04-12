@@ -797,11 +797,12 @@ datum
 			fluid_b = 130
 			reagent_state = LIQUID
 			transparency = 150
+			penetrates_skin = 1
 			on_mob_life(var/mob/M, var/method=INGEST, var/mult = 1)
 				if(!M)
 					M = holder.my_atom
-				if(holder.has_reagent("pseudosoul"))
-					holder.remove_reagent("pseudosoul", 10 * mult)
+				if(holder.has_reagent("strange_matter"))
+					holder.remove_reagent("strange_matter", 10 * mult)
 				if(holder.has_reagent("chronospeculo"))
 					holder.remove_reagent("chronospeculo", 10 * mult)
 				..()

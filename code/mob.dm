@@ -69,6 +69,7 @@
 	var/stuttering = null
 	var/real_name = null
 	var/acid_name = null
+	var/deity = 0 //ambrosia stuff
 	var/blinded = null
 	var/druggy = 0
 	var/sleeping = 0.0
