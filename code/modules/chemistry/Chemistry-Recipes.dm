@@ -267,7 +267,7 @@ datum
 			name = "antimonic alkaline"
 			id = "antimonic_alkaline"
 			required_reagents = list("bleach" = 1, "diethylamine" = 1, "plasma" = 1, "antimony" = 1)
-			result_amount = 4
+			result_amount = 3
 			result = "antimonic_alkaline"
 			mix_phrase = "The chemicals give off fumes that smell similar to ammonia."
 
@@ -330,8 +330,8 @@ datum
 		pseudosoul
 			name = "pseudosoul"
 			id = "pseudosoul"
-			required_reagents = list("epinephrine" = 1, "amphomine" = 1, "hydroacid" = 1, "phenol" = 1, "blood" = 1)
-			result_amount = 3
+			required_reagents = list("epinephrine" = 1, "ambuprophen" = 1, "hydroacid" = 1, "phenol" = 1, "blood" = 1)
+			result_amount = 4
 			result = "pseudosoul"
 			mix_phrase = "The mixture starts whispering quietly."
 			mix_sound = 'sound/effects/ghostbreath.ogg'
@@ -348,28 +348,23 @@ datum
 			name = "chloramine"
 			id = "chloramine"
 			required_reagents = list("bleach" = 1, "ammonia" = 1)
-			inhibitors = list("acetone")
 			mix_phrase = "The bleach mixes violently with the ammonia!"
-			//stole some code from cyanide
-			on_reaction(var/datum/reagents/holder, var/created_volume)
+			//stole some code from sarin
+			on_reaction(var/datum/reagents/holder, created_volume)
 				var/location = get_turf(holder.my_atom)
-
 				for(var/mob/M in all_viewers(null, location))
-					boutput(M, "<span class='alert'>The solution generates a strong vapor! OH FUCK!</span>")
-
-				var/list/mob/living/carbon/mobs_affected = list()
-				for(var/mob/living/carbon/C in range(location, 1))
-					if(!issmokeimmune(C))
-						mobs_affected += C
-				for(var/mob/living/carbon/C as anything in mobs_affected)
-					C.reagents.add_reagent("chloramine", (1 * created_volume) / length(mobs_affected))
-				return
+					boutput(M, "<span class='alert'>The solution generates a strong vapor!</span>")
+				if(holder?.my_atom?.is_open_container())
+					var/datum/reagents/smokeContents = new/datum/reagents/
+					smokeContents.add_reagent("chloramine", created_volume / 2)
+					smoke_reaction(smokeContents, 2, location)
+					return
 
 		neurotoxin
 			name = "nitric oxide"
 			id = "neurotoxin"
 			required_reagents = list("nitric_acid" = 1, "mannitol" = 1, "stabiliser" = 1, "mercury" = 2)
-			result_amount = 4
+			result_amount = 5
 			result = "neurotoxin"
 			mix_phrase = "A sickly sweet smell wafts through the air."
 
@@ -385,7 +380,7 @@ datum
 			name = "artificial ricin"
 			id = "ricin"
 			required_reagents = list("cyanide" = 1, "phenol" = 1, "hydroacid" = 1, "potassium_perchlorate" = 1, "catalyst" = 1)
-			result_amount = 2.5
+			result_amount = 4
 			result = "ricin"
 			mix_phrase = "The solution clears up ominously."
 
@@ -437,7 +432,7 @@ datum
 			id = "synthflesh"
 			result = "synthflesh"
 			required_reagents = list("blood" = 1, "carbon" = 2, "styptic_powder" = 1, "plasma" = 1)
-			result_amount = 4
+			result_amount = 3
 			mix_phrase = "The mixture knits together into a fibrous, bloody mass."
 			mix_sound = 'sound/impact_sounds/Slimy_Hit_4.ogg'
 
@@ -445,7 +440,16 @@ datum
 			name = "Synthblood"
 			id = "synthblood"
 			result = "blood"
-			required_reagents = list("saltpetre" = 1, "hydroacid" = 1, "bleach" = 1, "water" = 7)
+			required_reagents = list("oxygen" = 1, "iron" = 1, "blood" = 1, "water" = 7)
+			result_amount = 10
+			mix_phrase = "The mixture starts to coagulate slowly."
+			mix_sound = 'sound/impact_sounds/Slimy_Hit_4.ogg'
+
+		bloodc
+			name = "Synthblood"
+			id = "synthbloodc"
+			result = "bloodc"
+			required_reagents = list("oxygen" = 1, "iron" = 1, "bloodc" = 1, "water" = 7)
 			result_amount = 10
 			mix_phrase = "The mixture starts to coagulate slowly."
 			mix_sound = 'sound/impact_sounds/Slimy_Hit_4.ogg'
@@ -1958,7 +1962,7 @@ datum
 			name = "Stable mutagen"
 			id = "dna_mutagen"
 			result = "dna_mutagen"
-			required_reagents = list("mutagen" = 1, "silicon" = 2, "stabiliser" = 1, "plasma" = 1)
+			required_reagents = list("mutagen" = 1, "silicon" = 3, "stabiliser" = 1, "plasma" = 1)
 			result_amount = 3
 			mix_phrase = "The substance turns a drab green and begins to bubble."
 		//  required_temperature = 170
@@ -1982,7 +1986,7 @@ datum
 			result = "cyanide"
 			required_reagents = list("fuel" = 1, "ammonia" = 1, "oxygen" = 2, "plasma" = 1)
 			required_temperature = T0C + 100
-			result_amount = 3
+			result_amount = 4
 			mix_phrase = "The mixture gives off a faint scent of almonds."
 			mix_sound = 'sound/misc/drinkfizz.ogg'
 
@@ -2004,8 +2008,8 @@ datum
 			name = "Sarin"
 			id = "sarin"
 			result = "sarin"
-			required_reagents = list("chloramine" = 1, "oil" = 1, "oxygen" = 1, "phosphorus" = 1, "cyanide" = 1, "silver_azide" = 1, "acetone" = 1, "catalyst" = 1)
-			result_amount = 4
+			required_reagents = list("chloramine" = 1, "oil" = 1, "cyanide" = 1, "silver_azide" = 1, "acetone" = 1, "catalyst" = 1)
+			result_amount = 5
 			mix_phrase = "The mixture yields a colorless, odorless liquid."
 			mix_sound = 'sound/misc/drinkfizz.ogg'
 
@@ -2026,7 +2030,7 @@ datum
 			id = "phenol"
 			result = "phenol"
 			required_reagents = list("oil" = 1, "chlorine" = 2, "water" = 2) // hydrolysis of chlorobenzene
-			result_amount = 4
+			result_amount = 5
 			mix_phrase = "The mixture bubbles and gives off an unpleasant medicinal odor."
 			mix_sound = 'sound/misc/drinkfizz.ogg'
 
@@ -2034,9 +2038,9 @@ datum
 			name = "Salicylic Acid"
 			id = "salicylic_acid"
 			result = "salicylic_acid"
-			required_reagents = list("salt" = 1, "phenol" = 1, "carbon" = 1, "oxygen" = 1, "acid" = 1)
-			//required_temperature = 390
-			result_amount = 5
+			required_reagents = list("potassium" = 1, "acid" = 1, "iron" = 1, "oxygen" = 1)
+			required_temperature = 330
+			result_amount = 4
 			mix_phrase = "The mixture crystallizes."
 			mix_sound = 'sound/misc/drinkfizz.ogg'
 
@@ -2131,7 +2135,7 @@ datum
 			id = "acid"
 			result = "acid"
 			required_reagents = list("sulfur" = 1, "hydrogen" = 1, "oxygen" = 1) // tobba chem revision: change to SO3 + H2O
-			result_amount = 2
+			result_amount = 3
 			//required_temperature = -160
 
 			mix_phrase = "The mixture gives off a sharp acidic tang."
@@ -2186,13 +2190,22 @@ datum
 							H:unlock_medal("Red Hood", 1)
 				return
 
-		anti_rad // COGWERKS CHEM REVISION PROJECT: marked for revision. Potassium iodide? Prussian Blue?
+		anti_rad
 			name = "Potassium Iodide"
 			id = "anti_rad"
 			result = "anti_rad"
 			required_reagents = list("potassium" = 1, "iodine" = 1)
 			result_amount = 2
 			mix_phrase = "The solution settles calmly and emits gentle fumes."
+
+		prussian_blue
+			name = "prussian blue"
+			id = "prussian_blue"
+			result = "prussian_blue"
+			required_reagents = list("anti_rad" = 1, "antihol" = 1, "radium" = 1, "plasma" = 1)
+			result_amount = 3
+			mix_phrase = "The solution crystalizes into a blue powder."
+
 
 		penteticacid
 			name = "Pentetic Acid"
@@ -2216,17 +2229,17 @@ datum
 			name = "Acetic Acid"
 			id = "acetic_acid"
 			result = "acetic_acid"
-			required_reagents = list("fuel" = 1, "oxygen" = 1, "nitrogen" = 4)
-			result_amount = 3
+			required_reagents = list("fuel" = 1, "oxygen" = 1, "nitrogen" = 2)
+			result_amount = 4
 			mix_phrase = "It smells like vinegar and a bad hangover in here."
 
 		ether
 			name = "Ether"
 			id = "ether"
 			result = "ether"
-			required_reagents = list("ethanol" = 1, "ammonia" = 1, "oxygen" = 1, "fuel")
+			required_reagents = list("ethanol" = 1, "ammonia" = 1, "oxygen" = 1, "fuel" = 1)
 			result_amount = 4
-			mix_phrase = "The mixture yields a pungent odor, which makes you tired."
+			mix_phrase = "The mixture yields a pungent, drowsiness inducing odor."
 
 		kerosene
 			name = "Kerosene"
@@ -2268,7 +2281,7 @@ datum
 			id = "tetracaine"
 			result = "tetracaine"
 			required_reagents = list("silver" = 1, "sulfur" = 1, "oxygen" = 1, "chlorine" = 1, "ammonia" = 1)
-			result_amount = 3
+			result_amount = 5
 			mix_phrase = "A strong and cloying odor begins to bubble from the yellow mixture."
 			mix_sound = 'sound/misc/drinkfizz.ogg'
 
@@ -2284,16 +2297,16 @@ datum
 			result = "charcoal"
 			required_reagents = list("acetic_acid" = 1, "salt" = 1, "calcium" = 1, "oxygen" = 1)
 			required_temperature = 573
-			result_amount = 3
+			result_amount = 4
 			mix_phrase = "The mixture yields a fine black powder."
 			mix_sound = 'sound/misc/fuse.ogg'
 
-		teporone // COGWERKS CHEM REVISION PROJECT: marked for revision - magic drug
+		teporone
 			name = "Teporone"
 			id = "teporone"
 			result = "teporone"
 			required_reagents = list("silicon" = 1, "acetone" = 1, "cryostylane" = 1)
-			result_amount = 2
+			result_amount = 3
 			mix_phrase = "The mixture turns an odd lavender color."
 			mix_sound = 'sound/misc/drinkfizz.ogg'
 
@@ -2302,7 +2315,7 @@ datum
 			id = "epinephrine"
 			result = "epinephrine"
 			required_reagents = list("phenol" = 1, "plasma" = 1, "oxygen" = 1, "acetone" = 1)
-			result_amount = 4
+			result_amount = 3
 			mix_phrase = "Tiny white crystals precipitate out of the solution."
 			mix_sound = 'sound/misc/drinkfizz.ogg'
 
@@ -2319,7 +2332,7 @@ datum
 			name = "antiprophen"
 			id = "antiprophen"
 			result = "antiprophen"
-			required_reagents = list("amphomine" = 1, "plasmorphine" = 1, "stabiliser" = 1, "plasma" = 1)
+			required_reagents = list("ambuprophen" = 1, "plasmorphine" = 1, "stabiliser" = 1, "plasma" = 1)
 			result_amount = 3
 			mix_phrase = "The mixture quickly forms an extremely heavy muddy green gas."
 
@@ -2328,7 +2341,7 @@ datum
 			id = "atropine"
 			result = "atropine"
 			required_reagents = list("ethanol" = 2, "hydroacid" = 1, "acetone" = 2, "phenol" = 2, "catalyst" = 1)
-			result_amount = 4
+			result_amount = 7
 			mix_phrase = "A horrid smell like something died drifts from the mixture."
 
 		omnizine
@@ -2336,7 +2349,7 @@ datum
 			id = "omnizine"
 			result = "omnizine"
 			required_reagents = list("salicylic_acid" = 1, "charcoal" = 1, "salbutamol" = 1, "mannitol" = 1, "cryoxadone" = 1, "catalyst" = 1)
-			result_amount = 3
+			result_amount = 5
 			mix_phrase = "The mixture seems to slosh around on its own, fizzing violently."
 
 		leocizumab
@@ -2344,7 +2357,7 @@ datum
 			id = "leocizumab"
 			result = "leocizumab"
 			required_reagents = list("synaptizine" = 1, "alkaline_salts" = 1, "iron" = 2, "catalyst" = 1)
-			result_amount = "3"
+			result_amount = "4"
 			mix_phrase = "The resultant fluid starts faintly glowing purple."
 
 		oculine
@@ -2369,9 +2382,16 @@ datum
 			id = "mannitol"
 			result = "mannitol"
 			required_reagents = list("sugar" = 1, "hydrogen" = 1, "water" = 1)
-			//required_temperature = T0C + 150
-			result_amount = 2
+			result_amount = 3
 			mix_phrase = "The mixture bubbles slowly, making a slightly sweet odor."
+
+		synaptizine
+			name = "Synaptizine"
+			id = "synaptizine"
+			result = "synaptizine"
+			required_reagents = list("mannitol" = 1, "ephedrine" = 1, "acid" = 1, "plasma" = 1)
+			result_amount = 3
+			mix_phrase = "The mixture bubbles quietly, releasing an odor that makes all other odors more intense."
 
 		salbutamol
 			name = "Salbutamol"
@@ -2386,10 +2406,10 @@ datum
 			name = "Oxydecazine"
 			id = "oxydecazine"
 			result = "oxydecazine"
-			required_reagents = list("salbutamol" = 1, "oxygen" = 3, " acetone" = 1, "plasma" = 1)
+			required_reagents = list("salbutamol" = 1, "oxygen" = 2, " acetone" = 1, "plasma" = 1)
 			required_temperature = 374
-			result_amount = 3
-			mix_phrase = "The salbutamol seems to absorb the other reagents and swell in mass."
+			result_amount = 4
+			mix_phrase = "The salbutamol starts to absorb the other reagents and swell in mass."
 
 
 		perfluorodecalin // COGWERKS CHEM REVISION PROJECT:marked for revision
@@ -2403,12 +2423,11 @@ datum
 			mix_phrase = "The mixture rapidly turns into a dense pink liquid."
 			mix_sound = 'sound/misc/drinkfizz.ogg'
 
-		styptic_powder // COGWERKS CHEM REVISION PROJECT: no idea, probably a magic drug
+		styptic_powder
 			name = "Styptic Powder"
 			id = "styptic_powder"
 			result = "styptic_powder"
 			required_reagents = list("aluminium" = 1, "oxygen" = 1, "hydrogen" = 1, "acid" = 1)
-			//required_temperature = 325
 			result_amount = 4
 			mix_phrase = "The solution yields an astringent powder."
 
@@ -2417,8 +2436,8 @@ datum
 			id = "ephedrine"
 			result = "ephedrine"
 			required_reagents = list("sugar" = 1, "oil" = 1, "hydrogen" = 1, "diethylamine" = 1)
-			result_amount = 3
-			mix_phrase = "The solution fizzes and gives off toxic fumes."
+			result_amount = 4
+			mix_phrase = "The solution fizzes and gives off strong fumes."
 
 		methamphetamine
 			name = "Methamphetamine"
@@ -2448,8 +2467,8 @@ datum
 			name = "Mutadone"
 			id = "mutadone"
 			result = "mutadone"
-			required_reagents = list("mutagen" = 2, "stabiliser" = 1, "phosphorus" = 1, "magnesium")
-			result_amount = 4
+			required_reagents = list("mutagen" = 2, "stabiliser" = 1, "phosphorus" = 1, "magnesium" = 1)
+			result_amount = 5
 			mix_phrase = "A foul astringent liquid emerges from the reaction."
 
 		cryoxadone
@@ -2491,7 +2510,7 @@ datum
 			id = "initropidril"
 			result = "initropidril"
 			required_reagents = list("mercury" = 1, "ephedrine" = 1, "methamphetamine" = 2, "heparin" = 1, "catalyst" = 1)
-			result_amount = 3
+			result_amount = 5
 			mix_phrase = "A sweet and sugary scent drifts from the unpleasant milky substance."
 
 /*
@@ -2880,14 +2899,14 @@ datum
 			id = "potash"
 			result = "potash"
 			required_reagents = list("potassium" = 1, "chlorine" = 1, "acid" = 1)
-			result_amount = 2
+			result_amount = 3
 			mix_phrase = "The mixture yields a white crystalline compound."
 
 		plant_nutrients
 			name = "saltpetre"
 			id = "saltpetre"
 			result = "saltpetre"
-			required_reagents = list("ammonia" = 1, "nitrogen" = 1, "potassium" = 1, "hydrogen" = 1, "oxygen" = 2)
+			required_reagents = list("ammonia" = 1, "nitrogen" = 1, "potassium" = 1, "hydrogen" = 1, "oxygen" = 1)
 			result_amount = 5
 			mix_phrase = "A white crystalline substance condenses out of the mixture."
 			mix_sound = 'sound/misc/fuse.ogg'
@@ -2968,8 +2987,8 @@ datum
 			name = "Nitric Acid"
 			id = "nitric_acid"
 			result = "nitric_acid"
-			required_reagents = list("copper" = 1, "nitrogen" = 1, "water" = 2, "oxygen" = 2, "plasma" = 1)
-			result_amount = 4
+			required_reagents = list("copper" = 1, "nitrogen" = 1, "ammonia" = 1, "plasma" = 1)
+			result_amount = 3
 			required_temperature = 374
 			mix_phrase = "The mixture gives off a sharp acidic tang."
 
@@ -3180,7 +3199,7 @@ datum
 			id = "luminol"
 			result = "luminol"
 			required_reagents = list("oxygen" = 1, "hydrogen" = 1, "nitrogen" = 1, "carbon" = 1, "plasma" = 1)
-			result_amount = 5
+			result_amount = 4
 			mix_phrase = "The solution seems to highlight stains in the container."
 
 
@@ -3189,7 +3208,7 @@ datum
 			name = "Ammonia"
 			id = "ammonia"
 			result = "ammonia"
-			required_reagents = list("hydrogen" = 3, "nitrogen" = 1)
+			required_reagents = list("hydrogen" = 2, "nitrogen" = 1)
 			result_amount = 3
 			mix_phrase = "The mixture bubbles, emitting an acrid reek."
 
@@ -3223,7 +3242,7 @@ datum
 			id = "spacewalker"
 			result = "spacewalker"
 			required_reagents = list("plasma" = 1, "silver_sulfadiazine" = 1, "salbutamol" = 1, "oxygen" = 1)
-			result_amount = 4
+			result_amount = 3
 			mix_phrase = "The solution begins to swirl and darken."
 
 		bathsalts // cogwerks' dumb first drug attempt, delete if bad
@@ -3250,7 +3269,7 @@ datum
 			id = "diphenhydramine"
 			result = "antihistamine"
 			required_temperature = 320
-			result_amount = 4
+			result_amount = 5
 			required_reagents = list("oil" = 1, "carbon" = 1, "bromine" = 1, "diethylamine" = 1, "ethanol" = 1)
 			mix_phrase = "The mixture fizzes gently."
 			mix_sound = 'sound/misc/drinkfizz.ogg'
@@ -3278,7 +3297,7 @@ datum
 			id = "heparin"
 			result = "heparin"
 			required_reagents = list("sugar" = 1, "phenol" = 2, "acid" = 1)
-			result_amount = 2
+			result_amount = 4
 
 		proconvertin // coagulant
 			name = "Proconvertin"
@@ -3386,7 +3405,7 @@ datum
 			result = "strange_reagent"
 			required_reagents = list("blood" = 1, "synthflesh" = 1, "dna_mutagen" = 1, "epinephrine" = 1, "pseudosoul" = 1, "plasma" = 1)
 			result_amount = 1
-			mix_phrase = "The mixture compacts itself into a thick moving goo."
+			mix_phrase = "The mixture compacts itself into a thick moving goo." //the "1" result amount is not a mistake. It is INCREDIBLY potent.
 
 		raf
 			name = "Reality Anchor Fluid"
@@ -3395,8 +3414,6 @@ datum
 			required_reagents = list("plasma" = 1, "magnesium" = 2, "nitric_acid" = 2, "diethylamine" = 1)
 			result_amount = 5
 			mix_phrase = "The space around the chemical suddenly feels a lot more stable."
-
-
 
 		carpet
 			name = "Carpet"
@@ -3459,7 +3476,7 @@ datum
 			mix_phrase = "The smell of paint thinner assaults you as the solution bubbles."
 
 		hairgrownium
-			name = "Hairgrownium"
+			name = "capillium"
 			id = "hairgrownium"
 			result = "hairgrownium"
 			required_reagents = list("synthflesh" = 1, "iron" = 1, "silicon" = 1)
@@ -3726,7 +3743,7 @@ datum
 			id = "ketamine"
 			result = "ketamine"
 			required_reagents = list("plasmorphine" = 1, "antimony" = 1, "pyromethium" = 1, "lithium" = 1, "catalyst" = 1)
-			result_amount = 3
+			result_amount = 5
 			mix_phrase = "The reagents swirl together and half of it quickly evaporates."
 			on_reaction(var/datum/reagents/holder, var/created_volume)
 				var/location = get_turf(holder.my_atom)
@@ -3741,13 +3758,21 @@ datum
 				for(var/mob/living/carbon/C as anything in mobs_affected)
 					C.reagents.add_reagent("ketamine", created_volume / length(mobs_affected))
 				return
+		ambuprophen
+			name = "ambuprophen"
+			id = "ambuprophen"
+			result = "ambuprophen"
+			required_reagents = list("ephedrine" = 2, "antihistamine" = 1, "tetracaine" = 1, "fuel" = 2, "diethylamine" = 1)
+			result_amount = 7
+			required_temperature = 600
+			mix_phrase = "A bitter and soapy smell emits from the reagents."
 
 		plasmorphine
 			name = "plasmorphine"
 			id = "plasmorphine"
 			result = "plasmorphine"
-			required_reagents = list("amphomine" = 1, "cryoxadone" = 1, "methamphetamine" = 1, "epinepherine" = 1, "phosphorus" = 1)
-			result_amount = 3
+			required_reagents = list("ambuprophen" = 1, "cryoxadone" = 1, "methamphetamine" = 1, "epinepherine" = 1, "phosphorus" = 1)
+			result_amount = 5
 			mix_phrase = "The mixture bubbles violently for a few seconds and settles."
 
 		methyl_iodide
@@ -3770,7 +3795,9 @@ datum
 			name = "antidote"
 			id = "antidote"
 			result = "antidote"
-			required_reagents = list("bloodc" = 1, )
+			required_reagents = list("bloodc" = 1, "calomel" = 1, "funis_paralysin" = 1, "methyl_iodide" = 1, "plasma" = 1)
+			result_amount = 4
+			mix_phrase = "A horrible smell comes from the foaming mixture."
 
 		fliptonium
 			name = "fliptonium"
@@ -3914,7 +3941,7 @@ datum
 			id = "madness_toxin"
 			result = "madness_toxin"
 			required_reagents = list("catalyst" = 1, "formaldehyde" = 1, "mercury" = 1, "haloperidol" = 1, "plasma" = 1, "LSD" = 1)
-			result_amount = 2
+			result_amount = 4
 			mix_phrase = "The mixture forms a clear greenish liquid, emitting a nauseating smell reminiscent of chlorophyll and rubbing alcohol."
 			mix_sound = 'sound/misc/drinkfizz.ogg'
 
@@ -4005,11 +4032,27 @@ datum
 			name = "ambrosia"
 			id = "ambrosia"
 			result = "ambrosia"
-			required_reagents = list("strange_matter" = 1, "catalyst" = 1, "pacid" = 1, "chronospeculo" = 1, "regengoo" = 1, "omnizine" = 1, "atropine" = 1, "penteticacid" = 1, "leocizumab" = 1, "jarhead" = 1, "adrenomax" = 1, "somnium" = 1, "ketamine" = 1, "initropidril" = 1, "ricin" = 1, "madness_toxin" = 1, "astrolite" = 1, "foof" = 1, "octonitrocubane" = 1, "ldmatter" = 1, "nitroglycerine" = 1)
+			required_reagents = list("strange_matter" = 1, "catalyst" = 1, "pacid" = 1, "chronospeculo" = 1, "regengoo" = 1, "omnizine" = 1, "atropine" = 1, "penteticacid" = 1, "leocizumab" = 1, "jarhead" = 1, "adrenomax" = 1, "themomium" = 1, "ketamine" = 1, "initropidril" = 1, "ricin" = 1, "madness_toxin" = 1, "astrolite" = 1, "foof" = 1, "octonitrocubane" = 1, "ldmatter" = 1, "nitroglycerine" = 1)
 			result_amount = 20
 			required_temperature = -100
 			mix_phrase = "oh. oh no."
 			//mix_sound = 'something holy sounding'
+
+		regengoo
+			name = "regenerative goo"
+			id = "regengoo"
+			required_reagents = list("blood" = 1, "synthflesh" = 1, "strange_reagent" = 1, "pseudosoul" = 1, "catalyst" = 1)
+			result = "regengoo"
+			result_amount = 4
+			mix_phrase = "The solution quickly solidifies into a thick goop."
+
+		themomium
+			name = "themomium"
+			id = "themomium"
+			required_reagents = list("ampuline" = 1, "oculine" = 1, "pseudosoul" = 1, "oil" = 1, "catalyst" = 1)
+			result = "themomium"
+			result_amount = 4
+			mix_phrase = "The solution thickens into a blue oil."
 
 		expresso
 			name = "expresso"
@@ -4192,4 +4235,5 @@ datum
 			mix_phrase = "The strange matter annihilates the copper and plasma and the released energy condenses into a blue crystal. That's unnerving."
 			required_reagents = list("copper" = 1, "strange_matter" = 2, "plasma" = 1)
 			result_amount = 1
+			required_temperature = 755
 			mix_sound = 'sound/effects/elec_bzzz.ogg'

@@ -149,14 +149,14 @@ datum
 				..()
 				return
 
-		medical/russiancyan
-			name = "russian cyan"
-			id = "russian cyan"
+		medical/prussian_blue
+			name = "prussian_blue"
+			id = "prussian_blue"
 			description = "Prussian blue infused with pure phoron"
 			reagent_state = SOLID
 			fluid_r = 0
-			fluid_g = 210
-			fluid_b = 200
+			fluid_g = 50
+			fluid_b = 80
 			transparency = 100
 
 			on_mob_life(var/mob/M, var/mult = 1)

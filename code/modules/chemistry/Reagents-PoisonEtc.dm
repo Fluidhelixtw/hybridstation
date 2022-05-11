@@ -1789,8 +1789,8 @@ datum
 			depletion_rate = 0.4
 
 			on_mob_life(var/mob/M, var/mult = 1)
-				if(M.reagents.has_reagent("amphomine"))
-					M.reagents.remove_reagent("amphomine",15 * mult)
+				if(M.reagents.has_reagent("ambuprophen"))
+					M.reagents.remove_reagent("ambuprophen",15 * mult)
 				if(M.reagents.has_reagent("plasmorphine"))
 					M.reagents.remove_reagent("plasmorphine",10 * mult)
 				if(M.reagents.has_reagent("jarhead"))

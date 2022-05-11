@@ -853,14 +853,15 @@ datum
 						M.emote("shiver")
 						M.bodytemperature -= 70 * mult
 //FINISH LATER -fluidhelix
-		drug/amphomine
-			name = "amphomine"
-			id = "amphomine"
+		drug/ambuprophen
+			name = "ambuprophen"
+			id = "ambuprophen"
 			description = "A cheap and effective painkiller."
 			reagent_state = SOLID
 			fluid_r = 165
 			fluid_g = 185
 			fluid_b = 220
+			addiction_min = 15
 			addiction_prob = 100
 			transparency = 50
 			overdose = 25
@@ -870,12 +871,12 @@ datum
 					var/mob/M = holder.my_atom
 					boutput(M, "You stop feeling any pain from your less severe wounds...")
 					boutput(M, "<b>You hear a voice in your head say 'This chemical is under construction, its supposed to fix staminaloss from damage above crit but that feature hasn't been implimented yet!'. Wonder what that means.</b>")
-/*					M.bioHolder.AddEffect("r_amphomine")
+/*					M.bioHolder.AddEffect("r_ambuprophen")
 
 			on_remove()
 				if (ismob(holder?.my_atom))
 					var/mob/M = holder.my_atom
-					M.bioHolder.RemoveEffect("r_amphomine")
+					M.bioHolder.RemoveEffect("r_ambuprophen")
 				..()*/
 
 			on_mob_life(var/mob/M, var/mult = 1)
