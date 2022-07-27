@@ -419,7 +419,7 @@ datum
 		harmful/chloramine
 			name = "chloramine"
 			id = "chloramine"
-			description = "Smells an awful lot like the pool."
+			description = "Smells an awful lot like a pool."
 			reagent_state = GAS
 			fluid_r = 255
 			fluid_g = 255

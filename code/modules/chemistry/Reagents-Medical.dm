@@ -550,7 +550,7 @@ datum
 						H.organHolder.damage_organs(1*mult, 0, 1*mult, target_organs, 5)
 				else if (severity == 2)
 					if(probmult(20)) boutput(M, "<span class='notice'>Your head is pounding and your lungs feel like they're melting!</span>")
-					M.take_brain_damage(12 * mult)
+					M.take_brain_damage(2 * mult)
 					if (H.organHolder)
 						H.organHolder.damage_organs(1*mult, 0, 1*mult, target_organs, 10)
 
@@ -574,7 +574,9 @@ datum
 				if(M.get_oxygen_deprivation())
 					M.take_oxygen_deprivation(-2.5 * mult)
 				M.take_brain_damage(-2.5 * mult)
-				M.HealDamage("All", 2.5 * mult, 2.5 * mult, 1 * mult)
+				M.HealDamage("All", 2.5 * mult, 0* mult, 1 * mult)
+				if(volume > 20)
+					M.HealDamage("All", 0 * mult, 2.5* mult, 0 * mult)
 				if (isliving(M))
 					var/mob/living/L = M
 					if (L.bleeding)
