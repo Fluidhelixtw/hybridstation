@@ -2377,7 +2377,33 @@ datum
 			mix_phrase = "The mixture settles with a faint popping sound."
 			mix_sound = 'sound/misc/drinkfizz.ogg'
 
-		mannitol // COGWERKS CHEM REVISION PROJECT: maybe this could be Mannitol, side effect: makes u pee?
+		balmonicacid
+			name = "Balmonic Acid"
+			id = "balmonicacid"
+			result = "balmonicacid"
+			required_reagents = list("acetic_acid" = 1, "potassium" = 1, "salt" = 1)
+			result_amount = 3
+			mix_phrase = "Foul-smelling fumes come from the concoction."
+			mix_sound = 'sound/misc/drinkfizz.ogg'
+
+		digestaid
+			name = "Digest-Aid"
+			id = "digestaid"
+			result = "digestaid"
+			required_reagents = list("antihol" = 1, "ethanol" = 1, "oil" = 1)
+			result_amount = 3
+			mix_phrase = "The mixture foams for a second and settles."
+			mix_sound = 'sound/misc/drinkfizz.ogg'
+
+		glastidone
+			name = "glastidone"
+			id = "glastidone"
+			result = "glastidone"
+			required_reagents = list("balmonicacid" = 1, "digestaid" = 1, "auditone" = 1, "oculine" = 1, "plasma" = 1)
+			result_amount = 5
+			mix_phrase = "The mixture changes color rapidly."
+
+		mannitol
 			name = "Mannitol"
 			id = "mannitol"
 			result = "mannitol"
@@ -3227,7 +3253,7 @@ datum
 			result = "lean"
 			required_reagents = list("sodawater" = 1, "cold_medicine" = 1, "cocktail_citrus" = 1)
 			result_amount = 3
-			mix_phrase = "The mixture starts violently bubbling"
+			mix_phrase = "The mixture starts violently bubbling."
 
 		LSD
 			name = "Lysergic acid diethylamide"
@@ -3401,6 +3427,7 @@ datum
 			mix_phrase = "Ick, this stuff really stinks. Sure does make the container sparkle though!"
 
 		strange_reagent
+			name = "strang reagent"
 			id = "strange_reagent"
 			result = "strange_reagent"
 			required_reagents = list("blood" = 1, "synthflesh" = 1, "dna_mutagen" = 1, "epinephrine" = 1, "pseudosoul" = 1, "plasma" = 1)

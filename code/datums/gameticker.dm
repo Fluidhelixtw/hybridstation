@@ -436,8 +436,10 @@ var/global/current_state = GAME_STATE_WORLD_INIT
 
 			// Official go-ahead to be an end-of-round asshole
 			boutput(world, "<h3>The round has ended!</h3><strong style='color: #393;'>Further actions will have no impact on round results. Go hog wild!</strong>")
+
+			// End-of-round music.
 			for (var/client/C)
-				sleep(5 SECONDS)
+				SPAWN_DBG(5 SECONDS)
 				if (C.mob)
 					C.mob << sound(pick('sound/radio_station/music/union1.mp3', 'sound/radio_station/music/union2.mp3', 'sound/radio_station/music/union3.mp3', 'sound/radio_station/music/union4.mp3',))
 

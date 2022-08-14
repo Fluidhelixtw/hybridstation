@@ -305,7 +305,7 @@ ABSTRACT_TYPE(/datum/rc_entry/reagent/caterdrink)
 			src.rc_entries += rc_buildentry(/datum/rc_entry/reagent/cola,rand(4,8)*10)
 
 		switch(rand(1,50)) //Special Outcomes Zone
-			if(1)
+			if(1 to 2)
 				src.rc_entries += rc_buildentry(/datum/rc_entry/item/chaps,rand(3,6))
 			if(11 to 15)
 				src.rc_entries += rc_buildentry(/datum/rc_entry/item/grapes,rand(3,6))

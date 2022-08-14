@@ -328,7 +328,7 @@
 
 		src.post_system()
 
-		switch(rand(1,3))
+		switch(rand(1,2))
 			if(1)
 				setup_font_color = "#E79C01"
 			if(2)

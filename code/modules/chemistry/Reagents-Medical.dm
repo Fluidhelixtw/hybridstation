@@ -338,13 +338,14 @@ datum
 		medical/calomel
 			name = "purgative"
 			id = "calomel"
-			description = "This potent purgative rids the body of impurities. It is highly toxic however and close supervision is required."
+			description = "This potent purgative rids the body of impurities. The process is very toxic to the patient, however."
 			reagent_state = LIQUID
 			fluid_r = 25
 			fluid_g = 200
 			fluid_b = 50
 			depletion_rate = 0.8
 			transparency = 200
+			overdose = 25
 			value = 3 // 1c + 1c + heat
 
 			on_mob_life(var/mob/M, var/mult = 1)
@@ -359,6 +360,11 @@ datum
 					M.vomit()
 				..()
 				return
+
+			do_overdose(var/severity, var/mob/M, var/mult = 1)
+				if (!M)
+					M = holder.my_atom
+				M.take_toxin_damage(3 * mult, 1)
 
 		/*medical/tricalomel // COGWERKS CHEM REVISION PROJECT. marked for revision. also a chelation agent
 			name = "Tricalomel"
@@ -604,6 +610,123 @@ datum
 					M.TakeDamage("chest", 0, 3 * mult, 0, DAMAGE_BURN)
 
 
+		medical/digestaid
+			name = "Digest-Aid"
+			id = "digestaid"
+			description = "A popular product sold by Northern Lights, marketed to cure indigestion. In reality, it simply heals damaged organs used in digestion."
+			reagent_state = LIQUID
+			fluid_r = 40
+			fluid_g = 110
+			fluid_b = 60
+			transparency = 100
+			depletion_rate = 0.6
+			overdose = 20
+			target_organs = list("stomach", "intestines", "spleen", "pancreas")
+
+			on_mob_life(var/mob/M, var/mult = 1)
+				if(!M)M = holder.my_atom
+				if (ishuman(M))
+					var/mob/living/carbon/human/H = M
+					if (H.organHolder)
+						H.organHolder.heal_organs(1*mult, 1*mult, 1*mult, target_organs)
+				..()
+				return
+
+			do_overdose(var/severity, var/mob/M, var/mult = 1)
+				if (!M)
+					M = holder.my_atom
+				if (isliving(M))
+					var/mob/living/L = M
+					M.take_toxin_damage(1 * mult)
+					if(prob(20))
+						L.visible_message("<span class='alert'>[M] pukes all over \himself!</span>")
+						L.vomit()
+
+
+		medical/balmonicacid
+			name = "balmonic acid"
+			id = "balmonicacid"
+			description = "A foul-tasting concoction that helps with chest pain."
+			reagent_state = LIQUID
+			fluid_r = 190
+			fluid_g = 210
+			fluid_b = 160
+			transparency = 150
+			depletion_rate = 0.6
+			overdose = 25
+			target_organs = list("left_lung", "right_lung", "left_kidney", "right_kidney", "liver")
+			on_mob_life(var/mob/M, var/mult = 1)
+				if(!M)M = holder.my_atom
+				if (ishuman(M))
+					var/mob/living/carbon/human/H = M
+					if (H.organHolder)
+						H.organHolder.heal_organs(0.5*mult, 0.5*mult, 0.5*mult, target_organs)
+				..()
+				return
+
+			do_overdose(var/severity, var/mob/M, var/mult = 1)
+				if (!M)
+					M = holder.my_atom
+				if (isliving(M))
+					var/mob/living/L = M
+					if(prob(20))
+						L.emote("sneeze")
+					if (ishuman(M))
+						var/mob/living/carbon/human/H = M
+						if (H.organHolder)
+							H.organHolder.damage_organ(0, 0, 3, "appendix")
+
+		medical/glastidone
+			name = "glastidone"
+			id = "glastidone"
+			description = "A combination of multiple organ-healing fluids infused with phoron. Very potent."
+			reagent_state = LIQUID
+			fluid_r = 120
+			fluid_g = 40
+			fluid_b = 100
+			transparency = 200
+			depletion_rate = 0.8
+			overdose = 25
+			target_organs = list("heart", "left_lung", "right_lung", "left_kidney", "right_kidney", "liver", "stomach", "intestines", "spleen", "pancreas", "appendix",)
+
+			on_mob_life(var/mob/M, var/mult = 1)
+				if(!M)M = holder.my_atom
+				if (ishuman(M))
+					var/mob/living/carbon/human/H = M
+					if (H.organHolder)
+						H.organHolder.heal_organs(2*mult, 2*mult, 2*mult, target_organs)
+
+				if (M.bioHolder)
+					var/datum/bioEffect/BE
+					BE = M.bioHolder.GetEffect("deaf")
+					if (probmult(50) && (M.get_ear_damage() && M.get_ear_damage() <= M.get_ear_damage_natural_healing_threshold()) && BE?.curable_by_mutadone)
+						M.bioHolder.RemoveEffect("deaf")
+				if (M.get_ear_damage()) // Permanent ear damage.
+					M.take_ear_damage(-2 * mult)
+				if (M.get_ear_damage(1)) // Temporary deafness.
+					M.take_ear_damage(-2 * mult, 1)
+
+				if (M.bioHolder)
+					var/datum/bioEffect/BE
+					BE = M.bioHolder.GetEffect("bad_eyesight")
+					if (probmult(50) && BE?.curable_by_mutadone)
+						M.bioHolder.RemoveEffect("bad_eyesight")
+					BE = M.bioHolder.GetEffect("blind")
+					if (probmult(30) && BE?.curable_by_mutadone)
+						M.bioHolder.RemoveEffect("blind")
+				if (M.get_eye_damage()) // Permanent eye damage.
+					M.take_eye_damage(-2 * mult)
+				if (M.get_eye_damage(1)) // Temporary blindness.
+					M.take_eye_damage(-2 * mult, 1)
+				..()
+				return
+
+			do_overdose(var/severity, var/mob/M, var/mult = 1)
+				if (!M)
+					M = holder.my_atom
+				M.take_toxin_damage(1.5 * mult, 1)
+
+
 		medical/saline
 			name = "saline-glucose solution"
 			id = "saline"
@@ -628,6 +751,7 @@ datum
 				//M.UpdateDamageIcon()
 				..()
 				return
+
 
 		medical/anti_rad
 			name = "potassium iodide"
