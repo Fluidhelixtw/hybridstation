@@ -34,7 +34,7 @@
 
 	var/list/cool_grip_adj = list("a sick", "a wicked", "a deadly", "a menacing", "an edgy", "a tacticool", "a sweaty", "an awkward")
 	var/list/cool_grip1 = list("combat", "fightlord", "guerilla", "hidden", "space", "syndie", "double-reverse", "\"triple-dog-dare-ya\"", "stain-buster's")
-	var/list/cool_grip2a = list("blade", "cyber", "street", "assistant", "comedy", "butcher", "edge", "beast", "heck", "crud", "ass")
+	var/list/cool_grip2a = list("blade", "cyber", "street",  "assistant", "comedy", "butcher", "edge", "beast", "heck", "crud", "ass")
 	var/list/cool_grip2b = list("master", "slayer", "fighter", "militia", "space", "syndie", "lord", "blaster", "beef", "tyrannosaurus")
 	var/list/wheredWeSeeIt = list("saw the clown do", "saw the captain do", "saw the head of security do",\
 														"saw someone in a red spacesuit do", "saw a floating saw do", "saw on TV",\
