@@ -811,6 +811,7 @@ mob/dead/observer/proc/insert_observer(var/atom/target)
 		src.real_name = corpse.real_name
 	else
 		src.real_name = corpse.acid_name
+		
 	newobs.corpse = src.corpse
 	newobs.my_ghost = src
 	delete_on_logout_reset = delete_on_logout

@@ -80,6 +80,10 @@
 /datum/movement_modifier/reagent/adrenomax
 	multiplicative_slowdown = 0.5
 
+/datum/movement_modifier/reagent/sulfonal
+	multiplicative_slowdown = 1.1
+
+
 /datum/movement_modifier/reagent/cocktail_triple
 	multiplicative_slowdown = 0.333
 

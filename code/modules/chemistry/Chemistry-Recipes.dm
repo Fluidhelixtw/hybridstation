@@ -2348,7 +2348,7 @@ datum
 			name = "omnizine"
 			id = "omnizine"
 			result = "omnizine"
-			required_reagents = list("salicylic_acid" = 1, "charcoal" = 1, "salbutamol" = 1, "mannitol" = 1, "cryoxadone" = 1, "catalyst" = 1)
+			required_reagents = list("salicylic_acid" = 1, "tetracaine" = 1, "oxydecazine" = 1, "prussian_blue" = 1, "cryoxadone" = 1, "catalyst" = 1)
 			result_amount = 5
 			mix_phrase = "The mixture seems to slosh around on its own, fizzing violently."
 

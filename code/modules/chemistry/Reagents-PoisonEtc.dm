@@ -1388,15 +1388,19 @@ datum
 			blob_damage = 2
 
 			on_add()
-				if (istype(holder) && istype(holder.my_atom) && hascall(holder.my_atom,"add_stam_mod_max"))
-					remove_buff = holder.my_atom:add_stam_mod_max("r_sulfonal", -25)
-				return
+				if(ismob(holder?.my_atom))
+					var/mob/M = holder.my_atom
+					APPLY_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_sulfonal", 3)
+					APPLY_MOVEMENT_MODIFIER(M, /datum/movement_modifier/reagent/sulfonal, src.type)
+					M.add_stam_mod_max("sulfonal", -25)
 
 			on_remove()
-				if (remove_buff)
-					if (istype(holder) && istype(holder.my_atom) && hascall(holder.my_atom,"remove_stam_mod_max"))
-						holder.my_atom:remove_stam_mod_max("r_sulfonal")
-				return
+				if(ismob(holder?.my_atom))
+					var/mob/M = holder.my_atom
+					REMOVE_MOB_PROPERTY(M, PROP_STAMINA_REGEN_BONUS, "r_sulfonal")
+					REMOVE_MOVEMENT_MODIFIER(M, /datum/movement_modifier/reagent/sulfonal, src.type)
+					M.remove_stam_mod_max("sulfonal")
+
 
 			on_mob_life(var/mob/M, var/mult = 1)
 				if (!M) M = holder.my_atom

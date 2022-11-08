@@ -35,6 +35,10 @@ var/global/current_state = GAME_STATE_WORLD_INIT
 	var/tmp/timeDilationUpperBound = OVERLOADED_WORLD_TICKLAG
 	var/tmp/highMapCpuCount = 0 // how many times in a row has the map_cpu been high
 
+	var/list/lobby_music = list('sound/radio_station/music/union1.mp3', 'sound/radio_station/music/union2.mp3', 'sound/radio_station/music/union3.mp3', 'sound/radio_station/music/union4.mp3')
+	var/list/eor_music = list('sound/radio_station/music/union1.mp3', 'sound/radio_station/music/union2.mp3', 'sound/radio_station/music/union3.mp3', 'sound/radio_station/music/union4.mp3')
+
+
 /datum/controller/gameticker/proc/pregame()
 
 	pregame_timeleft = PREGAME_LOBBY_TICKS
@@ -56,6 +60,7 @@ var/global/current_state = GAME_STATE_WORLD_INIT
 
 
 	var/did_mapvote = 0
+	var/did_lobbymusic = 0
 	if (!player_capa)
 		new /obj/overlay/zamujasa/round_start_countdown/encourage()
 	var/obj/overlay/zamujasa/round_start_countdown/timer/title_countdown = new()
@@ -64,6 +69,10 @@ var/global/current_state = GAME_STATE_WORLD_INIT
 		// Start the countdown as normal, but hold it at 30 seconds until setup is complete
 		if (!game_start_delayed && (pregame_timeleft > 30 || current_state == GAME_STATE_PREGAME))
 			pregame_timeleft--
+
+			if (pregame_timeleft <= 120 && !did_lobbymusic)
+				lobby_music()
+				did_lobbymusic = 1
 
 			if (pregame_timeleft <= 60 && !did_mapvote)
 				// do it here now instead of before the countdown
@@ -283,6 +292,35 @@ var/global/current_state = GAME_STATE_WORLD_INIT
 				logTheThing("diary", usr ? usr : src, null, "the automated map switch vote couldn't run because: [e.name]", "admin")
 				message_admins("[key_name(usr ? usr : src)] the automated map switch vote couldn't run because: [e.name]")
 
+/datum/controller/gameticker/proc/lobby_music()
+
+	var/sound/music_lobby = new()
+	music_lobby.file = pick(lobby_music)
+	music_lobby.wait = 0
+	music_lobby.repeat = 0
+	music_lobby.priority = 253
+	music_lobby.channel = admin_sound_channel
+
+	music_lobby.frequency = 1
+
+	music_lobby.environment = -1
+	music_lobby.echo = -1
+
+	SPAWN_DBG(0)
+		for (var/client/C in clients)
+
+			var/client_vol = C.getVolume(VOLUME_CHANNEL_ADMIN)
+
+			if (!client_vol)
+				continue
+
+			C.sound_playing[ admin_sound_channel ][1] = 1
+			C.sound_playing[ admin_sound_channel ][2] = VOLUME_CHANNEL_ADMIN
+
+			music_lobby.volume = client_vol
+			C << music_lobby
+
+
 /datum/controller/gameticker
 	proc/distribute_jobs()
 		DivideOccupations()
@@ -437,11 +475,33 @@ var/global/current_state = GAME_STATE_WORLD_INIT
 			// Official go-ahead to be an end-of-round asshole
 			boutput(world, "<h3>The round has ended!</h3><strong style='color: #393;'>Further actions will have no impact on round results. Go hog wild!</strong>")
 
-			// End-of-round music.
-			for (var/client/C)
-				SPAWN_DBG(5 SECONDS)
-				if (C.mob)
-					C.mob << sound(pick('sound/radio_station/music/union1.mp3', 'sound/radio_station/music/union2.mp3', 'sound/radio_station/music/union3.mp3', 'sound/radio_station/music/union4.mp3',))
+			// end-of-round music stuff
+			SPAWN_DBG(8)
+				var/sound/music_sound = new()
+				music_sound.file = pick(eor_music)
+				music_sound.wait = 0
+				music_sound.repeat = 0
+				music_sound.priority = 254
+				music_sound.channel = admin_sound_channel
+
+				music_sound.frequency = 1
+
+				music_sound.environment = -1
+				music_sound.echo = -1
+
+				SPAWN_DBG(0)
+					for (var/client/C in clients)
+
+						var/client_vol = C.getVolume(VOLUME_CHANNEL_ADMIN)
+
+						if (!client_vol)
+							continue
+
+						C.sound_playing[ admin_sound_channel ][1] = 1
+						C.sound_playing[ admin_sound_channel ][2] = VOLUME_CHANNEL_ADMIN
+
+						music_sound.volume = client_vol
+						C << music_sound
 
 			SPAWN_DBG(0)
 				change_ghost_invisibility(INVIS_NONE)

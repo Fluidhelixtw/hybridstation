@@ -578,36 +578,19 @@ datum
 			on_mob_life(var/mob/M, var/mult = 1)
 				if(!M)M = holder.my_atom
 				if(M.get_oxygen_deprivation())
-					M.take_oxygen_deprivation(-2.5 * mult)
-				M.take_brain_damage(-2.5 * mult)
-				M.HealDamage("All", 2.5 * mult, 0* mult, 1 * mult)
-				if(volume > 20)
-					M.HealDamage("All", 0 * mult, 2.5* mult, 0 * mult)
-				if (isliving(M))
-					var/mob/living/L = M
-					if (L.bleeding)
-						repair_bleeding_damage(L, 10, 1 * mult)
-					if (L.blood_volume < 500)
-						L.blood_volume ++
-					if (ishuman(M))
-						var/mob/living/carbon/human/H = M
-						if (H.organHolder)
-							H.organHolder.heal_organs(10*mult, 10*mult, 10*mult, target_organs)
-
-				//M.UpdateDamageIcon()
+					M.take_oxygen_deprivation(-3 * mult)
+				M.HealDamage("All", 3* mult, 3* mult, 3* mult)
 				..()
 				return
 
 			do_overdose(var/severity, var/mob/M, var/mult = 1)
+				if (!M)M = holder.my_atom
 				if (severity == 1) //lesser
-					M.stuttering += 1
-					M.bodytemperature = max(M.base_body_temp, M.bodytemperature+(50 * mult))
-					if(probmult(20)) boutput(M, "<span class='notice'>You feel like you're melting!</span>")
+					M.take_brain_damage(2 * mult)
+					if(prob(10)) M.changeStatus("weakened", 4 SECONDS)
 				else if (severity == 2) // greater
-					M.stuttering += 2
-					M.bodytemperature = max(M.base_body_temp, M.bodytemperature+(100 * mult))
-					if(probmult(20)) boutput(M, "<span class='notice'>You feel like you're melting!</span>")
-					M.TakeDamage("chest", 0, 3 * mult, 0, DAMAGE_BURN)
+					M.take_brain_damage(3 * mult)
+					if(prob(15)) M.changeStatus("weakened", 4 SECONDS)
 
 
 		medical/digestaid
@@ -1485,24 +1468,17 @@ datum
 				..()
 
 
-			on_mob_life(var/mob/M, var/mult = 1) //god fuck this proc
+			on_mob_life(var/mob/M, var/mult = 1)
 				if(!M) M = holder.my_atom
-				M.make_dizzy(1 * mult)
-				if(M.bodytemperature < M.base_body_temp)
-					M.bodytemperature = min(M.base_body_temp + 10, M.bodytemperature+(10 * mult))
-				if(probmult(4)) M.emote("collapse")
-				if(M.get_oxygen_deprivation() > 50)
-					M.take_oxygen_deprivation(-20 * mult)
-				if(M.health < -50)
-					if(M.get_toxin_damage())
-						M.take_toxin_damage(-2 * mult)
-					M.HealDamage("All", 4 * mult, 4 * mult)
-					if (M.get_brain_damage())
-						M.take_brain_damage(-2.5 * mult)
-				else if (M.health > 15 && M.get_toxin_damage() < 70)
-					M.take_toxin_damage(1 * mult)
-				if(M.reagents.has_reagent("sarin"))
-					M.reagents.remove_reagent("sarin",20 * mult)
+				if (M.health < -50)
+					M.take_toxin_damage(-3 * mult)
+					if(M.get_oxygen_deprivation() > 50)
+						M.take_oxygen_deprivation(-20 * mult)
+					M.HealDamage("All", 5 * mult, 5 * mult)
+					M.take_brain_damage(-2.5 * mult)
+					M.HealDamage("All", 2 * mult, 2 * mult, 1 * mult)
+					if(M.losebreath > 10)
+						M.losebreath -= (10 * mult)
 				if (ishuman(M))
 					var/mob/living/carbon/human/H = M
 					if (H.organHolder)

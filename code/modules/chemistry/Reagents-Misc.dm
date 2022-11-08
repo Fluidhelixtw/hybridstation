@@ -8,7 +8,7 @@ datum
 		catalyst
 			name = "catalyst"
 			id = "catalyst"
-			description = "An INCREDIBLY potent catalyst made by combining pure phoron, strange matter and copper."
+			description = "An incredible potent catalyst made by combining pure phoron, strange matter and copper."
 			reagent_state = SOLID
 			fluid_r = 100
 			fluid_b = 200

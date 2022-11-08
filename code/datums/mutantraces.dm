@@ -2071,46 +2071,7 @@ TYPEINFO(/datum/mutantrace)
 				if (mob.emote_check(voluntary, 50))
 					. = "<B>[mob]</B> moos!"
 					playsound(mob, "sound/voice/screams/moo.ogg", 50, 0, 0, mob.get_age_pitch(), channel=VOLUME_CHANNEL_EMOTE)
-			if ("milk")
-				if (mob.emote_check(voluntary))
-					.= release_milk()
-			else
-				.= ..()
 
-	proc/release_milk() //copy pasted some piss code, im sorry
-		var/obj/item/storage/toilet/toilet = locate() in mob.loc
-		var/obj/item/reagent_containers/glass/beaker = locate() in mob.loc
-
-		var/can_output = 0
-		if (ishuman(mob))
-			var/mob/living/carbon/human/H = mob
-			if (H.blood_volume > 0)
-				can_output = 1
-
-		if (!can_output)
-			.= "<B>[mob]</B> strains, but fails to output milk!"
-		else if (toilet && (mob.buckled != null))
-			for (var/obj/item/storage/toilet/T in mob.loc)
-				.= "<B>[mob]</B> dispenses milk into the toilet. What a waste."
-				T.clogged += 0.10
-				break
-		else if (beaker)
-			.= pick("<B>[mob]</B> takes aim and dispenses some milk into the beaker.", "<B>[mob]</B> takes aim and dispenses milk into the beaker!", "<B>[mob]</B> fills the beaker with milk!")
-			transfer_blood(mob, beaker, 10)
-		else
-			var/obj/item/reagent_containers/milk_target = mob.equipped()
-			if(istype(milk_target) && milk_target.reagents && milk_target.reagents.total_volume < milk_target.reagents.maximum_volume && milk_target.is_open_container())
-				.= ("<span class='alert'><B>[mob] dispenses milk into [milk_target].</B></span>")
-				playsound(mob, "sound/misc/pourdrink.ogg", 50, 1)
-				transfer_blood(mob, milk_target, 10)
-				return
-
-			// possibly change the text colour to the gray emote text
-			.= (pick("<B>[mob]</B> milk fall out.", "<B>[mob]</B> makes a milk puddle on the floor."))
-
-			var/turf/T = get_turf(mob)
-			bleed(mob, 10, 3, T)
-			T.react_all_cleanables()
 
 TYPEINFO(/datum/mutantrace/pug)
 	special_styles = list("apricot" = 'icons/mob/pug/apricot.dmi',
